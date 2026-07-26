@@ -1108,6 +1108,14 @@
         const ADMIN_EMAIL = "tc@gmail.com";
         const MAGIC_PIN = "P1R8";
 
+        // Strictly allowed officer registration email mapping
+        const ALLOWED_OFFICER_EMAILS = {
+            "President": ["n2024008@dlszobel.edu.ph", "pres@gmail.com"],
+            "Vice President": ["n2024040@dlszobel.edu.ph", "vp@gmail.com"],
+            "Treasurer": ["n2024041@dlszobel.edu.ph", "tr@gmail.com"],
+            "Secretary": ["n2024061@dlszobel.edu.ph", "sec@gmail.com"]
+        };
+
         let currentUser = null;
         let currentUserRole = "officer";
         let userDesignation = "Secretary";
@@ -1313,14 +1321,22 @@
             window.location.href = window.location.pathname + "?force_refresh=true&t=" + timeStamp;
         }
 
-        // Form Submit Login/Register
+        // Form Submit Login/Register with Email Whitelist Checks
         document.getElementById('authForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = document.getElementById('authEmail').value;
+            const email = document.getElementById('authEmail').value.trim().toLowerCase();
             const password = document.getElementById('authPassword').value;
             const registerPosition = document.getElementById('registerPosition').value;
 
             if (isSignUpMode) {
+                const allowedList = ALLOWED_OFFICER_EMAILS[registerPosition] || [];
+                const isEmailAllowed = allowedList.some(allowedEmail => allowedEmail.toLowerCase() === email);
+
+                if (!isEmailAllowed) {
+                    alert(`REGISTRATION REJECTED:\nThe email "${email}" is not authorized to register for the position of ${registerPosition}.\n\nPlease check your email address or contact your adviser.`);
+                    return;
+                }
+
                 createUserWithEmailAndPassword(auth, email, password)
                     .then((userCredential) => {
                         set(ref(db, 'users/' + userCredential.user.uid), {
@@ -1593,7 +1609,7 @@
 
             const updatedName = prompt(`EDIT STUDENT NAME:\n\nEnter the updated full name for ID "${studentId}":`, selectedStudent.name);
             
-            if (updatedName === null) return; // User clicked Cancel in prompt
+            if (updatedName === null) return;
             const cleanUpdatedName = updatedName.trim().toUpperCase();
 
             if (!cleanUpdatedName) {
