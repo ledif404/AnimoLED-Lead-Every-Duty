@@ -155,7 +155,6 @@
             background-color: var(--primary-green-hover);
         }
 
-        /* Refined Auth Toggle Link Styling matching LED logo gold */
         .auth-toggle {
             text-align: center;
             margin-top: 20px;
@@ -794,8 +793,8 @@
                         <select id="fieldPeriodCount" onchange="handlePeriodRangeChange()">
                             <option value="5">5</option>
                             <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8" selected>8</option>
+                            <option value="7" selected>7</option>
+                            <option value="8">8</option>
                             <option value="9">9</option>
                         </select>
                     </div>
@@ -966,7 +965,7 @@
             <div id="modalStudentLabel" style="font-size: 12px; color: var(--text-muted);">Name | ID</div>
             <textarea id="modalRemarkInput" placeholder="Write reason (e.g., Medical clinic certificate, late due to heavy traffic)..."></textarea>
             <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
-                <button class="btn-ui btn-gray" onclick="closeStudentRemarkModal()">Cancel</button>
+                <button class="btn-ui btn-gray" onclick="closeStudentRemarkModal()">Close</button>
                 <button class="btn-ui btn-green edit-permission-btn" onclick="saveStudentRemarkModal()">Save Remark</button>
             </div>
         </div>
@@ -1162,11 +1161,16 @@
             }
         }
 
-        // Apply Edit Permissions based on role
+        // Apply Edit Permissions strictly to ALL Tracker controls
         function applyAttendancePermissions() {
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             const editButtons = document.querySelectorAll('.edit-permission-btn');
             const noticeBox = document.getElementById('readOnlyNotice');
+
+            // Lock/Unlock Meta Form Fields
+            document.getElementById('fieldModality').disabled = !canEdit;
+            document.getElementById('fieldPeriodCount').disabled = !canEdit;
+            document.getElementById('fieldRemarks').disabled = !canEdit;
             
             if (canEdit) {
                 editButtons.forEach(btn => btn.classList.remove('hidden'));
@@ -1468,7 +1472,7 @@
                     let dayData = globalDatabase[dateStr];
                     if(dayData && dayData.records && dayData.records[student.id]) {
                         let stateRow = dayData.records[student.id];
-                        let periodMax = dayData.periods || 8;
+                        let periodMax = dayData.periods || 7;
                         let absentCount = 0;
 
                         if(stateRow.hr === "A") absentCount++;
@@ -1509,7 +1513,7 @@
 
             if(existingDayData) {
                 document.getElementById('fieldModality').value = existingDayData.modality || "Face to Face";
-                document.getElementById('fieldPeriodCount').value = existingDayData.periods || "8";
+                document.getElementById('fieldPeriodCount').value = existingDayData.periods || "7";
                 document.getElementById('fieldRemarks').value = existingDayData.remarks || "";
 
                 STUDENT_DATA_SOURCE.forEach(s => {
@@ -1522,7 +1526,7 @@
                 });
             } else {
                 document.getElementById('fieldModality').value = "Face to Face";
-                document.getElementById('fieldPeriodCount').value = "8";
+                document.getElementById('fieldPeriodCount').value = "7";
                 document.getElementById('fieldRemarks').value = "";
 
                 STUDENT_DATA_SOURCE.forEach(s => {
@@ -1531,6 +1535,7 @@
             }
 
             handlePeriodRangeChange();
+            applyAttendancePermissions();
         }
 
         function createDefaultClearRow() {
@@ -1574,7 +1579,7 @@
                         <span style="font-weight: 500; color:#334155;">${student.name}</span>
                         <button class="bubble-comment-btn ${targetHasRemarkClass}" data-id="${student.id}" data-name="${student.name}">💬</button>
                     </td>
-                    <td style="text-align:center;"><button class="all-row-select" data-id="${student.id}" ${!canEdit ? 'disabled style="opacity:0.5;"' : ''}>✓</button></td>
+                    <td style="text-align:center;"><button class="all-row-select" data-id="${student.id}" ${!canEdit ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>✓</button></td>
                 `;
 
                 rowHtml += `<td><div class="click-status-cell ${getStatusClassStyle(stateRow.hr)}" data-id="${student.id}" data-key="hr">${stateRow.hr}</div></td>`;
@@ -1675,9 +1680,15 @@
 
         function openStudentRemarkModal(studentId, studentName) {
             modalActiveStudentId = studentId;
+            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
+            
             document.getElementById('modalStudentLabel').innerText = `${studentName} | ID: ${studentId}`;
             let currentSavedText = workingSheetRecords[studentId].remark || "";
-            document.getElementById('modalRemarkInput').value = currentSavedText;
+            
+            const textarea = document.getElementById('modalRemarkInput');
+            textarea.value = currentSavedText;
+            textarea.readOnly = !canEdit;
+
             document.getElementById('studentRemarkModal').classList.remove('hidden');
         }
 
@@ -1688,6 +1699,9 @@
 
         function saveStudentRemarkModal() {
             if(!modalActiveStudentId) return;
+            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
+            if (!canEdit) return;
+
             let currentTextInputValue = document.getElementById('modalRemarkInput').value;
             workingSheetRecords[modalActiveStudentId].remark = currentTextInputValue;
             closeStudentRemarkModal();
@@ -1695,6 +1709,9 @@
         }
 
         function resetActiveSheetForm() {
+            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
+            if (!canEdit) return;
+
             if(confirm("Clear daily sheet tracking logs?")) {
                 STUDENT_DATA_SOURCE.forEach(s => {
                     workingSheetRecords[s.id] = createDefaultClearRow();
@@ -1704,6 +1721,9 @@
         }
 
         function saveActiveSheetToDatabase() {
+            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
+            if (!canEdit) return;
+
             globalDatabase[activeEditingDateStr] = {
                 modality: document.getElementById('fieldModality').value,
                 periods: parseInt(document.getElementById('fieldPeriodCount').value),
@@ -1730,7 +1750,7 @@
             let csvHeader = "Student ID,Student Name";
             
             loggedDates.forEach(date => {
-                let pMax = globalDatabase[date].periods || 8;
+                let pMax = globalDatabase[date].periods || 7;
                 csvHeader += `,${date} (HR)`;
                 for (let i = 1; i <= pMax; i++) {
                     csvHeader += `,${date} (P${i})`;
@@ -1744,7 +1764,7 @@
                 
                 loggedDates.forEach(date => {
                     let dayData = globalDatabase[date];
-                    let pMax = dayData.periods || 8;
+                    let pMax = dayData.periods || 7;
                     let record = (dayData.records && dayData.records[student.id]) ? dayData.records[student.id] : null;
 
                     if (record) {
