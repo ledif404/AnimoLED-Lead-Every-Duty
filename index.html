@@ -27,6 +27,7 @@
             --accent-gold-hover: #d97706;
             
             --btn-red: #ef4444;
+            --btn-red-hover: #dc2626;
             --border-gray: #cbd5e1;
             --text-dark: #1e293b;
             --text-muted: #64748b;
@@ -336,6 +337,7 @@
         .btn-gold:hover { background-color: var(--accent-gold-hover); }
         .btn-gray { background-color: #e2e8f0; color: #475569; border-color: #cbd5e1; }
         .btn-red { background-color: var(--btn-red); color: white; }
+        .btn-red:hover { background-color: var(--btn-red-hover); }
 
         .permission-notice {
             background-color: #fef3c7;
@@ -661,6 +663,24 @@
             text-align: right;
         }
 
+        /* Toast Popup Notification */
+        .toast-popup {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #0f172a;
+            color: #ffffff;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            z-index: 9999;
+            border-left: 5px solid var(--accent-gold);
+            text-align: center;
+        }
+
         /* Image Cropper Container */
         .cropper-img-wrapper {
             width: 100%;
@@ -677,6 +697,11 @@
     </style>
 </head>
 <body>
+
+    <!-- SUCCESS TOAST NOTIFICATION -->
+    <div id="toastNotification" class="toast-popup hidden">
+        Account successfully wiped from the system.
+    </div>
 
     <!-- AUTHENTICATION SCREEN -->
     <div id="authContainer" class="auth-container">
@@ -877,6 +902,8 @@
                     <h2 class="view-title" id="profileHeaderTitle">Personal Profile</h2>
                     <div class="btn-set">
                         <button class="btn-ui btn-green" onclick="saveOfficerProfile()">💾 Save Profile Changes</button>
+                        <!-- Delete Account Button (strictly for Officers) -->
+                        <button id="deleteAccountBtn" class="btn-ui btn-red officer-only-field" onclick="openDeleteAccountModal()">🗑 Delete Account</button>
                     </div>
                 </div>
 
@@ -941,6 +968,29 @@
         </div>
     </div>
 
+    <!-- OFFICER: DELETE ACCOUNT CONFIRMATION & MAGIC PIN MODAL -->
+    <div id="deleteAccountModal" class="modal-backdrop hidden">
+        <div class="modal-window" style="border-top: 4px solid var(--btn-red);">
+            <h3 style="margin: 0 0 6px 0; color: var(--btn-red);">⚠️ Confirm Account Deletion</h3>
+            <p style="font-size: 13px; color: var(--text-dark); margin: 0 0 14px 0; line-height: 1.5;">
+                This action will permanently reset and wipe your profile details from the system. No records or details of your account will remain on the Admin panel.
+            </p>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 14px 0; font-weight: 600;">
+                To proceed with deletion, please ask your class adviser/moderator for the <strong>Magic PIN</strong> and enter it below:
+            </p>
+
+            <div class="form-group">
+                <label style="color: var(--btn-red);">Enter Magic PIN</label>
+                <input type="password" id="deleteMagicPinInput" placeholder="••••" style="letter-spacing: 2px; font-weight: bold;" onkeydown="if(event.key==='Enter'){executeAccountDeletion();}">
+            </div>
+
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
+                <button class="btn-ui btn-gray" onclick="closeDeleteAccountModal()">CANCEL</button>
+                <button class="btn-ui btn-red" onclick="executeAccountDeletion()">DELETE</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ADMIN: OFFICER DETAIL POPUP MODAL -->
     <div id="officerDetailModal" class="modal-backdrop hidden">
         <div class="modal-window">
@@ -992,8 +1042,8 @@
     <!-- SCRIPT MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, set, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDf9e2U7UdfLS8zGGMGWk0w5hzdt3LZ_c8",
@@ -1010,6 +1060,7 @@
         const db = getDatabase(app);
 
         const ADMIN_EMAIL = "tc@gmail.com";
+        const MAGIC_PIN = "P1R8"; // Required Case-Sensitive Adviser Deletion PIN
 
         let currentUser = null;
         let currentUserRole = "officer";
@@ -1022,6 +1073,17 @@
         if (window.location.search.includes('force_refresh=true')) {
             const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
             window.history.replaceState({path: cleanUrl}, '', cleanUrl);
+        }
+
+        // Show temporary wipe notification if flag is present in URL
+        if (window.location.search.includes('account_wiped=true')) {
+            const toast = document.getElementById('toastNotification');
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.replaceState({path: cleanUrl}, '', cleanUrl);
+            }, 4000);
         }
 
         if ('serviceWorker' in navigator) {
@@ -1167,7 +1229,6 @@
             const editButtons = document.querySelectorAll('.edit-permission-btn');
             const noticeBox = document.getElementById('readOnlyNotice');
 
-            // Lock/Unlock Meta Form Fields
             document.getElementById('fieldModality').disabled = !canEdit;
             document.getElementById('fieldPeriodCount').disabled = !canEdit;
             document.getElementById('fieldRemarks').disabled = !canEdit;
@@ -1251,6 +1312,48 @@
                 document.getElementById('adminOfficersView').classList.remove('hidden');
             }
         };
+
+        // Account Deletion Modal & Magic PIN Logic
+        window.openDeleteAccountModal = function() {
+            document.getElementById('deleteMagicPinInput').value = "";
+            document.getElementById('deleteAccountModal').classList.remove('hidden');
+            document.getElementById('deleteMagicPinInput').focus();
+        };
+
+        window.closeDeleteAccountModal = function() {
+            document.getElementById('deleteAccountModal').classList.add('hidden');
+            document.getElementById('deleteMagicPinInput').value = "";
+        };
+
+        window.executeAccountDeletion = function() {
+            const enteredPin = document.getElementById('deleteMagicPinInput').value;
+            
+            if (enteredPin !== MAGIC_PIN) {
+                alert("The magic pin is not correct. Account deletion canceled.");
+                return;
+            }
+
+            if (!currentUser) return;
+            const uidToDelete = currentUser.uid;
+
+            // 1. Wipe user profile data from Realtime Database
+            remove(ref(db, 'users/' + uidToDelete))
+                .then(() => {
+                    // 2. Try deleting Firebase Auth user profile
+                    deleteUser(currentUser)
+                        .then(() => finishAccountWipeFlow())
+                        .catch(() => finishAccountWipeFlow());
+                })
+                .catch((err) => alert("Failed to wipe database record: " + err.message));
+        };
+
+        function finishAccountWipeFlow() {
+            closeDeleteAccountModal();
+            signOut(auth).then(() => {
+                const timeStamp = new Date().getTime();
+                window.location.href = window.location.pathname + "?account_wiped=true&t=" + timeStamp;
+            });
+        }
 
         // Populate Officers Grid for Admin
         function updateAdminOfficersDirectory() {
@@ -1800,6 +1903,9 @@
         window.saveActiveSheetToDatabase = saveActiveSheetToDatabase;
         window.handlePeriodRangeChange = handlePeriodRangeChange;
         window.exportDataToSpreadsheet = exportDataToSpreadsheet;
+        window.openDeleteAccountModal = openDeleteAccountModal;
+        window.closeDeleteAccountModal = closeDeleteAccountModal;
+        window.executeAccountDeletion = executeAccountDeletion;
     </script>
 </body>
 </html>
