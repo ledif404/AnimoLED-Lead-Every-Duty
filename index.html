@@ -12,6 +12,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3429/3429149.png">
 
+    <!-- Cropper.js CSS for Photo Cropping -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
+
     <style>
         :root {
             /* Lasallian-Inspired Color Palette */
@@ -40,7 +43,6 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            /* Writing Pad / Paper Texture Background */
             background-color: #fbfbf8;
             background-image: linear-gradient(#e2e8f0 1px, transparent 1px);
             background-size: 100% 28px;
@@ -79,7 +81,6 @@
             margin-bottom: 24px;
         }
 
-        /* Original Logo Styling for Auth Page */
         .brand-title {
             font-size: 32px;
             font-weight: 800;
@@ -180,7 +181,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        /* Updated Navbar Logo: White 'Animo' + Gold 'LED' */
         .nav-brand {
             display: flex;
             align-items: center;
@@ -255,7 +255,7 @@
             color: #ffffff;
         }
 
-        /* Main View Container with Paper Elevation */
+        /* Main View Container */
         .portal-container {
             background-color: #ffffff;
             margin: 16px auto;
@@ -327,7 +327,7 @@
         .btn-gray { background-color: #e2e8f0; color: #475569; border-color: #cbd5e1; }
         .btn-red { background-color: var(--btn-red); color: white; }
 
-        /* Profile Editor Layout */
+        /* Profile Layout */
         .profile-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -351,8 +351,8 @@
         }
 
         .profile-avatar-preview {
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
             object-fit: cover;
             border: 3px solid var(--primary-green);
@@ -524,7 +524,7 @@
             font-size: 11px;
         }
 
-        /* Modal Box */
+        /* Modal Boxes */
         .modal-backdrop {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -542,7 +542,7 @@
             padding: 20px;
             border-radius: 8px;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             border-top: 4px solid var(--accent-gold);
         }
 
@@ -555,6 +555,20 @@
             box-sizing: border-box;
             font-size: 13px;
             margin-top: 10px;
+        }
+
+        /* Image Cropper Container */
+        .cropper-img-wrapper {
+            width: 100%;
+            max-height: 300px;
+            margin-top: 10px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .cropper-img-wrapper img {
+            max-width: 100%;
+            display: block;
         }
     </style>
 </head>
@@ -579,7 +593,7 @@
                 
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" id="authEmail" required placeholder="officer@school.edu">
+                    <input type="email" id="authEmail" required placeholder="user@school.edu">
                 </div>
 
                 <div class="form-group">
@@ -703,10 +717,10 @@
                 </div>
             </div>
 
-            <!-- OFFICER PROFILE MANAGEMENT VIEW -->
+            <!-- PERSONAL PROFILE VIEW -->
             <div id="officerProfileView" class="hidden">
                 <div class="view-header-flex">
-                    <h2 class="view-title">Officer Personal Profile</h2>
+                    <h2 class="view-title" id="profileHeaderTitle">Personal Profile</h2>
                     <div class="btn-set">
                         <button class="btn-ui btn-green" onclick="saveOfficerProfile()">💾 Save Profile Changes</button>
                     </div>
@@ -715,8 +729,8 @@
                 <div class="profile-grid">
                     <div class="profile-photo-card">
                         <img id="avatarPreview" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="profile-avatar-preview" alt="Profile Picture">
-                        <input type="file" id="profileImageInput" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(event)">
-                        <button class="btn-ui btn-gray" style="width: 100%; margin-top: 8px;" onclick="document.getElementById('profileImageInput').click()">📷 Upload Photo</button>
+                        <input type="file" id="profileImageInput" accept="image/*" style="display: none;" onchange="handleFileSelectedForCrop(event)">
+                        <button class="btn-ui btn-gray" style="width: 100%; margin-top: 8px;" onclick="document.getElementById('profileImageInput').click()">📷 Upload & Crop Photo</button>
                     </div>
 
                     <div class="profile-form-grid">
@@ -724,14 +738,36 @@
                             <label>Full Name</label>
                             <input type="text" id="profFullName" placeholder="e.g., Juan Dela Cruz">
                         </div>
-                        <div class="form-group">
+
+                        <!-- OFFICER FIELDS -->
+                        <div class="form-group officer-only-field">
                             <label>Designation / Position</label>
                             <input type="text" id="profDesignation" placeholder="e.g., Class Secretary / Vice President">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group officer-only-field">
                             <label>Student ID Number</label>
                             <input type="text" id="profStudentId" placeholder="e.g., N2026101">
                         </div>
+
+                        <!-- ADMIN / TEACHER FIELDS -->
+                        <div class="form-group admin-only-field hidden">
+                            <label>Department</label>
+                            <input type="text" id="profDepartment" placeholder="e.g., Applied Science">
+                        </div>
+                        <div class="form-group admin-only-field hidden">
+                            <label>Unit</label>
+                            <input type="text" id="profUnit" placeholder="e.g., Creative Technologies Unit">
+                        </div>
+                        <div class="form-group admin-only-field hidden">
+                            <label>Cluster</label>
+                            <input type="text" id="profCluster" placeholder="e.g., BRafeNHS">
+                        </div>
+                        <div class="form-group admin-only-field hidden">
+                            <label>Subject Handled</label>
+                            <input type="text" id="profSubject" placeholder="e.g., Computer Technology">
+                        </div>
+
+                        <!-- SHARED FIELDS -->
                         <div class="form-group">
                             <label>School Email</label>
                             <input type="email" id="profEmail" disabled style="background-color:#e2e8f0;">
@@ -764,6 +800,24 @@
         </div>
     </div>
 
+    <!-- PHOTO CROPPING MODAL -->
+    <div id="cropPhotoModal" class="modal-backdrop hidden">
+        <div class="modal-window">
+            <h3 style="margin: 0 0 4px 0; color: var(--primary-green);">Crop Profile Picture</h3>
+            <div style="font-size: 12px; color: var(--text-muted);">Adjust and frame your profile picture</div>
+            <div class="cropper-img-wrapper">
+                <img id="imageToCrop" src="">
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
+                <button class="btn-ui btn-gray" onclick="closeCropModal()">Cancel</button>
+                <button class="btn-ui btn-green" onclick="executeImageCrop()">Apply & Use Photo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cropper.js Script CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
     <!-- SCRIPT MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -785,7 +839,9 @@
         const db = getDatabase(app);
 
         let currentUser = null;
+        let currentUserRole = "officer";
         let profilePhotoBase64 = "";
+        let cropperInstance = null;
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -865,16 +921,26 @@
                 
                 onValue(ref(db, 'users/' + user.uid), (snapshot) => {
                     const userData = snapshot.val();
-                    const role = userData ? userData.role : 'officer';
-                    document.getElementById('displayUserRole').textContent = role;
+                    currentUserRole = userData ? (userData.role || 'officer') : 'officer';
+                    document.getElementById('displayUserRole').textContent = currentUserRole;
                     
+                    configureProfileFormByRole(currentUserRole);
+
                     if (userData) {
                         document.getElementById('profFullName').value = userData.fullName || "";
-                        document.getElementById('profDesignation').value = userData.designation || "";
-                        document.getElementById('profStudentId').value = userData.studentId || "";
                         document.getElementById('profMobile').value = userData.mobile || "";
                         document.getElementById('profBirthday').value = userData.birthday || "";
                         
+                        if (currentUserRole === 'admin') {
+                            document.getElementById('profDepartment').value = userData.department || "";
+                            document.getElementById('profUnit').value = userData.unit || "";
+                            document.getElementById('profCluster').value = userData.cluster || "";
+                            document.getElementById('profSubject').value = userData.subject || "";
+                        } else {
+                            document.getElementById('profDesignation').value = userData.designation || "";
+                            document.getElementById('profStudentId').value = userData.studentId || "";
+                        }
+
                         if (userData.photoBase64) {
                             profilePhotoBase64 = userData.photoBase64;
                             document.getElementById('avatarPreview').src = userData.photoBase64;
@@ -889,6 +955,21 @@
                 document.getElementById('appContainer').classList.add('hidden');
             }
         });
+
+        function configureProfileFormByRole(role) {
+            const officerFields = document.querySelectorAll('.officer-only-field');
+            const adminFields = document.querySelectorAll('.admin-only-field');
+
+            if (role === 'admin') {
+                document.getElementById('profileHeaderTitle').textContent = "Main Admin / Teacher Profile";
+                officerFields.forEach(el => el.classList.add('hidden'));
+                adminFields.forEach(el => el.classList.remove('hidden'));
+            } else {
+                document.getElementById('profileHeaderTitle').textContent = "Class Officer Profile";
+                adminFields.forEach(el => el.classList.add('hidden'));
+                officerFields.forEach(el => el.classList.remove('hidden'));
+            }
+        }
 
         // Form Submit
         document.getElementById('authForm').addEventListener('submit', (e) => {
@@ -934,31 +1015,67 @@
             }
         };
 
-        window.handleProfilePhotoUpload = function(event) {
+        // Cropper Logic
+        window.handleFileSelectedForCrop = function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    profilePhotoBase64 = e.target.result;
-                    document.getElementById('avatarPreview').src = profilePhotoBase64;
+                    const imgElement = document.getElementById('imageToCrop');
+                    imgElement.src = e.target.result;
+                    document.getElementById('cropPhotoModal').classList.remove('hidden');
+
+                    if (cropperInstance) cropperInstance.destroy();
+                    
+                    cropperInstance = new Cropper(imgElement, {
+                        aspectRatio: 1, // Square Crop
+                        viewMode: 1,
+                        background: false
+                    });
                 };
                 reader.readAsDataURL(file);
             }
         };
 
+        window.closeCropModal = function() {
+            document.getElementById('cropPhotoModal').classList.add('hidden');
+            if (cropperInstance) cropperInstance.destroy();
+            document.getElementById('profileImageInput').value = "";
+        };
+
+        window.executeImageCrop = function() {
+            if (!cropperInstance) return;
+            const canvas = cropperInstance.getCroppedCanvas({
+                width: 300,
+                height: 300
+            });
+            profilePhotoBase64 = canvas.toDataURL('image/jpeg');
+            document.getElementById('avatarPreview').src = profilePhotoBase64;
+            closeCropModal();
+        };
+
         window.saveOfficerProfile = function() {
             if (!currentUser) return;
             
-            const profileData = {
+            let profileData = {
+                role: currentUserRole,
                 fullName: document.getElementById('profFullName').value,
-                designation: document.getElementById('profDesignation').value,
-                studentId: document.getElementById('profStudentId').value,
                 mobile: document.getElementById('profMobile').value,
                 birthday: document.getElementById('profBirthday').value,
                 photoBase64: profilePhotoBase64
             };
 
-            set(ref(db, 'users/' + currentUser.uid), profileData, { merge: true })
+            if (currentUserRole === 'admin') {
+                profileData.department = document.getElementById('profDepartment').value;
+                profileData.unit = document.getElementById('profUnit').value;
+                profileData.cluster = document.getElementById('profCluster').value;
+                profileData.subject = document.getElementById('profSubject').value;
+            } else {
+                profileData.designation = document.getElementById('profDesignation').value;
+                profileData.studentId = document.getElementById('profStudentId').value;
+            }
+
+            set(ref(db, 'users/' + currentUser.uid), profileData)
                 .then(() => alert("Profile information updated successfully!"))
                 .catch((err) => alert("Failed to save profile: " + err.message));
         };
