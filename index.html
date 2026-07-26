@@ -155,7 +155,7 @@
             background-color: var(--primary-green-hover);
         }
 
-        /* Distinct Auth Toggle Styling */
+        /* Refined Auth Toggle Link Styling matching LED logo gold */
         .auth-toggle {
             text-align: center;
             margin-top: 20px;
@@ -164,16 +164,16 @@
         }
 
         .auth-toggle-btn {
-            color: var(--accent-gold-hover);
+            color: var(--accent-gold);
             font-weight: 800;
             cursor: pointer;
             text-decoration: underline;
             margin-left: 4px;
-            transition: color 0.2s;
+            transition: opacity 0.2s;
         }
 
         .auth-toggle-btn:hover {
-            color: var(--primary-green);
+            opacity: 0.85;
         }
 
         /* Top Bar Navigation */
@@ -688,13 +688,13 @@
             </div>
             
             <form id="authForm">
-                <!-- Position selection only shown during Officer Registration -->
+                <!-- Position selection ordered: President, Vice President, Secretary, Treasurer -->
                 <div class="form-group hidden" id="registerPositionGroup">
                     <label>Officer Position</label>
                     <select id="registerPosition">
-                        <option value="Secretary">Secretary</option>
                         <option value="President">President</option>
                         <option value="Vice President">Vice President</option>
+                        <option value="Secretary">Secretary</option>
                         <option value="Treasurer">Treasurer</option>
                     </select>
                 </div>
@@ -1162,7 +1162,7 @@
             }
         }
 
-        // Apply Edit Permissions based on role (Secretary and Admin can edit; others read-only)
+        // Apply Edit Permissions based on role
         function applyAttendancePermissions() {
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             const editButtons = document.querySelectorAll('.edit-permission-btn');
@@ -1177,7 +1177,6 @@
             }
         }
 
-        // Helper function for automatic forced refresh on Auth events
         function triggerForceRefresh() {
             const timeStamp = new Date().getTime();
             window.location.href = window.location.pathname + "?force_refresh=true&t=" + timeStamp;
@@ -1639,7 +1638,7 @@
 
             document.querySelectorAll('.click-status-cell').forEach(el => {
                 el.onclick = function() {
-                    if (!canEdit) return; // Prevent edits for Non-Secretary officers
+                    if (!canEdit) return;
                     let sid = this.getAttribute('data-id');
                     let key = this.getAttribute('data-key');
                     let currentVal = workingSheetRecords[sid][key] || "✓";
