@@ -597,6 +597,23 @@
             font-weight: bold;
         }
 
+        .delete-student-row-btn {
+            background: #fee2e2;
+            color: #ef4444;
+            border: 1px solid #fca5a5;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 2px 6px;
+            font-size: 11px;
+            margin-left: 6px;
+            font-weight: bold;
+        }
+
+        .delete-student-row-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+        }
+
         .badge-metric {
             background-color: #f1f5f9;
             padding: 3px 6px;
@@ -769,6 +786,7 @@
                 <div class="view-header-flex">
                     <h2 class="view-title" id="weeklyRangeTitle">Attendance Summary</h2>
                     <div class="btn-set">
+                        <button class="btn-ui btn-green admin-only-field hidden" onclick="openAddStudentModal()">➕ Add Student</button>
                         <button class="btn-ui btn-gold" onclick="exportDataToSpreadsheet()">📊 Export CSV</button>
                         <button class="btn-ui btn-gray" onclick="navigateWeek(-7)">← Prev</button>
                         <button class="btn-ui btn-green" onclick="navigateWeek(7)">Next →</button>
@@ -968,6 +986,28 @@
         </div>
     </div>
 
+    <!-- ADMIN: ADD NEW STUDENT MODAL -->
+    <div id="addStudentModal" class="modal-backdrop hidden">
+        <div class="modal-window">
+            <h3 style="margin: 0 0 6px 0; color: var(--primary-green);">➕ Add New Student to Tracker</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                Adding a student will automatically position them alphabetically in the class roster.
+            </p>
+            <div class="form-group">
+                <label>Student ID Number</label>
+                <input type="text" id="addStudentIdInput" placeholder="e.g., N2026100">
+            </div>
+            <div class="form-group">
+                <label>Student Name (SURNAME, FIRSTNAME MIDDLE)</label>
+                <input type="text" id="addStudentNameInput" placeholder="e.g., AMPARO, CARLOS REYES">
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
+                <button class="btn-ui btn-gray" onclick="closeAddStudentModal()">Cancel</button>
+                <button class="btn-ui btn-green" onclick="confirmAddStudent()">Add & Alphabetize</button>
+            </div>
+        </div>
+    </div>
+
     <!-- OFFICER: DELETE ACCOUNT CONFIRMATION & MAGIC PIN MODAL -->
     <div id="deleteAccountModal" class="modal-backdrop hidden">
         <div class="modal-window" style="border-top: 4px solid var(--btn-red);">
@@ -1002,8 +1042,9 @@
 
             <div id="modalOfficerInfoContent"></div>
 
-            <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px;">
                 <button class="btn-ui btn-gray" onclick="closeOfficerDetailsModal()">Close Window</button>
+                <button id="modalDeleteOfficerBtn" class="btn-ui btn-red admin-only-field hidden" onclick="executeAdminDeleteOfficer()">Delete Account</button>
             </div>
         </div>
     </div>
@@ -1060,7 +1101,7 @@
         const db = getDatabase(app);
 
         const ADMIN_EMAIL = "tc@gmail.com";
-        const MAGIC_PIN = "P1R8"; // Required Case-Sensitive Adviser Deletion PIN
+        const MAGIC_PIN = "P1R8";
 
         let currentUser = null;
         let currentUserRole = "officer";
@@ -1068,31 +1109,9 @@
         let profilePhotoBase64 = "";
         let cropperInstance = null;
         let allUsersData = {};
+        let activeModalOfficerUid = null;
 
-        // Force cache-busting on app load if requested
-        if (window.location.search.includes('force_refresh=true')) {
-            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-            window.history.replaceState({path: cleanUrl}, '', cleanUrl);
-        }
-
-        // Show temporary wipe notification if flag is present in URL
-        if (window.location.search.includes('account_wiped=true')) {
-            const toast = document.getElementById('toastNotification');
-            toast.classList.remove('hidden');
-            setTimeout(() => {
-                toast.classList.add('hidden');
-                const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-                window.history.replaceState({path: cleanUrl}, '', cleanUrl);
-            }, 4000);
-        }
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed: ', err));
-            });
-        }
-
-        const STUDENT_DATA_SOURCE = [
+        const DEFAULT_STUDENT_MASTERLIST = [
             { id: "N2024075", name: "ANCHETA, BRIANNAH JESSICA AMABLE" },
             { id: "N2024101", name: "ARNASAN, REIGN HANNAH GLORIA" },
             { id: "N2024154", name: "AYI, LIONEL RAFAEL NII BOYE II CACCAM" },
@@ -1134,6 +1153,31 @@
             { id: "N2026019", name: "TAN, GIL VIPER TOGORES" },
             { id: "N2026020", name: "VILLAPANDO, MOISES OSORIO" }
         ];
+
+        let currentStudentList = [];
+
+        // Force cache-busting on app load if requested
+        if (window.location.search.includes('force_refresh=true')) {
+            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({path: cleanUrl}, '', cleanUrl);
+        }
+
+        // Show temporary wipe notification if flag is present in URL
+        if (window.location.search.includes('account_wiped=true')) {
+            const toast = document.getElementById('toastNotification');
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+                const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                window.history.replaceState({path: cleanUrl}, '', cleanUrl);
+            }, 4000);
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed: ', err));
+            });
+        }
 
         let globalDatabase = {};
         let isSignUpMode = false;
@@ -1200,6 +1244,7 @@
                     }
                 });
 
+                bindStudentMasterlistSync();
                 bindDatabaseSync();
             } else {
                 currentUser = null;
@@ -1207,6 +1252,23 @@
                 document.getElementById('appContainer').classList.add('hidden');
             }
         });
+
+        function bindStudentMasterlistSync() {
+            onValue(ref(db, 'student_masterlist'), (snapshot) => {
+                const data = snapshot.val();
+                if (data && Array.isArray(data) && data.length > 0) {
+                    currentStudentList = sortStudentsAlphabetically(data);
+                } else {
+                    currentStudentList = sortStudentsAlphabetically(DEFAULT_STUDENT_MASTERLIST);
+                    set(ref(db, 'student_masterlist'), currentStudentList);
+                }
+                renderDashboardMatrix();
+            });
+        }
+
+        function sortStudentsAlphabetically(list) {
+            return list.sort((a, b) => a.name.localeCompare(b.name));
+        }
 
         function configureProfileFormByRole(role) {
             const officerFields = document.querySelectorAll('.officer-only-field');
@@ -1223,7 +1285,6 @@
             }
         }
 
-        // Apply Edit Permissions strictly to ALL Tracker controls
         function applyAttendancePermissions() {
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             const editButtons = document.querySelectorAll('.edit-permission-btn');
@@ -1333,13 +1394,13 @@
                 return;
             }
 
+            if (!confirm("ARE YOU SURE YOU WANT TO DELETE THIS OFFICER ACCOUNT?\n\nThis action cannot be undone.")) return;
+
             if (!currentUser) return;
             const uidToDelete = currentUser.uid;
 
-            // 1. Wipe user profile data from Realtime Database
             remove(ref(db, 'users/' + uidToDelete))
                 .then(() => {
-                    // 2. Try deleting Firebase Auth user profile
                     deleteUser(currentUser)
                         .then(() => finishAccountWipeFlow())
                         .catch(() => finishAccountWipeFlow());
@@ -1354,6 +1415,20 @@
                 window.location.href = window.location.pathname + "?account_wiped=true&t=" + timeStamp;
             });
         }
+
+        // Admin Deletion of Officers via Profile Modal
+        window.executeAdminDeleteOfficer = function() {
+            if (!activeModalOfficerUid) return;
+
+            if (confirm("ADMIN CONFIRMATION:\nAre you sure you want to delete this officer's account profile from the system?")) {
+                remove(ref(db, 'users/' + activeModalOfficerUid))
+                    .then(() => {
+                        alert("Officer account details deleted and wiped successfully!");
+                        closeOfficerDetailsModal();
+                    })
+                    .catch((err) => alert("Failed to delete officer: " + err.message));
+            }
+        };
 
         // Populate Officers Grid for Admin
         function updateAdminOfficersDirectory() {
@@ -1384,9 +1459,12 @@
 
         window.openOfficerDetailsModal = function(position) {
             let foundUser = null;
+            activeModalOfficerUid = null;
+
             Object.keys(allUsersData).forEach(uid => {
                 if (allUsersData[uid].designation === position) {
                     foundUser = allUsersData[uid];
+                    activeModalOfficerUid = uid;
                 }
             });
 
@@ -1394,6 +1472,7 @@
             const modalName = document.getElementById('modalOfficerName');
             const modalPos = document.getElementById('modalOfficerPosition');
             const modalContent = document.getElementById('modalOfficerInfoContent');
+            const deleteBtn = document.getElementById('modalDeleteOfficerBtn');
 
             modalPos.textContent = position;
 
@@ -1419,10 +1498,13 @@
                         <span class="detail-info-value">${foundUser.birthday || "N/A"}</span>
                     </div>
                 `;
+
+                if (currentUserRole === 'admin') deleteBtn.classList.remove('hidden');
             } else {
                 modalName.textContent = "Unregistered Officer";
                 modalImg.src = "https://cdn-icons-png.flaticon.com/512/847/847969.png";
                 modalContent.innerHTML = `<p style="text-align:center; color: var(--text-muted); font-size:13px; margin: 20px 0;">No officer has registered for this position yet.</p>`;
+                deleteBtn.classList.add('hidden');
             }
 
             document.getElementById('officerDetailModal').classList.remove('hidden');
@@ -1430,6 +1512,67 @@
 
         window.closeOfficerDetailsModal = function() {
             document.getElementById('officerDetailModal').classList.add('hidden');
+            activeModalOfficerUid = null;
+        };
+
+        // ADMIN: ADD & REMOVE STUDENT MODAL & LOGIC
+        window.openAddStudentModal = function() {
+            document.getElementById('addStudentIdInput').value = "";
+            document.getElementById('addStudentNameInput').value = "";
+            document.getElementById('addStudentModal').classList.remove('hidden');
+        };
+
+        window.closeAddStudentModal = function() {
+            document.getElementById('addStudentModal').classList.add('hidden');
+        };
+
+        window.confirmAddStudent = function() {
+            const sid = document.getElementById('addStudentIdInput').value.trim();
+            const sname = document.getElementById('addStudentNameInput').value.trim().toUpperCase();
+
+            if (!sid || !sname) {
+                alert("Please fill in both Student ID and Full Name.");
+                return;
+            }
+
+            if (currentStudentList.some(s => s.id === sid)) {
+                alert("A student with this ID already exists in the masterlist.");
+                return;
+            }
+
+            if (!confirm(`ADMIN CONFIRMATION:\nAre you sure you want to add "${sname}" (ID: ${sid}) to the tracker roster?`)) {
+                return;
+            }
+
+            currentStudentList.push({ id: sid, name: sname });
+            currentStudentList = sortStudentsAlphabetically(currentStudentList);
+
+            set(ref(db, 'student_masterlist'), currentStudentList)
+                .then(() => {
+                    alert(`Student ${sname} added and roster successfully alphabetized!`);
+                    closeAddStudentModal();
+                })
+                .catch((err) => alert("Failed to add student: " + err.message));
+        };
+
+        window.removeStudentFromRoster = function(studentId, studentName) {
+            if (!confirm(`ADMIN CONFIRMATION:\nAre you sure you want to REMOVE "${studentName}" (ID: ${studentId})?\n\nThis will wipe their entry from the roster.`)) {
+                return;
+            }
+
+            currentStudentList = currentStudentList.filter(s => s.id !== studentId);
+
+            // Wipe records across daily attendance entries in database
+            Object.keys(globalDatabase).forEach(dateKey => {
+                if (globalDatabase[dateKey].records && globalDatabase[dateKey].records[studentId]) {
+                    delete globalDatabase[dateKey].records[studentId];
+                }
+            });
+
+            set(ref(db, 'student_masterlist'), currentStudentList)
+                .then(() => saveDatabaseToDisk())
+                .then(() => alert(`Student ${studentName} removed and wiped from tracker.`))
+                .catch((err) => alert("Failed to remove student: " + err.message));
         };
 
         // Cropper Logic
@@ -1473,6 +1616,8 @@
 
         window.saveOfficerProfile = function() {
             if (!currentUser) return;
+
+            if (!confirm("Are you sure you want to save these profile changes?")) return;
             
             let profileData = {
                 email: currentUser.email,
@@ -1512,7 +1657,7 @@
         }
 
         function saveDatabaseToDisk() {
-            set(ref(db, 'attendance_records'), globalDatabase);
+            return set(ref(db, 'attendance_records'), globalDatabase);
         }
 
         function navigateWeek(daysOffset) {
@@ -1562,9 +1707,14 @@
             const tbody = document.getElementById('dashboardTableBody');
             tbody.innerHTML = '';
 
-            STUDENT_DATA_SOURCE.forEach((student, index) => {
+            currentStudentList.forEach((student, index) => {
                 let tr = document.createElement('tr');
-                tr.innerHTML = `<td>${index + 1}</td><td style="color:var(--text-muted); font-size:11px;">${student.id}</td><td style="font-weight:500; color:#334155;">${student.name}</td>`;
+                
+                let adminDeleteBtnHtml = (currentUserRole === 'admin') 
+                    ? `<button class="delete-student-row-btn" onclick="event.stopPropagation(); removeStudentFromRoster('${student.id}', '${student.name.replace(/'/g, "\\'")}')">✖</button>`
+                    : '';
+
+                tr.innerHTML = `<td>${index + 1}</td><td style="color:var(--text-muted); font-size:11px;">${student.id}</td><td style="font-weight:500; color:#334155;">${student.name} ${adminDeleteBtnHtml}</td>`;
                 
                 datesOfWeek.forEach(date => {
                     let td = document.createElement('td');
@@ -1619,7 +1769,7 @@
                 document.getElementById('fieldPeriodCount').value = existingDayData.periods || "7";
                 document.getElementById('fieldRemarks').value = existingDayData.remarks || "";
 
-                STUDENT_DATA_SOURCE.forEach(s => {
+                currentStudentList.forEach(s => {
                     if (existingDayData.records && existingDayData.records[s.id]) {
                         workingSheetRecords[s.id] = { ...existingDayData.records[s.id] };
                         if (workingSheetRecords[s.id].remark === undefined) workingSheetRecords[s.id].remark = "";
@@ -1632,7 +1782,7 @@
                 document.getElementById('fieldPeriodCount').value = "7";
                 document.getElementById('fieldRemarks').value = "";
 
-                STUDENT_DATA_SOURCE.forEach(s => {
+                currentStudentList.forEach(s => {
                     workingSheetRecords[s.id] = createDefaultClearRow();
                 });
             }
@@ -1670,8 +1820,8 @@
 
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
 
-            STUDENT_DATA_SOURCE.forEach((student, index) => {
-                let stateRow = workingSheetRecords[student.id];
+            currentStudentList.forEach((student, index) => {
+                let stateRow = workingSheetRecords[student.id] || createDefaultClearRow();
                 let tr = document.createElement('tr');
 
                 let targetHasRemarkClass = (stateRow.remark && stateRow.remark.trim().length > 0) ? 'has-student-remark' : '';
@@ -1786,7 +1936,7 @@
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             
             document.getElementById('modalStudentLabel').innerText = `${studentName} | ID: ${studentId}`;
-            let currentSavedText = workingSheetRecords[studentId].remark || "";
+            let currentSavedText = (workingSheetRecords[studentId] && workingSheetRecords[studentId].remark) ? workingSheetRecords[studentId].remark : "";
             
             const textarea = document.getElementById('modalRemarkInput');
             textarea.value = currentSavedText;
@@ -1806,6 +1956,7 @@
             if (!canEdit) return;
 
             let currentTextInputValue = document.getElementById('modalRemarkInput').value;
+            if(!workingSheetRecords[modalActiveStudentId]) workingSheetRecords[modalActiveStudentId] = createDefaultClearRow();
             workingSheetRecords[modalActiveStudentId].remark = currentTextInputValue;
             closeStudentRemarkModal();
             renderSheetEditorRows();
@@ -1815,8 +1966,8 @@
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             if (!canEdit) return;
 
-            if(confirm("Clear daily sheet tracking logs?")) {
-                STUDENT_DATA_SOURCE.forEach(s => {
+            if(confirm("CONFIRM RESET:\nClear all daily sheet tracking logs for this date?")) {
+                currentStudentList.forEach(s => {
                     workingSheetRecords[s.id] = createDefaultClearRow();
                 });
                 renderSheetEditorRows();
@@ -1827,14 +1978,18 @@
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             if (!canEdit) return;
 
+            if (!confirm("Save active attendance sheet entries to database?")) return;
+
             globalDatabase[activeEditingDateStr] = {
                 modality: document.getElementById('fieldModality').value,
                 periods: parseInt(document.getElementById('fieldPeriodCount').value),
                 remarks: document.getElementById('fieldRemarks').value,
                 records: JSON.parse(JSON.stringify(workingSheetRecords))
             };
-            saveDatabaseToDisk();
-            exitToDashboard();
+            saveDatabaseToDisk().then(() => {
+                alert("Attendance sheet saved successfully!");
+                exitToDashboard();
+            });
         }
 
         function exitToDashboard() {
@@ -1862,7 +2017,7 @@
             });
             csvContent += csvHeader + "\r\n";
 
-            STUDENT_DATA_SOURCE.forEach(student => {
+            currentStudentList.forEach(student => {
                 let rowStr = `"${student.id}","${student.name}"`;
                 
                 loggedDates.forEach(date => {
@@ -1906,6 +2061,11 @@
         window.openDeleteAccountModal = openDeleteAccountModal;
         window.closeDeleteAccountModal = closeDeleteAccountModal;
         window.executeAccountDeletion = executeAccountDeletion;
+        window.executeAdminDeleteOfficer = executeAdminDeleteOfficer;
+        window.openAddStudentModal = openAddStudentModal;
+        window.closeAddStudentModal = closeAddStudentModal;
+        window.confirmAddStudent = confirmAddStudent;
+        window.removeStudentFromRoster = removeStudentFromRoster;
     </script>
 </body>
 </html>
