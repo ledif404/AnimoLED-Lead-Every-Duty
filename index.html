@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AnimoLED — Lead Every Duty</title>
     
-    <!-- PWA Installation Support -->
+    <!-- PWA Installation & Cache Prevention Meta Tags -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#004725">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -152,17 +155,25 @@
             background-color: var(--primary-green-hover);
         }
 
+        /* Distinct Auth Toggle Styling */
         .auth-toggle {
             text-align: center;
-            margin-top: 18px;
+            margin-top: 20px;
             font-size: 13px;
             color: var(--text-muted);
         }
 
-        .auth-toggle span {
-            color: var(--primary-green);
-            font-weight: 700;
+        .auth-toggle-btn {
+            color: var(--accent-gold-hover);
+            font-weight: 800;
             cursor: pointer;
+            text-decoration: underline;
+            margin-left: 4px;
+            transition: color 0.2s;
+        }
+
+        .auth-toggle-btn:hover {
+            color: var(--primary-green);
         }
 
         /* Top Bar Navigation */
@@ -326,6 +337,17 @@
         .btn-gold:hover { background-color: var(--accent-gold-hover); }
         .btn-gray { background-color: #e2e8f0; color: #475569; border-color: #cbd5e1; }
         .btn-red { background-color: var(--btn-red); color: white; }
+
+        .permission-notice {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
 
         /* Profile Layout */
         .profile-grid {
@@ -666,20 +688,20 @@
             </div>
             
             <form id="authForm">
-                <!-- Registration Specific Position Selection -->
+                <!-- Position selection only shown during Officer Registration -->
                 <div class="form-group hidden" id="registerPositionGroup">
                     <label>Officer Position</label>
                     <select id="registerPosition">
+                        <option value="Secretary">Secretary</option>
                         <option value="President">President</option>
                         <option value="Vice President">Vice President</option>
-                        <option value="Secretary">Secretary</option>
                         <option value="Treasurer">Treasurer</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label>Email Address</label>
-                    <input type="email" id="authEmail" required placeholder="user@school.edu">
+                    <input type="email" id="authEmail" required placeholder="user@dlszobel.edu.ph">
                 </div>
 
                 <div class="form-group">
@@ -691,7 +713,8 @@
             </form>
 
             <div class="auth-toggle">
-                <span id="authToggleText" onclick="toggleAuthMode()">Need an officer account? Register here</span>
+                <span id="authToggleMessage">Need an officer account?</span>
+                <span id="authToggleBtn" class="auth-toggle-btn" onclick="toggleAuthMode()">Register here</span>
             </div>
         </div>
     </div>
@@ -748,9 +771,13 @@
                     <h2 class="view-title" id="dailySheetHeaderTitle">Attendance Sheet</h2>
                     <div class="btn-set">
                         <button class="btn-ui btn-gray" onclick="exitToDashboard()">← Back</button>
-                        <button class="btn-ui btn-green" onclick="saveActiveSheetToDatabase()">✎ Save Sheet</button>
-                        <button class="btn-ui btn-red" onclick="resetActiveSheetForm()">↺ Reset</button>
+                        <button class="btn-ui btn-green edit-permission-btn" onclick="saveActiveSheetToDatabase()">✎ Save Sheet</button>
+                        <button class="btn-ui btn-red edit-permission-btn" onclick="resetActiveSheetForm()">↺ Reset</button>
                     </div>
+                </div>
+
+                <div id="readOnlyNotice" class="permission-notice hidden">
+                    🔒 View Only Mode: Attendance filing and edits are strictly reserved for the Class Secretary and Main Admin.
                 </div>
 
                 <div class="meta-form-grid">
@@ -924,9 +951,7 @@
                 <span id="modalOfficerPosition" class="role-badge">Position</span>
             </div>
 
-            <div id="modalOfficerInfoContent">
-                <!-- Info rows rendered via JS -->
-            </div>
+            <div id="modalOfficerInfoContent"></div>
 
             <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
                 <button class="btn-ui btn-gray" onclick="closeOfficerDetailsModal()">Close Window</button>
@@ -942,7 +967,7 @@
             <textarea id="modalRemarkInput" placeholder="Write reason (e.g., Medical clinic certificate, late due to heavy traffic)..."></textarea>
             <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
                 <button class="btn-ui btn-gray" onclick="closeStudentRemarkModal()">Cancel</button>
-                <button class="btn-ui btn-green" onclick="saveStudentRemarkModal()">Save Remark</button>
+                <button class="btn-ui btn-green edit-permission-btn" onclick="saveStudentRemarkModal()">Save Remark</button>
             </div>
         </div>
     </div>
@@ -989,9 +1014,16 @@
 
         let currentUser = null;
         let currentUserRole = "officer";
+        let userDesignation = "Secretary";
         let profilePhotoBase64 = "";
         let cropperInstance = null;
         let allUsersData = {};
+
+        // Force cache-busting on app load if requested
+        if (window.location.search.includes('force_refresh=true')) {
+            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+            window.history.replaceState({path: cleanUrl}, '', cleanUrl);
+        }
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -1069,18 +1101,16 @@
                 document.getElementById('appContainer').classList.remove('hidden');
                 document.getElementById('profEmail').value = user.email;
                 
-                // Determine Admin status strictly based on email
                 currentUserRole = (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? "admin" : "officer";
-                document.getElementById('displayUserRole').textContent = currentUserRole === "admin" ? "Main Admin" : "Officer";
 
-                configureProfileFormByRole(currentUserRole);
-
-                // Fetch current user data and all users directory
                 onValue(ref(db, 'users'), (snapshot) => {
                     allUsersData = snapshot.val() || {};
                     const userData = allUsersData[user.uid];
 
                     if (userData) {
+                        userDesignation = userData.designation || (currentUserRole === "admin" ? "Main Admin" : "Officer");
+                        document.getElementById('displayUserRole').textContent = userDesignation;
+
                         document.getElementById('profFullName').value = userData.fullName || "";
                         document.getElementById('profMobile').value = userData.mobile || "";
                         document.getElementById('profBirthday').value = userData.birthday || "";
@@ -1091,7 +1121,7 @@
                             document.getElementById('profCluster').value = userData.cluster || "";
                             document.getElementById('profSubject').value = userData.subject || "";
                         } else {
-                            document.getElementById('profDesignation').value = userData.designation || "Officer";
+                            document.getElementById('profDesignation').value = userDesignation;
                             document.getElementById('profStudentId').value = userData.studentId || "";
                         }
 
@@ -1100,6 +1130,9 @@
                             document.getElementById('avatarPreview').src = userData.photoBase64;
                         }
                     }
+
+                    configureProfileFormByRole(currentUserRole);
+                    applyAttendancePermissions();
 
                     if (currentUserRole === 'admin') {
                         updateAdminOfficersDirectory();
@@ -1129,6 +1162,27 @@
             }
         }
 
+        // Apply Edit Permissions based on role (Secretary and Admin can edit; others read-only)
+        function applyAttendancePermissions() {
+            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
+            const editButtons = document.querySelectorAll('.edit-permission-btn');
+            const noticeBox = document.getElementById('readOnlyNotice');
+            
+            if (canEdit) {
+                editButtons.forEach(btn => btn.classList.remove('hidden'));
+                if (noticeBox) noticeBox.classList.add('hidden');
+            } else {
+                editButtons.forEach(btn => btn.classList.add('hidden'));
+                if (noticeBox) noticeBox.classList.remove('hidden');
+            }
+        }
+
+        // Helper function for automatic forced refresh on Auth events
+        function triggerForceRefresh() {
+            const timeStamp = new Date().getTime();
+            window.location.href = window.location.pathname + "?force_refresh=true&t=" + timeStamp;
+        }
+
         // Form Submit Login/Register
         document.getElementById('authForm').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -1143,11 +1197,16 @@
                             email: email,
                             role: "officer",
                             designation: registerPosition
+                        }).then(() => {
+                            triggerForceRefresh();
                         });
                     })
                     .catch((error) => alert(error.message));
             } else {
                 signInWithEmailAndPassword(auth, email, password)
+                    .then(() => {
+                        triggerForceRefresh();
+                    })
                     .catch((error) => alert(error.message));
             }
         });
@@ -1157,16 +1216,22 @@
             if (isSignUpMode) {
                 document.getElementById('registerPositionGroup').classList.remove('hidden');
                 document.getElementById('authSubmitBtn').textContent = "Register Officer Account";
-                document.getElementById('authToggleText').textContent = "Already have an account? Sign In";
+                document.getElementById('authToggleMessage').textContent = "Already have an account?";
+                document.getElementById('authToggleBtn').textContent = "Sign in";
+                document.getElementById('authEmail').placeholder = "user@dlszobel.edu.ph";
             } else {
                 document.getElementById('registerPositionGroup').classList.add('hidden');
                 document.getElementById('authSubmitBtn').textContent = "Sign In";
-                document.getElementById('authToggleText').textContent = "Need an officer account? Register here";
+                document.getElementById('authToggleMessage').textContent = "Need an officer account?";
+                document.getElementById('authToggleBtn').textContent = "Register here";
+                document.getElementById('authEmail').placeholder = "user@dlszobel.edu.ph";
             }
         };
 
         window.handleLogout = function() {
-            signOut(auth);
+            signOut(auth).then(() => {
+                triggerForceRefresh();
+            });
         };
 
         window.showView = function(viewName) {
@@ -1496,6 +1561,8 @@
             let aggregatedGlobalTardiness = 0;
             let aggregatedGlobalExcused = 0;
 
+            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
+
             STUDENT_DATA_SOURCE.forEach((student, index) => {
                 let stateRow = workingSheetRecords[student.id];
                 let tr = document.createElement('tr');
@@ -1508,7 +1575,7 @@
                         <span style="font-weight: 500; color:#334155;">${student.name}</span>
                         <button class="bubble-comment-btn ${targetHasRemarkClass}" data-id="${student.id}" data-name="${student.name}">💬</button>
                     </td>
-                    <td style="text-align:center;"><button class="all-row-select" data-id="${student.id}">✓</button></td>
+                    <td style="text-align:center;"><button class="all-row-select" data-id="${student.id}" ${!canEdit ? 'disabled style="opacity:0.5;"' : ''}>✓</button></td>
                 `;
 
                 rowHtml += `<td><div class="click-status-cell ${getStatusClassStyle(stateRow.hr)}" data-id="${student.id}" data-key="hr">${stateRow.hr}</div></td>`;
@@ -1568,8 +1635,11 @@
         }
 
         function catchDynamicRowEventListeners() {
+            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
+
             document.querySelectorAll('.click-status-cell').forEach(el => {
                 el.onclick = function() {
+                    if (!canEdit) return; // Prevent edits for Non-Secretary officers
                     let sid = this.getAttribute('data-id');
                     let key = this.getAttribute('data-key');
                     let currentVal = workingSheetRecords[sid][key] || "✓";
@@ -1581,6 +1651,7 @@
 
             document.querySelectorAll('.all-row-select').forEach(el => {
                 el.onclick = function() {
+                    if (!canEdit) return;
                     let sid = this.getAttribute('data-id');
                     let currentHrVal = workingSheetRecords[sid].hr;
                     let nextIdx = (CYCLIC_STATES.indexOf(currentHrVal) + 1) % CYCLIC_STATES.length;
