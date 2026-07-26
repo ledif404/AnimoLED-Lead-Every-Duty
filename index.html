@@ -611,6 +611,7 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(2px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -622,12 +623,13 @@
         .modal-window {
             background: #ffffff;
             padding: 24px;
-            border-radius: 8px;
+            border-radius: 10px;
             width: 100%;
             max-width: 440px;
-            border-top: 4px solid var(--accent-gold);
+            border-top: 5px solid var(--accent-gold);
             max-height: 90vh;
             overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
         }
 
         .modal-window textarea {
@@ -970,6 +972,44 @@
         </div>
     </div>
 
+    <!-- THEMED GENERAL ALERT MODAL -->
+    <div id="appAlertModal" class="modal-backdrop hidden">
+        <div class="modal-window">
+            <h3 id="appAlertTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Notice</h3>
+            <div id="appAlertMessage" style="font-size: 13px; color: var(--text-dark); line-height: 1.5; white-space: pre-wrap;"></div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 18px;">
+                <button class="btn-ui btn-green" onclick="closeAppAlertModal()">Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- THEMED CONFIRMATION MODAL -->
+    <div id="appConfirmModal" class="modal-backdrop hidden">
+        <div class="modal-window">
+            <h3 id="appConfirmTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Confirmation Required</h3>
+            <div id="appConfirmMessage" style="font-size: 13px; color: var(--text-dark); line-height: 1.5; white-space: pre-wrap;"></div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
+                <button class="btn-ui btn-gray" onclick="closeAppConfirmModal(false)">Cancel</button>
+                <button id="appConfirmOkBtn" class="btn-ui btn-green" onclick="closeAppConfirmModal(true)">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- THEMED PROMPT INPUT MODAL -->
+    <div id="appPromptModal" class="modal-backdrop hidden">
+        <div class="modal-window">
+            <h3 id="appPromptTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Enter Information</h3>
+            <div id="appPromptMessage" style="font-size: 13px; color: var(--text-dark); margin-bottom: 12px; line-height: 1.5;"></div>
+            <div class="form-group">
+                <input type="text" id="appPromptInput" placeholder="Type response here...">
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
+                <button class="btn-ui btn-gray" onclick="closeAppPromptModal(false)">Cancel</button>
+                <button class="btn-ui btn-green" onclick="closeAppPromptModal(true)">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ADMIN: ADD NEW STUDENT MODAL -->
     <div id="addStudentModal" class="modal-backdrop hidden">
         <div class="modal-window">
@@ -994,7 +1034,7 @@
 
     <!-- ADMIN: MODIFY STUDENT MODAL (EDIT & REMOVE) -->
     <div id="modifyStudentModal" class="modal-backdrop hidden">
-        <div class="modal-window" style="border-top: 4px solid var(--accent-gold);">
+        <div class="modal-window" style="border-top: 5px solid var(--accent-gold);">
             <h3 style="margin: 0 0 6px 0; color: var(--primary-green);">✏️ Modify Student Roster</h3>
             <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
                 Select a student from the dropdown list to edit their name or permanently remove them from the system.
@@ -1015,7 +1055,7 @@
 
     <!-- OFFICER: DELETE ACCOUNT CONFIRMATION & MAGIC PIN MODAL -->
     <div id="deleteAccountModal" class="modal-backdrop hidden">
-        <div class="modal-window" style="border-top: 4px solid var(--btn-red);">
+        <div class="modal-window" style="border-top: 5px solid var(--btn-red);">
             <h3 style="margin: 0 0 6px 0; color: var(--btn-red);">⚠️ Confirm Account Deletion</h3>
             <p style="font-size: 13px; color: var(--text-dark); margin: 0 0 14px 0; line-height: 1.5;">
                 This action will permanently reset and wipe your profile details from the system. No records or details of your account will remain on the Admin panel.
@@ -1108,7 +1148,6 @@
         const ADMIN_EMAIL = "tc@gmail.com";
         const MAGIC_PIN = "P1R8";
 
-        // Strictly allowed officer registration email mapping
         const ALLOWED_OFFICER_EMAILS = {
             "President": ["n2024008@dlszobel.edu.ph", "pres@gmail.com"],
             "Vice President": ["n2024040@dlszobel.edu.ph", "vp@gmail.com"],
@@ -1123,6 +1162,9 @@
         let cropperInstance = null;
         let allUsersData = {};
         let activeModalOfficerUid = null;
+
+        let confirmModalCallback = null;
+        let promptModalCallback = null;
 
         const DEFAULT_STUDENT_MASTERLIST = [
             { id: "N2024075", name: "ANCHETA, BRIANNAH JESSICA AMABLE" },
@@ -1168,6 +1210,59 @@
         ];
 
         let currentStudentList = [];
+
+        // Dynamic Themed Dialog Replacement Helpers
+        window.showAppAlert = function(title, message) {
+            document.getElementById('appAlertTitle').textContent = title || "Notice";
+            document.getElementById('appAlertMessage').textContent = message || "";
+            document.getElementById('appAlertModal').classList.remove('hidden');
+        };
+
+        window.closeAppAlertModal = function() {
+            document.getElementById('appAlertModal').classList.add('hidden');
+        };
+
+        window.showAppConfirm = function(title, message, isDanger, callback) {
+            document.getElementById('appConfirmTitle').textContent = title || "Confirmation Required";
+            document.getElementById('appConfirmMessage').textContent = message || "";
+            confirmModalCallback = callback;
+            
+            const okBtn = document.getElementById('appConfirmOkBtn');
+            if(isDanger) {
+                okBtn.className = "btn-ui btn-red";
+            } else {
+                okBtn.className = "btn-ui btn-green";
+            }
+
+            document.getElementById('appConfirmModal').classList.remove('hidden');
+        };
+
+        window.closeAppConfirmModal = function(result) {
+            document.getElementById('appConfirmModal').classList.add('hidden');
+            if (confirmModalCallback) {
+                confirmModalCallback(result);
+                confirmModalCallback = null;
+            }
+        };
+
+        window.showAppPrompt = function(title, message, defaultValue, callback) {
+            document.getElementById('appPromptTitle').textContent = title || "Input Required";
+            document.getElementById('appPromptMessage').textContent = message || "";
+            const input = document.getElementById('appPromptInput');
+            input.value = defaultValue || "";
+            promptModalCallback = callback;
+            document.getElementById('appPromptModal').classList.remove('hidden');
+            input.focus();
+        };
+
+        window.closeAppPromptModal = function(result) {
+            document.getElementById('appPromptModal').classList.add('hidden');
+            if (promptModalCallback) {
+                const val = document.getElementById('appPromptInput').value;
+                promptModalCallback(result ? val : null);
+                promptModalCallback = null;
+            }
+        };
 
         // Force cache-busting on app load if requested
         if (window.location.search.includes('force_refresh=true')) {
@@ -1333,7 +1428,7 @@
                 const isEmailAllowed = allowedList.some(allowedEmail => allowedEmail.toLowerCase() === email);
 
                 if (!isEmailAllowed) {
-                    alert(`REGISTRATION REJECTED:\nThe email "${email}" is not authorized to register for the position of ${registerPosition}.\n\nPlease check your email address or contact your adviser.`);
+                    showAppAlert("Registration Rejected", `The email address "${email}" is not authorized to register for the position of ${registerPosition}.\n\nPlease check your credentials or consult your class adviser.`);
                     return;
                 }
 
@@ -1347,13 +1442,13 @@
                             triggerForceRefresh();
                         });
                     })
-                    .catch((error) => alert(error.message));
+                    .catch((error) => showAppAlert("Registration Error", error.message));
             } else {
                 signInWithEmailAndPassword(auth, email, password)
                     .then(() => {
                         triggerForceRefresh();
                     })
-                    .catch((error) => alert(error.message));
+                    .catch((error) => showAppAlert("Authentication Error", error.message));
             }
         });
 
@@ -1411,22 +1506,23 @@
             const enteredPin = document.getElementById('deleteMagicPinInput').value;
             
             if (enteredPin !== MAGIC_PIN) {
-                alert("The magic pin is not correct. Account deletion canceled.");
+                showAppAlert("Invalid Magic PIN", "The magic pin entered is not correct. Account deletion canceled.");
                 return;
             }
 
-            if (!confirm("ARE YOU SURE YOU WANT TO DELETE THIS OFFICER ACCOUNT?\n\nThis action cannot be undone.")) return;
+            showAppConfirm("Confirm Permanent Deletion", "Are you completely sure you want to delete this officer account? This action cannot be undone.", true, (confirmed) => {
+                if (!confirmed) return;
+                if (!currentUser) return;
+                const uidToDelete = currentUser.uid;
 
-            if (!currentUser) return;
-            const uidToDelete = currentUser.uid;
-
-            remove(ref(db, 'users/' + uidToDelete))
-                .then(() => {
-                    deleteUser(currentUser)
-                        .then(() => finishAccountWipeFlow())
-                        .catch(() => finishAccountWipeFlow());
-                })
-                .catch((err) => alert("Failed to wipe database record: " + err.message));
+                remove(ref(db, 'users/' + uidToDelete))
+                    .then(() => {
+                        deleteUser(currentUser)
+                            .then(() => finishAccountWipeFlow())
+                            .catch(() => finishAccountWipeFlow());
+                    })
+                    .catch((err) => showAppAlert("System Error", "Failed to wipe database record: " + err.message));
+            });
         };
 
         function finishAccountWipeFlow() {
@@ -1441,14 +1537,16 @@
         window.executeAdminDeleteOfficer = function() {
             if (!activeModalOfficerUid) return;
 
-            if (confirm("ADMIN CONFIRMATION:\nAre you sure you want to delete this officer's account profile from the system?")) {
+            showAppConfirm("Admin Confirmation", "Are you sure you want to delete and wipe this officer's account profile from the system?", true, (confirmed) => {
+                if (!confirmed) return;
+
                 remove(ref(db, 'users/' + activeModalOfficerUid))
                     .then(() => {
-                        alert("Officer account details deleted and wiped successfully!");
                         closeOfficerDetailsModal();
+                        showAppAlert("Account Wiped", "Officer account details have been successfully deleted from the directory.");
                     })
-                    .catch((err) => alert("Failed to delete officer: " + err.message));
-            }
+                    .catch((err) => showAppAlert("Error", "Failed to delete officer: " + err.message));
+            });
         };
 
         // Populate Officers Grid for Admin
@@ -1552,28 +1650,28 @@
             const sname = document.getElementById('addStudentNameInput').value.trim().toUpperCase();
 
             if (!sid || !sname) {
-                alert("Please fill in both Student ID and Full Name.");
+                showAppAlert("Incomplete Form", "Please fill in both Student ID and Full Name.");
                 return;
             }
 
             if (currentStudentList.some(s => s.id === sid)) {
-                alert("A student with this ID already exists in the masterlist.");
+                showAppAlert("Duplicate ID", "A student with this ID number already exists in the masterlist.");
                 return;
             }
 
-            if (!confirm(`ADMIN CONFIRMATION:\nAre you sure you want to add "${sname}" (ID: ${sid}) to the tracker roster?`)) {
-                return;
-            }
+            showAppConfirm("Add Student", `Are you sure you want to add "${sname}" (ID: ${sid}) to the roster?`, false, (confirmed) => {
+                if (!confirmed) return;
 
-            currentStudentList.push({ id: sid, name: sname });
-            currentStudentList = sortStudentsAlphabetically(currentStudentList);
+                currentStudentList.push({ id: sid, name: sname });
+                currentStudentList = sortStudentsAlphabetically(currentStudentList);
 
-            set(ref(db, 'student_masterlist'), currentStudentList)
-                .then(() => {
-                    alert(`Student ${sname} added and roster successfully alphabetized!`);
-                    closeAddStudentModal();
-                })
-                .catch((err) => alert("Failed to add student: " + err.message));
+                set(ref(db, 'student_masterlist'), currentStudentList)
+                    .then(() => {
+                        closeAddStudentModal();
+                        showAppAlert("Student Added", `Student ${sname} has been added and auto-alphabetized in the roster!`);
+                    })
+                    .catch((err) => showAppAlert("Database Error", "Failed to add student: " + err.message));
+            });
         };
 
         // ADMIN: MODIFY STUDENT MODAL (EDIT NAME & REMOVE DROPDOWN)
@@ -1582,7 +1680,7 @@
             selectEl.innerHTML = '';
 
             if (currentStudentList.length === 0) {
-                alert("No students currently found in the roster.");
+                showAppAlert("Empty Roster", "No students currently found in the roster.");
                 return;
             }
 
@@ -1607,29 +1705,29 @@
             const selectedStudent = currentStudentList.find(s => s.id === studentId);
             if (!selectedStudent) return;
 
-            const updatedName = prompt(`EDIT STUDENT NAME:\n\nEnter the updated full name for ID "${studentId}":`, selectedStudent.name);
-            
-            if (updatedName === null) return;
-            const cleanUpdatedName = updatedName.trim().toUpperCase();
+            showAppPrompt("Edit Student Name", `Enter the updated full name for ID "${studentId}":`, selectedStudent.name, (updatedName) => {
+                if (updatedName === null) return;
+                const cleanUpdatedName = updatedName.trim().toUpperCase();
 
-            if (!cleanUpdatedName) {
-                alert("Student name cannot be empty.");
-                return;
-            }
+                if (!cleanUpdatedName) {
+                    showAppAlert("Invalid Input", "Student name cannot be empty.");
+                    return;
+                }
 
-            if (!confirm(`ADMIN CONFIRMATION:\nAre you sure you want to rename "${selectedStudent.name}" to "${cleanUpdatedName}"?`)) {
-                return;
-            }
+                showAppConfirm("Confirm Name Change", `Are you sure you want to rename "${selectedStudent.name}" to "${cleanUpdatedName}"?`, false, (confirmed) => {
+                    if (!confirmed) return;
 
-            selectedStudent.name = cleanUpdatedName;
-            currentStudentList = sortStudentsAlphabetically(currentStudentList);
+                    selectedStudent.name = cleanUpdatedName;
+                    currentStudentList = sortStudentsAlphabetically(currentStudentList);
 
-            set(ref(db, 'student_masterlist'), currentStudentList)
-                .then(() => {
-                    alert("Student name updated and roster re-alphabetized successfully!");
-                    closeModifyStudentModal();
-                })
-                .catch((err) => alert("Failed to update student name: " + err.message));
+                    set(ref(db, 'student_masterlist'), currentStudentList)
+                        .then(() => {
+                            closeModifyStudentModal();
+                            showAppAlert("Update Success", "Student name updated and roster re-alphabetized successfully!");
+                        })
+                        .catch((err) => showAppAlert("Error", "Failed to update student name: " + err.message));
+                });
+            });
         };
 
         window.confirmRemoveStudentFromDropdown = function() {
@@ -1639,26 +1737,25 @@
             const selectedStudent = currentStudentList.find(s => s.id === studentId);
             if (!selectedStudent) return;
 
-            if (!confirm(`ADMIN CONFIRMATION:\nAre you sure you want to REMOVE "${selectedStudent.name}" (ID: ${studentId})?\n\nThis action will permanently wipe their attendance logs.`)) {
-                return;
-            }
+            showAppConfirm("Remove Student", `Are you sure you want to REMOVE "${selectedStudent.name}" (ID: ${studentId})?\n\nThis action will permanently wipe their attendance logs.`, true, (confirmed) => {
+                if (!confirmed) return;
 
-            currentStudentList = currentStudentList.filter(s => s.id !== studentId);
+                currentStudentList = currentStudentList.filter(s => s.id !== studentId);
 
-            // Wipe records across daily attendance entries in database
-            Object.keys(globalDatabase).forEach(dateKey => {
-                if (globalDatabase[dateKey].records && globalDatabase[dateKey].records[studentId]) {
-                    delete globalDatabase[dateKey].records[studentId];
-                }
+                Object.keys(globalDatabase).forEach(dateKey => {
+                    if (globalDatabase[dateKey].records && globalDatabase[dateKey].records[studentId]) {
+                        delete globalDatabase[dateKey].records[studentId];
+                    }
+                });
+
+                set(ref(db, 'student_masterlist'), currentStudentList)
+                    .then(() => saveDatabaseToDisk())
+                    .then(() => {
+                        closeModifyStudentModal();
+                        showAppAlert("Student Removed", `Student ${selectedStudent.name} has been removed and wiped from the system.`);
+                    })
+                    .catch((err) => showAppAlert("Error", "Failed to remove student: " + err.message));
             });
-
-            set(ref(db, 'student_masterlist'), currentStudentList)
-                .then(() => saveDatabaseToDisk())
-                .then(() => {
-                    alert(`Student ${selectedStudent.name} removed and wiped from tracker.`);
-                    closeModifyStudentModal();
-                })
-                .catch((err) => alert("Failed to remove student: " + err.message));
         };
 
         // Cropper Logic
@@ -1703,30 +1800,32 @@
         window.saveOfficerProfile = function() {
             if (!currentUser) return;
 
-            if (!confirm("Are you sure you want to save these profile changes?")) return;
-            
-            let profileData = {
-                email: currentUser.email,
-                role: currentUserRole,
-                fullName: document.getElementById('profFullName').value,
-                mobile: document.getElementById('profMobile').value,
-                birthday: document.getElementById('profBirthday').value,
-                photoBase64: profilePhotoBase64
-            };
+            showAppConfirm("Save Profile", "Are you sure you want to save these profile changes?", false, (confirmed) => {
+                if (!confirmed) return;
 
-            if (currentUserRole === 'admin') {
-                profileData.department = document.getElementById('profDepartment').value;
-                profileData.unit = document.getElementById('profUnit').value;
-                profileData.cluster = document.getElementById('profCluster').value;
-                profileData.subject = document.getElementById('profSubject').value;
-            } else {
-                profileData.designation = document.getElementById('profDesignation').value;
-                profileData.studentId = document.getElementById('profStudentId').value;
-            }
+                let profileData = {
+                    email: currentUser.email,
+                    role: currentUserRole,
+                    fullName: document.getElementById('profFullName').value,
+                    mobile: document.getElementById('profMobile').value,
+                    birthday: document.getElementById('profBirthday').value,
+                    photoBase64: profilePhotoBase64
+                };
 
-            set(ref(db, 'users/' + currentUser.uid), profileData)
-                .then(() => alert("Profile information updated successfully!"))
-                .catch((err) => alert("Failed to save profile: " + err.message));
+                if (currentUserRole === 'admin') {
+                    profileData.department = document.getElementById('profDepartment').value;
+                    profileData.unit = document.getElementById('profUnit').value;
+                    profileData.cluster = document.getElementById('profCluster').value;
+                    profileData.subject = document.getElementById('profSubject').value;
+                } else {
+                    profileData.designation = document.getElementById('profDesignation').value;
+                    profileData.studentId = document.getElementById('profStudentId').value;
+                }
+
+                set(ref(db, 'users/' + currentUser.uid), profileData)
+                    .then(() => showAppAlert("Profile Saved", "Your profile information has been updated successfully!"))
+                    .catch((err) => showAppAlert("Save Failed", "Failed to save profile: " + err.message));
+            });
         };
 
         function bindDatabaseSync() {
@@ -2047,29 +2146,32 @@
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             if (!canEdit) return;
 
-            if(confirm("CONFIRM RESET:\nClear all daily sheet tracking logs for this date?")) {
+            showAppConfirm("Confirm Reset", "Are you sure you want to clear all daily sheet tracking logs for this date?", true, (confirmed) => {
+                if (!confirmed) return;
                 currentStudentList.forEach(s => {
                     workingSheetRecords[s.id] = createDefaultClearRow();
                 });
                 renderSheetEditorRows();
-            }
+            });
         }
 
         function saveActiveSheetToDatabase() {
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             if (!canEdit) return;
 
-            if (!confirm("Save active attendance sheet entries to database?")) return;
+            showAppConfirm("Save Attendance", "Are you sure you want to save the active attendance sheet entries to the database?", false, (confirmed) => {
+                if (!confirmed) return;
 
-            globalDatabase[activeEditingDateStr] = {
-                modality: document.getElementById('fieldModality').value,
-                periods: parseInt(document.getElementById('fieldPeriodCount').value),
-                remarks: document.getElementById('fieldRemarks').value,
-                records: JSON.parse(JSON.stringify(workingSheetRecords))
-            };
-            saveDatabaseToDisk().then(() => {
-                alert("Attendance sheet saved successfully!");
-                exitToDashboard();
+                globalDatabase[activeEditingDateStr] = {
+                    modality: document.getElementById('fieldModality').value,
+                    periods: parseInt(document.getElementById('fieldPeriodCount').value),
+                    remarks: document.getElementById('fieldRemarks').value,
+                    records: JSON.parse(JSON.stringify(workingSheetRecords))
+                };
+                saveDatabaseToDisk().then(() => {
+                    showAppAlert("Success", "Attendance sheet saved successfully!");
+                    exitToDashboard();
+                });
             });
         }
 
@@ -2081,7 +2183,7 @@
         function exportDataToSpreadsheet() {
             const loggedDates = Object.keys(globalDatabase).sort();
             if (loggedDates.length === 0) {
-                alert("No saved attendance records found to export.");
+                showAppAlert("Export Error", "No saved attendance records were found in the database to export.");
                 return;
             }
 
@@ -2150,6 +2252,9 @@
         window.closeModifyStudentModal = closeModifyStudentModal;
         window.executeEditStudentName = executeEditStudentName;
         window.confirmRemoveStudentFromDropdown = confirmRemoveStudentFromDropdown;
+        window.closeAppAlertModal = closeAppAlertModal;
+        window.closeAppConfirmModal = closeAppConfirmModal;
+        window.closeAppPromptModal = closeAppPromptModal;
     </script>
 </body>
 </html>
