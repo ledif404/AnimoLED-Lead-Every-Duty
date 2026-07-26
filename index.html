@@ -620,6 +620,11 @@
             box-sizing: border-box;
         }
 
+        /* Top-level System Alerts, Confirms, and Prompts Overlay Stacking Fix */
+        .top-dialog-modal {
+            z-index: 10000 !important;
+        }
+
         .modal-window {
             background: #ffffff;
             padding: 24px;
@@ -973,7 +978,7 @@
     </div>
 
     <!-- THEMED GENERAL ALERT MODAL -->
-    <div id="appAlertModal" class="modal-backdrop hidden">
+    <div id="appAlertModal" class="modal-backdrop top-dialog-modal hidden">
         <div class="modal-window">
             <h3 id="appAlertTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Notice</h3>
             <div id="appAlertMessage" style="font-size: 13px; color: var(--text-dark); line-height: 1.5; white-space: pre-wrap;"></div>
@@ -984,7 +989,7 @@
     </div>
 
     <!-- THEMED CONFIRMATION MODAL -->
-    <div id="appConfirmModal" class="modal-backdrop hidden">
+    <div id="appConfirmModal" class="modal-backdrop top-dialog-modal hidden">
         <div class="modal-window">
             <h3 id="appConfirmTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Confirmation Required</h3>
             <div id="appConfirmMessage" style="font-size: 13px; color: var(--text-dark); line-height: 1.5; white-space: pre-wrap;"></div>
@@ -996,7 +1001,7 @@
     </div>
 
     <!-- THEMED PROMPT INPUT MODAL -->
-    <div id="appPromptModal" class="modal-backdrop hidden">
+    <div id="appPromptModal" class="modal-backdrop top-dialog-modal hidden">
         <div class="modal-window">
             <h3 id="appPromptTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Enter Information</h3>
             <div id="appPromptMessage" style="font-size: 13px; color: var(--text-dark); margin-bottom: 12px; line-height: 1.5;"></div>
