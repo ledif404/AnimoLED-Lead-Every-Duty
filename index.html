@@ -597,23 +597,6 @@
             font-weight: bold;
         }
 
-        .delete-student-row-btn {
-            background: #fee2e2;
-            color: #ef4444;
-            border: 1px solid #fca5a5;
-            border-radius: 4px;
-            cursor: pointer;
-            padding: 2px 6px;
-            font-size: 11px;
-            margin-left: 6px;
-            font-weight: bold;
-        }
-
-        .delete-student-row-btn:hover {
-            background: #ef4444;
-            color: #ffffff;
-        }
-
         .badge-metric {
             background-color: #f1f5f9;
             padding: 3px 6px;
@@ -787,6 +770,7 @@
                     <h2 class="view-title" id="weeklyRangeTitle">Attendance Summary</h2>
                     <div class="btn-set">
                         <button class="btn-ui btn-green admin-only-field hidden" onclick="openAddStudentModal()">➕ Add Student</button>
+                        <button class="btn-ui btn-red admin-only-field hidden" onclick="openRemoveStudentModal()">➖ Remove Student</button>
                         <button class="btn-ui btn-gold" onclick="exportDataToSpreadsheet()">📊 Export CSV</button>
                         <button class="btn-ui btn-gray" onclick="navigateWeek(-7)">← Prev</button>
                         <button class="btn-ui btn-green" onclick="navigateWeek(7)">Next →</button>
@@ -1004,6 +988,26 @@
             <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
                 <button class="btn-ui btn-gray" onclick="closeAddStudentModal()">Cancel</button>
                 <button class="btn-ui btn-green" onclick="confirmAddStudent()">Add & Alphabetize</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN: REMOVE STUDENT MODAL -->
+    <div id="removeStudentModal" class="modal-backdrop hidden">
+        <div class="modal-window" style="border-top: 4px solid var(--btn-red);">
+            <h3 style="margin: 0 0 6px 0; color: var(--btn-red);">➖ Remove Student from Tracker</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                Select a student to delete from the class roster. This will permanently wipe their attendance entries from the system.
+            </p>
+            <div class="form-group">
+                <label style="color: var(--btn-red);">Select Student</label>
+                <select id="removeStudentDropdown">
+                    <!-- Dynamic option list rendered via JS -->
+                </select>
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
+                <button class="btn-ui btn-gray" onclick="closeRemoveStudentModal()">Cancel</button>
+                <button class="btn-ui btn-red" onclick="confirmRemoveStudentFromDropdown()">Remove Student</button>
             </div>
         </div>
     </div>
@@ -1515,7 +1519,7 @@
             activeModalOfficerUid = null;
         };
 
-        // ADMIN: ADD & REMOVE STUDENT MODAL & LOGIC
+        // ADMIN: ADD STUDENT MODAL
         window.openAddStudentModal = function() {
             document.getElementById('addStudentIdInput').value = "";
             document.getElementById('addStudentNameInput').value = "";
@@ -1555,8 +1559,38 @@
                 .catch((err) => alert("Failed to add student: " + err.message));
         };
 
-        window.removeStudentFromRoster = function(studentId, studentName) {
-            if (!confirm(`ADMIN CONFIRMATION:\nAre you sure you want to REMOVE "${studentName}" (ID: ${studentId})?\n\nThis will wipe their entry from the roster.`)) {
+        // ADMIN: REMOVE STUDENT MODAL (DROPDOWN-BASED)
+        window.openRemoveStudentModal = function() {
+            const selectEl = document.getElementById('removeStudentDropdown');
+            selectEl.innerHTML = '';
+
+            if (currentStudentList.length === 0) {
+                alert("No students currently found in the roster.");
+                return;
+            }
+
+            currentStudentList.forEach(student => {
+                const opt = document.createElement('option');
+                opt.value = student.id;
+                opt.textContent = `${student.name} (${student.id})`;
+                selectEl.appendChild(opt);
+            });
+
+            document.getElementById('removeStudentModal').classList.remove('hidden');
+        };
+
+        window.closeRemoveStudentModal = function() {
+            document.getElementById('removeStudentModal').classList.add('hidden');
+        };
+
+        window.confirmRemoveStudentFromDropdown = function() {
+            const selectEl = document.getElementById('removeStudentDropdown');
+            const studentId = selectEl.value;
+
+            const selectedStudent = currentStudentList.find(s => s.id === studentId);
+            if (!selectedStudent) return;
+
+            if (!confirm(`ADMIN CONFIRMATION:\nAre you sure you want to REMOVE "${selectedStudent.name}" (ID: ${studentId})?\n\nThis action will permanently wipe their attendance logs.`)) {
                 return;
             }
 
@@ -1571,7 +1605,10 @@
 
             set(ref(db, 'student_masterlist'), currentStudentList)
                 .then(() => saveDatabaseToDisk())
-                .then(() => alert(`Student ${studentName} removed and wiped from tracker.`))
+                .then(() => {
+                    alert(`Student ${selectedStudent.name} removed and wiped from tracker.`);
+                    closeRemoveStudentModal();
+                })
                 .catch((err) => alert("Failed to remove student: " + err.message));
         };
 
@@ -1709,12 +1746,7 @@
 
             currentStudentList.forEach((student, index) => {
                 let tr = document.createElement('tr');
-                
-                let adminDeleteBtnHtml = (currentUserRole === 'admin') 
-                    ? `<button class="delete-student-row-btn" onclick="event.stopPropagation(); removeStudentFromRoster('${student.id}', '${student.name.replace(/'/g, "\\'")}')">✖</button>`
-                    : '';
-
-                tr.innerHTML = `<td>${index + 1}</td><td style="color:var(--text-muted); font-size:11px;">${student.id}</td><td style="font-weight:500; color:#334155;">${student.name} ${adminDeleteBtnHtml}</td>`;
+                tr.innerHTML = `<td>${index + 1}</td><td style="color:var(--text-muted); font-size:11px;">${student.id}</td><td style="font-weight:500; color:#334155;">${student.name}</td>`;
                 
                 datesOfWeek.forEach(date => {
                     let td = document.createElement('td');
@@ -2065,7 +2097,9 @@
         window.openAddStudentModal = openAddStudentModal;
         window.closeAddStudentModal = closeAddStudentModal;
         window.confirmAddStudent = confirmAddStudent;
-        window.removeStudentFromRoster = removeStudentFromRoster;
+        window.openRemoveStudentModal = openRemoveStudentModal;
+        window.closeRemoveStudentModal = closeRemoveStudentModal;
+        window.confirmRemoveStudentFromDropdown = confirmRemoveStudentFromDropdown;
     </script>
 </body>
 </html>
