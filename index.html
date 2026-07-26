@@ -17,15 +17,12 @@
             /* Lasallian-Inspired Color Palette */
             --primary-green: #004725;
             --primary-green-hover: #00331a;
-            --accent-emerald: #059669;
             --accent-gold: #f59e0b;
             --accent-gold-hover: #d97706;
             
             --btn-red: #ef4444;
-            --btn-red-hover: #dc2626;
-            --bg-light: #f8fafc;
             --border-gray: #cbd5e1;
-            --text-dark: #0f172a;
+            --text-dark: #1e293b;
             --text-muted: #64748b;
             
             /* Status Colors */
@@ -43,7 +40,10 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f1f5f9;
+            /* Writing Pad / Paper Texture Background */
+            background-color: #fbfbf8;
+            background-image: linear-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 100% 28px;
             color: var(--text-dark);
             margin: 0;
             padding: 0;
@@ -79,8 +79,9 @@
             margin-bottom: 24px;
         }
 
+        /* Original Logo Styling for Auth Page */
         .brand-title {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 800;
             color: var(--primary-green);
             margin: 0;
@@ -89,6 +90,7 @@
 
         .brand-title span {
             color: var(--accent-gold);
+            text-transform: uppercase;
         }
 
         .brand-motto {
@@ -166,34 +168,62 @@
         .top-navbar {
             background-color: var(--primary-green);
             color: #ffffff;
-            height: 60px;
+            min-height: 60px;
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
-            padding: 0 16px;
+            padding: 8px 16px;
             position: sticky;
             top: 0;
             z-index: 100;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+        /* Updated Navbar Logo: White 'Animo' + Gold 'LED' */
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: 8px;
             font-weight: 800;
-            font-size: 18px;
+            font-size: 22px;
             letter-spacing: -0.5px;
+            color: #ffffff;
         }
 
         .nav-brand span {
             color: var(--accent-gold);
+            text-transform: uppercase;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             font-size: 13px;
         }
 
@@ -209,11 +239,11 @@
         }
 
         .logout-btn {
-            background: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            border: none;
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.4);
             padding: 6px 12px;
-            border-radius: 4px;
+            border-radius: 6px;
             font-weight: 600;
             font-size: 12px;
             cursor: pointer;
@@ -222,17 +252,19 @@
 
         .logout-btn:hover {
             background: rgba(239, 68, 68, 0.8);
+            color: #ffffff;
         }
 
-        /* Main View Container */
+        /* Main View Container with Paper Elevation */
         .portal-container {
             background-color: #ffffff;
             margin: 16px auto;
             max-width: 1200px;
             border-radius: 8px;
-            border: 1px solid var(--border-gray);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             padding: 16px;
+            border-top: 4px solid var(--primary-green);
         }
 
         @media (min-width: 768px) {
@@ -294,6 +326,51 @@
         .btn-gold:hover { background-color: var(--accent-gold-hover); }
         .btn-gray { background-color: #e2e8f0; color: #475569; border-color: #cbd5e1; }
         .btn-red { background-color: var(--btn-red); color: white; }
+
+        /* Profile Editor Layout */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 768px) {
+            .profile-grid {
+                grid-template-columns: 240px 1fr;
+            }
+        }
+
+        .profile-photo-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 1px dashed var(--border-gray);
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .profile-avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-green);
+            background-color: #e2e8f0;
+            margin-bottom: 12px;
+        }
+
+        .profile-form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 640px) {
+            .profile-form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
         /* Meta Form Grid */
         .meta-form-grid {
@@ -526,16 +603,20 @@
             <div class="nav-brand">
                 Animo<span>LED</span>
             </div>
-            <div class="user-info">
-                <span id="displayUserEmail">user@school.edu</span>
-                <span class="role-badge" id="displayUserRole">Officer</span>
+
+            <div class="nav-actions">
+                <button class="nav-btn" onclick="showView('dashboard')">📋 Tracker</button>
+                <button class="nav-btn" onclick="showView('profile')">👤 My Profile</button>
+                <div class="user-info">
+                    <span class="role-badge" id="displayUserRole">Officer</span>
+                </div>
                 <button class="logout-btn" onclick="handleLogout()">Sign Out</button>
             </div>
         </div>
 
         <div class="portal-container">
             
-            <!-- WEEKLY SUMMARY MATRIX -->
+            <!-- WEEKLY SUMMARY MATRIX VIEW -->
             <div id="dashboardMatrixView">
                 <div class="view-header-flex">
                     <h2 class="view-title" id="weeklyRangeTitle">Attendance Summary</h2>
@@ -560,7 +641,7 @@
                 </div>
             </div>
 
-            <!-- DAILY ATTENDANCE SHEET EDITOR -->
+            <!-- DAILY ATTENDANCE SHEET EDITOR VIEW -->
             <div id="dailyAttendanceSheetView" class="hidden">
                 <div class="view-header-flex">
                     <h2 class="view-title" id="dailySheetHeaderTitle">Attendance Sheet</h2>
@@ -622,6 +703,51 @@
                 </div>
             </div>
 
+            <!-- OFFICER PROFILE MANAGEMENT VIEW -->
+            <div id="officerProfileView" class="hidden">
+                <div class="view-header-flex">
+                    <h2 class="view-title">Officer Personal Profile</h2>
+                    <div class="btn-set">
+                        <button class="btn-ui btn-green" onclick="saveOfficerProfile()">💾 Save Profile Changes</button>
+                    </div>
+                </div>
+
+                <div class="profile-grid">
+                    <div class="profile-photo-card">
+                        <img id="avatarPreview" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="profile-avatar-preview" alt="Profile Picture">
+                        <input type="file" id="profileImageInput" accept="image/*" style="display: none;" onchange="handleProfilePhotoUpload(event)">
+                        <button class="btn-ui btn-gray" style="width: 100%; margin-top: 8px;" onclick="document.getElementById('profileImageInput').click()">📷 Upload Photo</button>
+                    </div>
+
+                    <div class="profile-form-grid">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="profFullName" placeholder="e.g., Juan Dela Cruz">
+                        </div>
+                        <div class="form-group">
+                            <label>Designation / Position</label>
+                            <input type="text" id="profDesignation" placeholder="e.g., Class Secretary / Vice President">
+                        </div>
+                        <div class="form-group">
+                            <label>Student ID Number</label>
+                            <input type="text" id="profStudentId" placeholder="e.g., N2026101">
+                        </div>
+                        <div class="form-group">
+                            <label>School Email</label>
+                            <input type="email" id="profEmail" disabled style="background-color:#e2e8f0;">
+                        </div>
+                        <div class="form-group">
+                            <label>Mobile Number</label>
+                            <input type="tel" id="profMobile" placeholder="e.g., 09171234567">
+                        </div>
+                        <div class="form-group">
+                            <label>Birthday</label>
+                            <input type="date" id="profBirthday">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -658,7 +784,9 @@
         const auth = getAuth(app);
         const db = getDatabase(app);
 
-        // Register Service Worker for PWA
+        let currentUser = null;
+        let profilePhotoBase64 = "";
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed: ', err));
@@ -730,18 +858,33 @@
         // Auth Listener
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                currentUser = user;
                 document.getElementById('authContainer').classList.add('hidden');
                 document.getElementById('appContainer').classList.remove('hidden');
-                document.getElementById('displayUserEmail').textContent = user.email;
+                document.getElementById('profEmail').value = user.email;
                 
                 onValue(ref(db, 'users/' + user.uid), (snapshot) => {
                     const userData = snapshot.val();
                     const role = userData ? userData.role : 'officer';
                     document.getElementById('displayUserRole').textContent = role;
+                    
+                    if (userData) {
+                        document.getElementById('profFullName').value = userData.fullName || "";
+                        document.getElementById('profDesignation').value = userData.designation || "";
+                        document.getElementById('profStudentId').value = userData.studentId || "";
+                        document.getElementById('profMobile').value = userData.mobile || "";
+                        document.getElementById('profBirthday').value = userData.birthday || "";
+                        
+                        if (userData.photoBase64) {
+                            profilePhotoBase64 = userData.photoBase64;
+                            document.getElementById('avatarPreview').src = userData.photoBase64;
+                        }
+                    }
                 });
 
                 bindDatabaseSync();
             } else {
+                currentUser = null;
                 document.getElementById('authContainer').classList.remove('hidden');
                 document.getElementById('appContainer').classList.add('hidden');
             }
@@ -777,6 +920,47 @@
 
         window.handleLogout = function() {
             signOut(auth);
+        };
+
+        window.showView = function(viewName) {
+            document.getElementById('dashboardMatrixView').classList.add('hidden');
+            document.getElementById('dailyAttendanceSheetView').classList.add('hidden');
+            document.getElementById('officerProfileView').classList.add('hidden');
+
+            if (viewName === 'dashboard') {
+                document.getElementById('dashboardMatrixView').classList.remove('hidden');
+            } else if (viewName === 'profile') {
+                document.getElementById('officerProfileView').classList.remove('hidden');
+            }
+        };
+
+        window.handleProfilePhotoUpload = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePhotoBase64 = e.target.result;
+                    document.getElementById('avatarPreview').src = profilePhotoBase64;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        window.saveOfficerProfile = function() {
+            if (!currentUser) return;
+            
+            const profileData = {
+                fullName: document.getElementById('profFullName').value,
+                designation: document.getElementById('profDesignation').value,
+                studentId: document.getElementById('profStudentId').value,
+                mobile: document.getElementById('profMobile').value,
+                birthday: document.getElementById('profBirthday').value,
+                photoBase64: profilePhotoBase64
+            };
+
+            set(ref(db, 'users/' + currentUser.uid), profileData, { merge: true })
+                .then(() => alert("Profile information updated successfully!"))
+                .catch((err) => alert("Failed to save profile: " + err.message));
         };
 
         function bindDatabaseSync() {
@@ -880,7 +1064,7 @@
 
         function openDailyMonitoringSheet(dateStr) {
             activeEditingDateStr = dateStr;
-            document.getElementById('dashboardMatrixView').classList.add('hidden');
+            showView('dailySheet');
             document.getElementById('dailyAttendanceSheetView').classList.remove('hidden');
 
             let parts = dateStr.split('-');
@@ -1097,8 +1281,7 @@
         }
 
         function exitToDashboard() {
-            document.getElementById('dailyAttendanceSheetView').classList.add('hidden');
-            document.getElementById('dashboardMatrixView').classList.remove('hidden');
+            showView('dashboard');
             renderDashboardMatrix();
         }
 
