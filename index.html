@@ -13,7 +13,7 @@
     <meta name="theme-color" content="#004725">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3429/3429149.png">
+    <link rel="apple-touch-icon" href="./AnimoLED%20Logo.png">
 
     <!-- Cropper.js CSS for Photo Cropping -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
@@ -74,7 +74,7 @@
             width: 100%;
             max-width: 400px;
             border-radius: 12px;
-            padding: 32px 24px;
+            padding: 28px 24px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
             box-sizing: border-box;
             border-top: 5px solid var(--accent-gold);
@@ -82,29 +82,14 @@
 
         .brand-header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
-        .brand-title {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--primary-green);
-            margin: 0;
-            letter-spacing: -0.5px;
-        }
-
-        .brand-title span {
-            color: var(--accent-gold);
-            text-transform: uppercase;
-        }
-
-        .brand-motto {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            margin-top: 4px;
-            font-weight: 600;
+        .brand-logo-img {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 4px;
+            display: inline-block;
         }
 
         .form-group {
@@ -195,10 +180,16 @@
         .nav-brand {
             display: flex;
             align-items: center;
+            gap: 10px;
             font-weight: 800;
             font-size: 22px;
             letter-spacing: -0.5px;
             color: #ffffff;
+        }
+
+        .nav-brand-img {
+            height: 36px;
+            width: auto;
         }
 
         .nav-brand span {
@@ -620,7 +611,6 @@
             box-sizing: border-box;
         }
 
-        /* Top-level System Alerts, Confirms, and Prompts Overlay Stacking Fix */
         .top-dialog-modal {
             z-index: 10000 !important;
         }
@@ -714,8 +704,7 @@
     <div id="authContainer" class="auth-container">
         <div class="auth-card">
             <div class="brand-header">
-                <h1 class="brand-title">Animo<span>LED</span></h1>
-                <div class="brand-motto">★ Lead Every Duty ★</div>
+                <img src="./AnimoLED%20Logo.png" alt="AnimoLED Logo" class="brand-logo-img">
             </div>
             
             <form id="authForm">
@@ -755,7 +744,7 @@
         
         <div class="top-navbar">
             <div class="nav-brand">
-                Animo<span>LED</span>
+                <img src="./AnimoLED%20Logo.png" alt="AnimoLED Logo" class="nav-brand-img">
             </div>
 
             <div class="nav-actions">

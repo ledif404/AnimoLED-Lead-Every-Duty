@@ -3,12 +3,12 @@
   "name": "AnimoLED — Lead Every Duty",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3429/3429149.png",
+      "src": "./AnimoLED%20Logo.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3429/3429149.png",
+      "src": "./AnimoLED%20Logo.png",
       "type": "image/png",
       "sizes": "512x512"
     }
