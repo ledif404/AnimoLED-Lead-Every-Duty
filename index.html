@@ -840,7 +840,6 @@
                 <img src="./AnimoLED%20Logo.png" alt="AnimoLED Logo" class="brand-logo-img">
             </div>
             
-            <!-- ADDED ONSUBMIT EVENT PREVENT DEFAULT TO FIX "?" URL NATIVE SUBMISSION BUG -->
             <form id="authForm" onsubmit="event.preventDefault();">
                 <div class="form-group hidden" id="registerPositionGroup">
                     <label>Officer Position</label>
@@ -994,24 +993,31 @@
                 </div>
 
                 <div class="officers-2x2-grid">
+                    <!-- Top Left: President -->
                     <div class="officer-tile">
                         <span class="officer-tile-title">★ President ★</span>
                         <img id="tileImg-President" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="officer-tile-img" alt="President">
                         <div id="tileName-President" class="officer-tile-name">Unregistered</div>
                         <button class="btn-ui btn-green" style="width: 100%;" onclick="openOfficerDetailsModal('President')">View Profile</button>
                     </div>
+
+                    <!-- Top Right: Vice President -->
                     <div class="officer-tile">
                         <span class="officer-tile-title">★ Vice President ★</span>
                         <img id="tileImg-Vice President" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="officer-tile-img" alt="Vice President">
                         <div id="tileName-Vice President" class="officer-tile-name">Unregistered</div>
                         <button class="btn-ui btn-green" style="width: 100%;" onclick="openOfficerDetailsModal('Vice President')">View Profile</button>
                     </div>
+
+                    <!-- Bottom Left: Secretary -->
                     <div class="officer-tile">
                         <span class="officer-tile-title">★ Secretary ★</span>
                         <img id="tileImg-Secretary" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="officer-tile-img" alt="Secretary">
                         <div id="tileName-Secretary" class="officer-tile-name">Unregistered</div>
                         <button class="btn-ui btn-green" style="width: 100%;" onclick="openOfficerDetailsModal('Secretary')">View Profile</button>
                     </div>
+
+                    <!-- Bottom Right: Treasurer -->
                     <div class="officer-tile">
                         <span class="officer-tile-title">★ Treasurer ★</span>
                         <img id="tileImg-Treasurer" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="officer-tile-img" alt="Treasurer">
@@ -1027,6 +1033,7 @@
                     <h2 class="view-title" id="profileHeaderTitle">Personal Profile</h2>
                     <div class="btn-set">
                         <button class="btn-ui btn-green" onclick="saveOfficerProfile()">💾 Save Profile Changes</button>
+                        <!-- Delete Account Button (strictly for Officers) -->
                         <button id="deleteAccountBtn" class="btn-ui btn-red officer-only-field" onclick="openDeleteAccountModal()">🗑 Delete Account</button>
                     </div>
                 </div>
@@ -1044,6 +1051,7 @@
                             <input type="text" id="profFullName" placeholder="e.g., Juan Dela Cruz">
                         </div>
 
+                        <!-- OFFICER FIELDS -->
                         <div class="form-group officer-only-field">
                             <label>Officer Position</label>
                             <input type="text" id="profDesignation" disabled style="background-color:#e2e8f0; font-weight: bold;">
@@ -1053,6 +1061,7 @@
                             <input type="text" id="profStudentId" placeholder="e.g., N2026101">
                         </div>
 
+                        <!-- ADMIN / TEACHER FIELDS -->
                         <div class="form-group admin-only-field hidden">
                             <label>Department</label>
                             <input type="text" id="profDepartment" placeholder="e.g., Applied Science">
@@ -1070,6 +1079,7 @@
                             <input type="text" id="profSubject" placeholder="e.g., Computer Technology">
                         </div>
 
+                        <!-- SHARED FIELDS -->
                         <div class="form-group">
                             <label>School Email</label>
                             <input type="email" id="profEmail" disabled style="background-color:#e2e8f0;">
@@ -1086,7 +1096,7 @@
                 </div>
             </div>
 
-            <!-- MISSION COLLECTION VIEW -->
+            <!-- NEW: 💰 MISSION COLLECTION VIEW -->
             <div id="missionCollectionView" class="hidden">
                 <div class="view-header-flex">
                     <h2 class="view-title">💰 Mission Collection <span style="font-size:13px; color:var(--text-muted); font-weight:500;">| AY 2026–2027</span></h2>
@@ -1097,12 +1107,14 @@
                     </div>
                 </div>
 
+                <!-- MC View-Only Notice -->
                 <div id="mcReadOnlyNotice" class="permission-notice hidden">
                     🔒 View Only Mode: Mission Collection entry and editing are strictly reserved for the Class Treasurer and Main Admin.
                 </div>
 
                 <!-- MC DASHBOARD TAB -->
                 <div id="mcDashboardTab">
+                    <!-- Summary Cards -->
                     <div class="meta-form-grid" style="margin-bottom: 20px;">
                         <div class="meta-box" style="border-left: 4px solid var(--accent-gold);">
                             <label>Total Collected (AY 26-27)</label>
@@ -1128,6 +1140,7 @@
                         </div>
                     </div>
 
+                    <!-- Main Chart -->
                     <div class="table-scroller" style="background:#fff; padding:16px; margin-bottom: 20px;">
                         <h3 style="margin:0 0 16px 0; font-size:13px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Weekly Collection Trend</h3>
                         <div class="table-scroller" style="border:none;">
@@ -1137,6 +1150,7 @@
                         </div>
                     </div>
 
+                    <!-- Search & Table -->
                     <div style="display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
                         <input type="text" id="mcSearchInput" placeholder="Search week or amount..." style="padding:8px; border:1px solid var(--border-gray); border-radius:4px; flex:1; min-width:200px; font-size:13px;" oninput="renderMcTable()">
                         <select id="mcFilterSelect" style="padding:8px; border:1px solid var(--border-gray); border-radius:4px; font-size:13px;" onchange="renderMcTable()">
@@ -1162,7 +1176,9 @@
                                     <th style="text-align:center; width:120px;">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="mcTableBody"></tbody>
+                            <tbody id="mcTableBody">
+                                <!-- Dynamic rows -->
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -1177,6 +1193,7 @@
                         </div>
                     </div>
                     
+                    <!-- Hidden Container specifically formatted for PDF generation -->
                     <div id="mcPdfExportContainer" style="background:#fff; padding:30px; border:1px solid var(--border-gray); border-radius:6px; color:#000;">
                         <div style="text-align:center; margin-bottom:30px; border-bottom:2px solid var(--primary-green); padding-bottom:16px;">
                             <h2 style="margin:0 0 8px 0; color:var(--primary-green); font-size:24px;">AnimoLED</h2>
@@ -1232,6 +1249,141 @@
         </div>
     </div>
 
+    <!-- THEMED GENERAL ALERT MODAL -->
+    <div id="appAlertModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window">
+            <h3 id="appAlertTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Notice</h3>
+            <div id="appAlertMessage" style="font-size: 13px; color: var(--text-dark); line-height: 1.5; white-space: pre-wrap;"></div>
+            <div style="display: flex; justify-content: flex-end; margin-top: 18px;">
+                <button class="btn-ui btn-green" onclick="closeAppAlertModal()">Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- THEMED CONFIRMATION MODAL -->
+    <div id="appConfirmModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window">
+            <h3 id="appConfirmTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Confirmation Required</h3>
+            <div id="appConfirmMessage" style="font-size: 13px; color: var(--text-dark); line-height: 1.5; white-space: pre-wrap;"></div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
+                <button class="btn-ui btn-gray" onclick="closeAppConfirmModal(false)">Cancel</button>
+                <button id="appConfirmOkBtn" class="btn-ui btn-green" onclick="closeAppConfirmModal(true)">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- THEMED PROMPT INPUT MODAL -->
+    <div id="appPromptModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window">
+            <h3 id="appPromptTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Enter Information</h3>
+            <div id="appPromptMessage" style="font-size: 13px; color: var(--text-dark); margin-bottom: 12px; line-height: 1.5;"></div>
+            <div class="form-group">
+                <input type="text" id="appPromptInput" placeholder="Type response here...">
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
+                <button class="btn-ui btn-gray" onclick="closeAppPromptModal(false)">Cancel</button>
+                <button class="btn-ui btn-green" onclick="closeAppPromptModal(true)">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN: ADD NEW STUDENT MODAL -->
+    <div id="addStudentModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window">
+            <h3 style="margin: 0 0 6px 0; color: var(--primary-green);">➕ Add New Student to Tracker</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                Adding a student will automatically position them alphabetically in the class roster.
+            </p>
+            <div class="form-group">
+                <label>Student ID Number</label>
+                <input type="text" id="addStudentIdInput" placeholder="e.g., N2026100">
+            </div>
+            <div class="form-group">
+                <label>Student Name (SURNAME, FIRSTNAME MIDDLE)</label>
+                <input type="text" id="addStudentNameInput" placeholder="e.g., AMPARO, CARLOS REYES">
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
+                <button class="btn-ui btn-gray" onclick="closeAddStudentModal()">Cancel</button>
+                <button class="btn-ui btn-green" onclick="confirmAddStudent()">Add & Alphabetize</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN: MODIFY STUDENT MODAL (EDIT & REMOVE) -->
+    <div id="modifyStudentModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window" style="border-top: 5px solid var(--accent-gold);">
+            <h3 style="margin: 0 0 6px 0; color: var(--primary-green);">✏️ Modify Student Roster</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                Select a student from the dropdown list to edit their name or permanently remove them from the system.
+            </p>
+            <div class="form-group">
+                <label>Select Target Student</label>
+                <select id="modifyStudentDropdown">
+                    <!-- Dynamic option list rendered via JS -->
+                </select>
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; flex-wrap:wrap;">
+                <button class="btn-ui btn-gray" onclick="closeModifyStudentModal()">Cancel</button>
+                <button class="btn-ui btn-gold" onclick="executeEditStudentName()">✏️ Edit Name</button>
+                <button class="btn-ui btn-red" onclick="confirmRemoveStudentFromDropdown()">🗑 Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OFFICER: DELETE ACCOUNT CONFIRMATION & MAGIC PIN MODAL -->
+    <div id="deleteAccountModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window" style="border-top: 5px solid var(--btn-red);">
+            <h3 style="margin: 0 0 6px 0; color: var(--btn-red);">⚠️ Confirm Account Deletion</h3>
+            <p style="font-size: 13px; color: var(--text-dark); margin: 0 0 14px 0; line-height: 1.5;">
+                This action will permanently reset and wipe your profile details from the system. No records or details of your account will remain on the Admin panel.
+            </p>
+            <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 14px 0; font-weight: 600;">
+                To proceed with deletion, please ask your class adviser/moderator for the <strong>Magic PIN</strong> and enter it below:
+            </p>
+
+            <div class="form-group">
+                <label style="color: var(--btn-red);">Enter Magic PIN</label>
+                <input type="password" id="deleteMagicPinInput" placeholder="••••" style="letter-spacing: 2px; font-weight: bold;" onkeydown="if(event.key==='Enter'){executeAccountDeletion();}">
+            </div>
+
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
+                <button class="btn-ui btn-gray" onclick="closeDeleteAccountModal()">CANCEL</button>
+                <button class="btn-ui btn-red" onclick="executeAccountDeletion()">DELETE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN: OFFICER DETAIL POPUP MODAL -->
+    <div id="officerDetailModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window">
+            <div style="text-align: center; margin-bottom: 16px;">
+                <img id="modalOfficerImg" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-green);">
+                <h3 id="modalOfficerName" style="margin: 8px 0 2px 0; color: var(--primary-green);">Officer Name</h3>
+                <span id="modalOfficerPosition" class="role-badge">Position</span>
+            </div>
+
+            <div id="modalOfficerInfoContent"></div>
+
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px;">
+                <button class="btn-ui btn-gray" onclick="closeOfficerDetailsModal()">Close Window</button>
+                <button id="modalDeleteOfficerBtn" class="btn-ui btn-red admin-only-field hidden" onclick="executeAdminDeleteOfficer()">Delete Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STUDENT REMARK MODAL -->
+    <div id="studentRemarkModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window">
+            <h3 style="margin: 0 0 4px 0; color: var(--primary-green);">Student Log Remark</h3>
+            <div id="modalStudentLabel" style="font-size: 12px; color: var(--text-muted);">Name | ID</div>
+            <textarea id="modalRemarkInput" placeholder="Write reason (e.g., Medical clinic certificate, late due to heavy traffic)..."></textarea>
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
+                <button class="btn-ui btn-gray" onclick="closeStudentRemarkModal()">Close</button>
+                <button class="btn-ui btn-green edit-permission-btn" onclick="saveStudentRemarkModal()">Save Remark</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MISSION COLLECTION ADD/EDIT MODAL -->
     <div id="mcEntryModal" class="modal-backdrop top-dialog-modal hidden">
         <div class="modal-window" style="max-width: 500px; border-top: 5px solid var(--primary-green);">
@@ -1243,7 +1395,9 @@
             <div style="display:flex; gap:12px; margin-bottom:16px;">
                 <div class="form-group" style="flex:1;">
                     <label>Collection Week</label>
-                    <select id="mcWeekSelect" onchange="handleMcWeekSelectChange()"></select>
+                    <select id="mcWeekSelect" onchange="handleMcWeekSelectChange()">
+                        <!-- Options generated in JS -->
+                    </select>
                 </div>
                 <div class="form-group" style="flex:2;">
                     <label>Official Date</label>
@@ -1322,139 +1476,6 @@
 
             <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
                 <button class="btn-ui btn-gray" onclick="closeMcViewModal()">Close Window</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- THEMED GENERAL ALERT MODAL -->
-    <div id="appAlertModal" class="modal-backdrop top-dialog-modal hidden">
-        <div class="modal-window">
-            <h3 id="appAlertTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Notice</h3>
-            <div id="appAlertMessage" style="font-size: 13px; color: var(--text-dark); line-height: 1.5; white-space: pre-wrap;"></div>
-            <div style="display: flex; justify-content: flex-end; margin-top: 18px;">
-                <button class="btn-ui btn-green" onclick="closeAppAlertModal()">Understand</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- THEMED CONFIRMATION MODAL -->
-    <div id="appConfirmModal" class="modal-backdrop top-dialog-modal hidden">
-        <div class="modal-window">
-            <h3 id="appConfirmTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Confirmation Required</h3>
-            <div id="appConfirmMessage" style="font-size: 13px; color: var(--text-dark); line-height: 1.5; white-space: pre-wrap;"></div>
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
-                <button class="btn-ui btn-gray" onclick="closeAppConfirmModal(false)">Cancel</button>
-                <button id="appConfirmOkBtn" class="btn-ui btn-green" onclick="closeAppConfirmModal(true)">Confirm</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- THEMED PROMPT INPUT MODAL -->
-    <div id="appPromptModal" class="modal-backdrop top-dialog-modal hidden">
-        <div class="modal-window">
-            <h3 id="appPromptTitle" style="margin: 0 0 8px 0; color: var(--primary-green);">Enter Information</h3>
-            <div id="appPromptMessage" style="font-size: 13px; color: var(--text-dark); margin-bottom: 12px; line-height: 1.5;"></div>
-            <div class="form-group">
-                <input type="text" id="appPromptInput" placeholder="Type response here...">
-            </div>
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
-                <button class="btn-ui btn-gray" onclick="closeAppPromptModal(false)">Cancel</button>
-                <button class="btn-ui btn-green" onclick="closeAppPromptModal(true)">Save Changes</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ADMIN: ADD NEW STUDENT MODAL -->
-    <div id="addStudentModal" class="modal-backdrop top-dialog-modal hidden">
-        <div class="modal-window">
-            <h3 style="margin: 0 0 6px 0; color: var(--primary-green);">➕ Add New Student to Tracker</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-                Adding a student will automatically position them alphabetically in the class roster.
-            </p>
-            <div class="form-group">
-                <label>Student ID Number</label>
-                <input type="text" id="addStudentIdInput" placeholder="e.g., N2026100">
-            </div>
-            <div class="form-group">
-                <label>Student Name (SURNAME, FIRSTNAME MIDDLE)</label>
-                <input type="text" id="addStudentNameInput" placeholder="e.g., AMPARO, CARLOS REYES">
-            </div>
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
-                <button class="btn-ui btn-gray" onclick="closeAddStudentModal()">Cancel</button>
-                <button class="btn-ui btn-green" onclick="confirmAddStudent()">Add & Alphabetize</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ADMIN: MODIFY STUDENT MODAL (EDIT & REMOVE) -->
-    <div id="modifyStudentModal" class="modal-backdrop top-dialog-modal hidden">
-        <div class="modal-window" style="border-top: 5px solid var(--accent-gold);">
-            <h3 style="margin: 0 0 6px 0; color: var(--primary-green);">✏️ Modify Student Roster</h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-                Select a student from the dropdown list to edit their name or permanently remove them from the system.
-            </p>
-            <div class="form-group">
-                <label>Select Target Student</label>
-                <select id="modifyStudentDropdown"></select>
-            </div>
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; flex-wrap:wrap;">
-                <button class="btn-ui btn-gray" onclick="closeModifyStudentModal()">Cancel</button>
-                <button class="btn-ui btn-gold" onclick="executeEditStudentName()">✏️ Edit Name</button>
-                <button class="btn-ui btn-red" onclick="confirmRemoveStudentFromDropdown()">🗑 Remove</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- OFFICER: DELETE ACCOUNT CONFIRMATION & MAGIC PIN MODAL -->
-    <div id="deleteAccountModal" class="modal-backdrop top-dialog-modal hidden">
-        <div class="modal-window" style="border-top: 5px solid var(--btn-red);">
-            <h3 style="margin: 0 0 6px 0; color: var(--btn-red);">⚠️ Confirm Account Deletion</h3>
-            <p style="font-size: 13px; color: var(--text-dark); margin: 0 0 14px 0; line-height: 1.5;">
-                This action will permanently reset and wipe your profile details from the system. No records or details of your account will remain on the Admin panel.
-            </p>
-            <p style="font-size: 12px; color: var(--text-muted); margin: 0 0 14px 0; font-weight: 600;">
-                To proceed with deletion, please ask your class adviser/moderator for the <strong>Magic PIN</strong> and enter it below:
-            </p>
-
-            <div class="form-group">
-                <label style="color: var(--btn-red);">Enter Magic PIN</label>
-                <input type="password" id="deleteMagicPinInput" placeholder="••••" style="letter-spacing: 2px; font-weight: bold;" onkeydown="if(event.key==='Enter'){executeAccountDeletion();}">
-            </div>
-
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px;">
-                <button class="btn-ui btn-gray" onclick="closeDeleteAccountModal()">CANCEL</button>
-                <button class="btn-ui btn-red" onclick="executeAccountDeletion()">DELETE</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ADMIN: OFFICER DETAIL POPUP MODAL -->
-    <div id="officerDetailModal" class="modal-backdrop top-dialog-modal hidden">
-        <div class="modal-window">
-            <div style="text-align: center; margin-bottom: 16px;">
-                <img id="modalOfficerImg" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-green);">
-                <h3 id="modalOfficerName" style="margin: 8px 0 2px 0; color: var(--primary-green);">Officer Name</h3>
-                <span id="modalOfficerPosition" class="role-badge">Position</span>
-            </div>
-
-            <div id="modalOfficerInfoContent"></div>
-
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px;">
-                <button class="btn-ui btn-gray" onclick="closeOfficerDetailsModal()">Close Window</button>
-                <button id="modalDeleteOfficerBtn" class="btn-ui btn-red admin-only-field hidden" onclick="executeAdminDeleteOfficer()">Delete Account</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- STUDENT REMARK MODAL -->
-    <div id="studentRemarkModal" class="modal-backdrop top-dialog-modal hidden">
-        <div class="modal-window">
-            <h3 style="margin: 0 0 4px 0; color: var(--primary-green);">Student Log Remark</h3>
-            <div id="modalStudentLabel" style="font-size: 12px; color: var(--text-muted);">Name | ID</div>
-            <textarea id="modalRemarkInput" placeholder="Write reason (e.g., Medical clinic certificate, late due to heavy traffic)..."></textarea>
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px;">
-                <button class="btn-ui btn-gray" onclick="closeStudentRemarkModal()">Close</button>
-                <button class="btn-ui btn-green edit-permission-btn" onclick="saveStudentRemarkModal()">Save Remark</button>
             </div>
         </div>
     </div>
@@ -1630,7 +1651,9 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed: ', err));
+                navigator.serviceWorker.register('./sw.js').then((registration) => {
+                    registration.update();
+                }).catch(err => console.log('SW registration failed: ', err));
             });
         }
 
@@ -1652,10 +1675,6 @@
         let modalActiveStudentId = null;
 
         const CYCLIC_STATES = ["✓", "A", "L", "T", "E"];
-
-        // ============================================
-        // MISSION COLLECTION SYSTEM (AY 2026-2027)
-        // ============================================
         
         const MISSION_COLLECTION_SCHEDULE = [
             { week: 1, date: "2026-07-06", display: "Monday, July 06, 2026" },
@@ -2270,7 +2289,7 @@
             html2pdf().set(opt).from(element).save();
         };
 
-        // --- Auth Hooks & UI Load ---
+        // Auth Listeners & Other App Init logic
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
@@ -2286,7 +2305,7 @@
 
                     if (userData) {
                         userDesignation = userData.designation || (currentUserRole === "admin" ? "Main Admin" : "Officer");
-                        userFullName = userData.fullName || "Officer";
+                        userFullName = userData.fullName || "";
                         document.getElementById('displayUserRole').textContent = userDesignation;
 
                         document.getElementById('profFullName').value = userData.fullName || "";
@@ -2311,7 +2330,7 @@
 
                     configureProfileFormByRole(currentUserRole);
                     applyAttendancePermissions();
-
+                    
                     if (currentUserRole === 'admin' || userDesignation === 'Treasurer') {
                         document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.remove('hidden'));
                         document.getElementById('mcReadOnlyNotice').classList.add('hidden');
