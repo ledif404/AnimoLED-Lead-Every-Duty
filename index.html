@@ -13,10 +13,16 @@
     <meta name="theme-color" content="#004725">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3429/3429149.png">
+    <link rel="apple-touch-icon" href="./AnimoLED%20Logo.png">
 
     <!-- Cropper.js CSS for Photo Cropping -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
+    
+    <!-- Chart.js for Mission Collection Graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- html2pdf for Mission Collection Reports -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         :root {
@@ -83,6 +89,13 @@
         .brand-header {
             text-align: center;
             margin-bottom: 24px;
+        }
+
+        .brand-logo-img {
+            max-width: 180px;
+            height: auto;
+            margin-bottom: 4px;
+            display: inline-block;
         }
 
         .brand-title {
@@ -195,10 +208,16 @@
         .nav-brand {
             display: flex;
             align-items: center;
+            gap: 10px;
             font-weight: 800;
             font-size: 22px;
             letter-spacing: -0.5px;
             color: #ffffff;
+        }
+
+        .nav-brand-img {
+            height: 36px;
+            width: auto;
         }
 
         .nav-brand span {
@@ -210,6 +229,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .nav-btn {
@@ -471,6 +491,10 @@
         .meta-box {
             display: flex;
             flex-direction: column;
+            background: #fff;
+            border: 1px solid var(--border-gray);
+            border-radius: 6px;
+            padding: 12px;
         }
 
         .meta-box label {
@@ -514,13 +538,14 @@
             border-collapse: collapse;
             font-size: 13px;
             text-align: left;
+            background-color: #ffffff;
         }
 
         th {
             background-color: #f8fafc;
             color: var(--primary-green);
             font-weight: 700;
-            padding: 10px 8px;
+            padding: 12px 10px;
             border-bottom: 2px solid var(--border-gray);
             border-right: 1px solid #e2e8f0;
             font-size: 11px;
@@ -529,12 +554,13 @@
         }
 
         td {
-            padding: 8px;
+            padding: 10px;
             border-bottom: 1px solid #e2e8f0;
             border-right: 1px solid #e2e8f0;
             white-space: nowrap;
         }
 
+        /* Generic Table Status Pills */
         .matrix-summary-cell {
             text-align: center;
             cursor: pointer;
@@ -620,7 +646,6 @@
             box-sizing: border-box;
         }
 
-        /* Top-level System Alerts, Confirms, and Prompts Overlay Stacking Fix */
         .top-dialog-modal {
             z-index: 10000 !important;
         }
@@ -648,7 +673,6 @@
             margin-top: 10px;
         }
 
-        /* Detailed Officer Modal Info Table */
         .detail-info-row {
             display: flex;
             justify-content: space-between;
@@ -688,7 +712,7 @@
             text-align: center;
         }
 
-        /* Image Cropper Container */
+        /* Image Cropper */
         .cropper-img-wrapper {
             width: 100%;
             max-height: 300px;
@@ -701,25 +725,79 @@
             max-width: 100%;
             display: block;
         }
+
+        /* MISSION COLLECTION SPECIFIC STYLES */
+        .mc-chart-wrapper {
+            position: relative;
+            height: 300px;
+            min-width: 600px;
+        }
+
+        .mc-denom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+
+        .mc-denom-table th {
+            background-color: #f1f5f9;
+            padding: 8px;
+            border-bottom: 2px solid var(--border-gray);
+            font-size: 11px;
+        }
+
+        .mc-denom-table td {
+            padding: 8px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        .mc-denom-input {
+            width: 60px;
+            padding: 6px;
+            border: 1px solid var(--border-gray);
+            border-radius: 4px;
+            text-align: right;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        
+        .mc-denom-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        .mc-subtotal-cell {
+            text-align: right;
+            font-family: monospace;
+            font-weight: 600;
+            color: #334155;
+        }
+        
+        .mc-total-row {
+            background-color: #f8fafc;
+            border-top: 2px solid var(--primary-green);
+            font-weight: 800;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
 
     <!-- SUCCESS TOAST NOTIFICATION -->
     <div id="toastNotification" class="toast-popup hidden">
-        Account successfully wiped from the system.
+        Action completed successfully.
     </div>
 
     <!-- AUTHENTICATION SCREEN -->
     <div id="authContainer" class="auth-container">
         <div class="auth-card">
             <div class="brand-header">
-                <h1 class="brand-title">Animo<span>LED</span></h1>
-                <div class="brand-motto">★ Lead Every Duty ★</div>
+                <img src="./AnimoLED%20Logo.png" alt="AnimoLED Logo" class="brand-logo-img">
             </div>
             
             <form id="authForm">
-                <!-- Position selection ordered: President, Vice President, Secretary, Treasurer -->
                 <div class="form-group hidden" id="registerPositionGroup">
                     <label>Officer Position</label>
                     <select id="registerPosition">
@@ -755,11 +833,13 @@
         
         <div class="top-navbar">
             <div class="nav-brand">
-                Animo<span>LED</span>
+                <img src="./AnimoLED%20Logo.png" alt="AnimoLED Logo" class="nav-brand-img">
             </div>
 
             <div class="nav-actions">
                 <button class="nav-btn" onclick="showView('dashboard')">📋 Tracker</button>
+                <!-- NEW MISSION COLLECTION NAV BUTTON -->
+                <button class="nav-btn" onclick="showView('missionCollection')">💰 Mission Collection</button>
                 <button class="nav-btn admin-only-field hidden" onclick="showView('officers')">👥 My Officers</button>
                 <button class="nav-btn" onclick="showView('profile')">👤 My Profile</button>
                 <div class="user-info">
@@ -911,7 +991,6 @@
                     <h2 class="view-title" id="profileHeaderTitle">Personal Profile</h2>
                     <div class="btn-set">
                         <button class="btn-ui btn-green" onclick="saveOfficerProfile()">💾 Save Profile Changes</button>
-                        <!-- Delete Account Button (strictly for Officers) -->
                         <button id="deleteAccountBtn" class="btn-ui btn-red officer-only-field" onclick="openDeleteAccountModal()">🗑 Delete Account</button>
                     </div>
                 </div>
@@ -974,6 +1053,250 @@
                 </div>
             </div>
 
+            <!-- NEW: 💰 MISSION COLLECTION VIEW -->
+            <div id="missionCollectionView" class="hidden">
+                <div class="view-header-flex">
+                    <h2 class="view-title">💰 Mission Collection <span style="font-size:13px; color:var(--text-muted); font-weight:500;">| AY 2026–2027</span></h2>
+                    <div class="btn-set">
+                        <button class="btn-ui btn-gray" onclick="toggleMcTab('dashboard')">📊 Dashboard</button>
+                        <button class="btn-ui btn-gray" onclick="toggleMcTab('reports')">📈 Reports</button>
+                        <button class="btn-ui btn-green mc-edit-permission hidden" onclick="openMcAddModal()">➕ Add Entry</button>
+                    </div>
+                </div>
+
+                <!-- MC View-Only Notice -->
+                <div id="mcReadOnlyNotice" class="permission-notice hidden">
+                    🔒 View Only Mode: Mission Collection entry and editing are strictly reserved for the Class Treasurer and Main Admin.
+                </div>
+
+                <!-- MC DASHBOARD TAB -->
+                <div id="mcDashboardTab">
+                    <!-- Summary Cards -->
+                    <div class="meta-form-grid" style="margin-bottom: 20px;">
+                        <div class="meta-box" style="border-left: 4px solid var(--accent-gold);">
+                            <label>Total Collected (AY 26-27)</label>
+                            <div id="mcStatTotal" style="font-size:18px; font-weight:800; color:var(--primary-green);">₱0.00</div>
+                        </div>
+                        <div class="meta-box">
+                            <label>Current Collection Week</label>
+                            <div id="mcStatCurrentWeek" style="font-size:14px; font-weight:700; color:#334155;">-</div>
+                            <div id="mcStatCurrentDate" style="font-size:11px; color:var(--text-muted);"></div>
+                        </div>
+                        <div class="meta-box">
+                            <label>Highest Collection</label>
+                            <div id="mcStatHighestAmount" style="font-size:16px; font-weight:700; color:var(--primary-green);">₱0.00</div>
+                            <div id="mcStatHighestWeek" style="font-size:11px; color:var(--text-muted);">-</div>
+                        </div>
+                        <div class="meta-box">
+                            <label>Average Weekly Collection</label>
+                            <div id="mcStatAverage" style="font-size:16px; font-weight:700; color:#334155;">₱0.00</div>
+                        </div>
+                        <div class="meta-box">
+                            <label>Recorded Weeks</label>
+                            <div id="mcStatCount" style="font-size:16px; font-weight:700; color:#334155;">0 / 43</div>
+                        </div>
+                    </div>
+
+                    <!-- Main Chart -->
+                    <div class="table-scroller" style="background:#fff; padding:16px; margin-bottom: 20px;">
+                        <h3 style="margin:0 0 16px 0; font-size:13px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Weekly Collection Trend</h3>
+                        <div class="table-scroller" style="border:none;">
+                            <div class="mc-chart-wrapper">
+                                <canvas id="mcChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search & Table -->
+                    <div style="display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
+                        <input type="text" id="mcSearchInput" placeholder="Search week or amount..." style="padding:8px; border:1px solid var(--border-gray); border-radius:4px; flex:1; min-width:200px; font-size:13px;" oninput="renderMcTable()">
+                        <select id="mcFilterSelect" style="padding:8px; border:1px solid var(--border-gray); border-radius:4px; font-size:13px;" onchange="renderMcTable()">
+                            <option value="all">All Weeks</option>
+                            <option value="with_collection">With Collection (> ₱0)</option>
+                            <option value="zero">₱0 Collection</option>
+                        </select>
+                        <select id="mcSortSelect" style="padding:8px; border:1px solid var(--border-gray); border-radius:4px; font-size:13px;" onchange="renderMcTable()">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="high">Highest Amount</option>
+                            <option value="low">Lowest Amount</option>
+                        </select>
+                    </div>
+                    
+                    <div class="table-scroller" style="margin-bottom: 30px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width:100px;">Week</th>
+                                    <th>Collection Date</th>
+                                    <th style="text-align:right;">Total Collection</th>
+                                    <th style="text-align:center; width:120px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mcTableBody">
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- MC REPORTS TAB -->
+                <div id="mcReportsTab" class="hidden">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                        <h3 style="margin:0; font-size:15px; color:var(--primary-green);">Mission Collection Reports</h3>
+                        <div class="btn-set">
+                            <button class="btn-ui btn-gold" onclick="exportMcCSV()">📊 Export CSV Data</button>
+                            <button class="btn-ui btn-green" onclick="exportMcPDF()">📄 Export PDF Report</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden Container specifically formatted for PDF generation -->
+                    <div id="mcPdfExportContainer" style="background:#fff; padding:30px; border:1px solid var(--border-gray); border-radius:6px; color:#000;">
+                        <div style="text-align:center; margin-bottom:30px; border-bottom:2px solid var(--primary-green); padding-bottom:16px;">
+                            <h2 style="margin:0 0 8px 0; color:var(--primary-green); font-size:24px;">AnimoLED</h2>
+                            <h3 style="margin:0 0 4px 0; font-size:16px;">MISSION COLLECTION REPORT</h3>
+                            <p style="margin:0; font-size:13px; color:#555;">Academic Year 2026–2027</p>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; margin-bottom:30px; font-size:13px;">
+                            <div>
+                                <p style="margin:4px 0;"><strong>Total Collected:</strong> <span id="pdfTotalCollected">₱0.00</span></p>
+                                <p style="margin:4px 0;"><strong>Average Weekly:</strong> <span id="pdfAvgWeekly">₱0.00</span></p>
+                            </div>
+                            <div>
+                                <p style="margin:4px 0;"><strong>Highest Week:</strong> <span id="pdfHighest">Week X (₱0.00)</span></p>
+                                <p style="margin:4px 0;"><strong>Recorded Weeks:</strong> <span id="pdfRecordedCount">0 / 43</span></p>
+                            </div>
+                        </div>
+
+                        <h4 style="margin:0 0 12px 0; font-size:14px; border-bottom:1px solid #ccc; padding-bottom:4px;">Overall Denomination Summary</h4>
+                        <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:30px;">
+                            <thead>
+                                <tr style="background:#f1f5f9;">
+                                    <th style="padding:6px; text-align:left; border:1px solid #ccc;">Denomination</th>
+                                    <th style="padding:6px; text-align:right; border:1px solid #ccc;">Total Quantity</th>
+                                    <th style="padding:6px; text-align:right; border:1px solid #ccc;">Total Value</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pdfDenomTbody"></tbody>
+                            <tfoot>
+                                <tr style="font-weight:bold; background:#e2e8f0;">
+                                    <td colspan="2" style="padding:6px; text-align:right; border:1px solid #ccc;">GRAND TOTAL:</td>
+                                    <td id="pdfDenomGrandTotal" style="padding:6px; text-align:right; border:1px solid #ccc;">₱0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <h4 style="margin:0 0 12px 0; font-size:14px; border-bottom:1px solid #ccc; padding-bottom:4px;">Monthly Collection Summary</h4>
+                        <table style="width:100%; border-collapse:collapse; font-size:12px; margin-bottom:30px;">
+                            <thead>
+                                <tr style="background:#f1f5f9;">
+                                    <th style="padding:6px; text-align:left; border:1px solid #ccc;">Month</th>
+                                    <th style="padding:6px; text-align:right; border:1px solid #ccc;">Total Collection</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pdfMonthTbody"></tbody>
+                        </table>
+
+                        <p style="font-size:10px; color:#777; text-align:center; margin-top:40px;" id="pdfTimestampStr"></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MISSION COLLECTION ADD/EDIT MODAL -->
+    <div id="mcEntryModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window" style="max-width: 500px; border-top: 5px solid var(--primary-green);">
+            <h3 id="mcEntryTitle" style="margin: 0 0 6px 0; color: var(--primary-green);">💰 Add Mission Collection</h3>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                Enter physical denominations carefully. The system automatically handles skipped zero-collection weeks.
+            </p>
+
+            <div style="display:flex; gap:12px; margin-bottom:16px;">
+                <div class="form-group" style="flex:1;">
+                    <label>Collection Week</label>
+                    <select id="mcWeekSelect" onchange="handleMcWeekSelectChange()">
+                        <!-- Options generated in JS -->
+                    </select>
+                </div>
+                <div class="form-group" style="flex:2;">
+                    <label>Official Date</label>
+                    <input type="text" id="mcDateDisplay" disabled style="background-color:#e2e8f0; font-weight:600; color:#334155;">
+                </div>
+            </div>
+
+            <table class="mc-denom-table">
+                <thead>
+                    <tr>
+                        <th style="text-align:left;">Denomination</th>
+                        <th style="text-align:right; width:80px;">Quantity</th>
+                        <th style="text-align:right; width:100px;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>₱1,000.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_1000" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_1000">₱0.00</td></tr>
+                    <tr><td>₱500.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_500" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_500">₱0.00</td></tr>
+                    <tr><td>₱200.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_200" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_200">₱0.00</td></tr>
+                    <tr><td>₱100.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_100" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_100">₱0.00</td></tr>
+                    <tr><td>₱50.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_50" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_50">₱0.00</td></tr>
+                    <tr><td>₱20.00 (Paper Bill)</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_20p" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_20p">₱0.00</td></tr>
+                    <tr><td>₱20.00 (Coin)</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_20c" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_20c">₱0.00</td></tr>
+                    <tr><td>₱10.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_10" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_10">₱0.00</td></tr>
+                    <tr><td>₱5.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_5" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_5">₱0.00</td></tr>
+                    <tr><td>₱1.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_1" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_1">₱0.00</td></tr>
+                    <tr><td>₱0.25</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_025" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_025">₱0.00</td></tr>
+                    <tr><td>₱0.10</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_010" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_010">₱0.00</td></tr>
+                    <tr><td>₱0.05</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_005" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_005">₱0.00</td></tr>
+                </tbody>
+                <tfoot>
+                    <tr class="mc-total-row">
+                        <td colspan="2" style="text-align:right; padding:12px 8px; color:var(--primary-green);">TOTAL COLLECTION:</td>
+                        <td id="mc_grand_total" style="text-align:right; padding:12px 8px; color:var(--primary-green);">₱0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px;">
+                <button class="btn-ui btn-gray" onclick="closeMcModal()">Cancel</button>
+                <button class="btn-ui btn-green" onclick="saveMcEntry()">Save Collection</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MISSION COLLECTION VIEW MODAL (READ ONLY) -->
+    <div id="mcViewModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window" style="max-width: 500px;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
+                <div>
+                    <h3 id="mcViewTitle" style="margin: 0 0 4px 0; color: var(--primary-green);">Week X Collection</h3>
+                    <div id="mcViewDate" style="font-size: 13px; font-weight: 600; color: var(--text-dark);">Monday, Date</div>
+                </div>
+                <div id="mcViewTotalBadge" style="background:var(--cell-present-bg); color:var(--cell-present-text); padding:6px 12px; border-radius:6px; font-weight:800; font-size:16px;">₱0.00</div>
+            </div>
+
+            <div id="mcViewAutoNotice" class="permission-notice hidden" style="margin-bottom:12px;">
+                ℹ️ Automatically recorded as ₱0.00 because no collection was manually entered for this prior week.
+            </div>
+
+            <div class="table-scroller" style="max-height: 250px; margin-bottom:16px;">
+                <table class="mc-denom-table" style="margin-top:0;">
+                    <thead>
+                        <tr><th style="text-align:left;">Denomination</th><th style="text-align:right;">Qty</th><th style="text-align:right;">Subtotal</th></tr>
+                    </thead>
+                    <tbody id="mcViewTbody"></tbody>
+                </table>
+            </div>
+
+            <div style="background:#f8fafc; padding:12px; border-radius:6px; border:1px solid var(--border-gray); font-size:11px; color:var(--text-muted); line-height:1.6;">
+                <div id="mcViewCreated">Created: -</div>
+                <div id="mcViewModified">Modified: -</div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+                <button class="btn-ui btn-gray" onclick="closeMcViewModal()">Close Window</button>
+            </div>
         </div>
     </div>
 
@@ -1016,7 +1339,7 @@
     </div>
 
     <!-- ADMIN: ADD NEW STUDENT MODAL -->
-    <div id="addStudentModal" class="modal-backdrop hidden">
+    <div id="addStudentModal" class="modal-backdrop top-dialog-modal hidden">
         <div class="modal-window">
             <h3 style="margin: 0 0 6px 0; color: var(--primary-green);">➕ Add New Student to Tracker</h3>
             <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
@@ -1038,7 +1361,7 @@
     </div>
 
     <!-- ADMIN: MODIFY STUDENT MODAL (EDIT & REMOVE) -->
-    <div id="modifyStudentModal" class="modal-backdrop hidden">
+    <div id="modifyStudentModal" class="modal-backdrop top-dialog-modal hidden">
         <div class="modal-window" style="border-top: 5px solid var(--accent-gold);">
             <h3 style="margin: 0 0 6px 0; color: var(--primary-green);">✏️ Modify Student Roster</h3>
             <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
@@ -1050,16 +1373,16 @@
                     <!-- Dynamic option list rendered via JS -->
                 </select>
             </div>
-            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px;">
+            <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; flex-wrap:wrap;">
                 <button class="btn-ui btn-gray" onclick="closeModifyStudentModal()">Cancel</button>
                 <button class="btn-ui btn-gold" onclick="executeEditStudentName()">✏️ Edit Name</button>
-                <button class="btn-ui btn-red" onclick="confirmRemoveStudentFromDropdown()">🗑 Remove Student</button>
+                <button class="btn-ui btn-red" onclick="confirmRemoveStudentFromDropdown()">🗑 Remove</button>
             </div>
         </div>
     </div>
 
     <!-- OFFICER: DELETE ACCOUNT CONFIRMATION & MAGIC PIN MODAL -->
-    <div id="deleteAccountModal" class="modal-backdrop hidden">
+    <div id="deleteAccountModal" class="modal-backdrop top-dialog-modal hidden">
         <div class="modal-window" style="border-top: 5px solid var(--btn-red);">
             <h3 style="margin: 0 0 6px 0; color: var(--btn-red);">⚠️ Confirm Account Deletion</h3>
             <p style="font-size: 13px; color: var(--text-dark); margin: 0 0 14px 0; line-height: 1.5;">
@@ -1082,7 +1405,7 @@
     </div>
 
     <!-- ADMIN: OFFICER DETAIL POPUP MODAL -->
-    <div id="officerDetailModal" class="modal-backdrop hidden">
+    <div id="officerDetailModal" class="modal-backdrop top-dialog-modal hidden">
         <div class="modal-window">
             <div style="text-align: center; margin-bottom: 16px;">
                 <img id="modalOfficerImg" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-green);">
@@ -1100,7 +1423,7 @@
     </div>
 
     <!-- STUDENT REMARK MODAL -->
-    <div id="studentRemarkModal" class="modal-backdrop hidden">
+    <div id="studentRemarkModal" class="modal-backdrop top-dialog-modal hidden">
         <div class="modal-window">
             <h3 style="margin: 0 0 4px 0; color: var(--primary-green);">Student Log Remark</h3>
             <div id="modalStudentLabel" style="font-size: 12px; color: var(--text-muted);">Name | ID</div>
@@ -1113,7 +1436,7 @@
     </div>
 
     <!-- PHOTO CROPPING MODAL -->
-    <div id="cropPhotoModal" class="modal-backdrop hidden">
+    <div id="cropPhotoModal" class="modal-backdrop top-dialog-modal hidden">
         <div class="modal-window">
             <h3 style="margin: 0 0 4px 0; color: var(--primary-green);">Crop Profile Picture</h3>
             <div style="font-size: 12px; color: var(--text-muted);">Adjust and frame your profile picture</div>
@@ -1127,14 +1450,11 @@
         </div>
     </div>
 
-    <!-- Cropper.js Script CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
-
     <!-- SCRIPT MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, set, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, remove, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDf9e2U7UdfLS8zGGMGWk0w5hzdt3LZ_c8",
@@ -1163,6 +1483,7 @@
         let currentUser = null;
         let currentUserRole = "officer";
         let userDesignation = "Secretary";
+        let userFullName = "Officer";
         let profilePhotoBase64 = "";
         let cropperInstance = null;
         let allUsersData = {};
@@ -1311,7 +1632,632 @@
 
         const CYCLIC_STATES = ["✓", "A", "L", "T", "E"];
 
-        // Auth Listener
+        // ============================================
+        // MISSION COLLECTION SYSTEM (AY 2026-2027)
+        // ============================================
+        
+        const MISSION_COLLECTION_SCHEDULE = [
+            { week: 1, date: "2026-07-06", display: "Monday, July 06, 2026" },
+            { week: 2, date: "2026-07-13", display: "Monday, July 13, 2026" },
+            { week: 3, date: "2026-07-20", display: "Monday, July 20, 2026" },
+            { week: 4, date: "2026-07-27", display: "Monday, July 27, 2026" },
+            { week: 5, date: "2026-08-03", display: "Monday, August 03, 2026" },
+            { week: 6, date: "2026-08-10", display: "Monday, August 10, 2026" },
+            { week: 7, date: "2026-08-17", display: "Monday, August 17, 2026" },
+            { week: 8, date: "2026-08-24", display: "Monday, August 24, 2026" },
+            { week: 9, date: "2026-08-31", display: "Monday, August 31, 2026" },
+            { week: 10, date: "2026-09-07", display: "Monday, September 07, 2026" },
+            { week: 11, date: "2026-09-14", display: "Monday, September 14, 2026" },
+            { week: 12, date: "2026-09-21", display: "Monday, September 21, 2026" },
+            { week: 13, date: "2026-09-28", display: "Monday, September 28, 2026" },
+            { week: 14, date: "2026-10-05", display: "Monday, October 05, 2026" },
+            { week: 15, date: "2026-10-12", display: "Monday, October 12, 2026" },
+            { week: 16, date: "2026-10-19", display: "Monday, October 19, 2026" },
+            { week: 17, date: "2026-10-26", display: "Monday, October 26, 2026" },
+            { week: 18, date: "2026-11-02", display: "Monday, November 02, 2026" },
+            { week: 19, date: "2026-11-09", display: "Monday, November 09, 2026" },
+            { week: 20, date: "2026-11-16", display: "Monday, November 16, 2026" },
+            { week: 21, date: "2026-11-23", display: "Monday, November 23, 2026" },
+            { week: 22, date: "2026-11-30", display: "Monday, November 30, 2026" },
+            { week: 23, date: "2026-12-07", display: "Monday, December 07, 2026" },
+            { week: 24, date: "2026-12-14", display: "Monday, December 14, 2026" },
+            { week: 25, date: "2026-12-21", display: "Monday, December 21, 2026" },
+            { week: 26, date: "2026-12-28", display: "Monday, December 28, 2026" },
+            { week: 27, date: "2027-01-04", display: "Monday, January 04, 2027" },
+            { week: 28, date: "2027-01-11", display: "Monday, January 11, 2027" },
+            { week: 29, date: "2027-01-18", display: "Monday, January 18, 2027" },
+            { week: 30, date: "2027-01-25", display: "Monday, January 25, 2027" },
+            { week: 31, date: "2027-02-01", display: "Monday, February 01, 2027" },
+            { week: 32, date: "2027-02-08", display: "Monday, February 08, 2027" },
+            { week: 33, date: "2027-02-15", display: "Monday, February 15, 2027" },
+            { week: 34, date: "2027-02-22", display: "Monday, February 22, 2027" },
+            { week: 35, date: "2027-03-01", display: "Monday, March 01, 2027" },
+            { week: 36, date: "2027-03-08", display: "Monday, March 08, 2027" },
+            { week: 37, date: "2027-03-15", display: "Monday, March 15, 2027" },
+            { week: 38, date: "2027-03-22", display: "Monday, March 22, 2027" },
+            { week: 39, date: "2027-03-29", display: "Monday, March 29, 2027" },
+            { week: 40, date: "2027-04-05", display: "Monday, April 05, 2027" },
+            { week: 41, date: "2027-04-12", display: "Monday, April 12, 2027" },
+            { week: 42, date: "2027-04-19", display: "Monday, April 19, 2027" },
+            { week: 43, date: "2027-04-26", display: "Monday, April 26, 2027" }
+        ];
+
+        let mcGlobalData = {};
+        let mcChartObj = null;
+        let mcEditModeWeek = null;
+
+        function bindMissionCollectionSync() {
+            onValue(ref(db, 'mission_collections'), (snapshot) => {
+                mcGlobalData = snapshot.val() || {};
+                if (!document.getElementById('missionCollectionView').classList.contains('hidden')) {
+                    if (!document.getElementById('mcDashboardTab').classList.contains('hidden')) {
+                        renderMcDashboard();
+                    } else if (!document.getElementById('mcReportsTab').classList.contains('hidden')) {
+                        renderMcReports();
+                    }
+                }
+            });
+        }
+
+        function getMcCurrentWeekInfo() {
+            const now = new Date().getTime();
+            let current = null;
+            for(let i=0; i<MISSION_COLLECTION_SCHEDULE.length; i++) {
+                let wDate = new Date(MISSION_COLLECTION_SCHEDULE[i].date).getTime();
+                if(now >= wDate) {
+                    current = MISSION_COLLECTION_SCHEDULE[i];
+                } else {
+                    break;
+                }
+            }
+            if(!current) return { status: "Not Started", obj: MISSION_COLLECTION_SCHEDULE[0] };
+            if(now > new Date("2027-05-03").getTime()) return { status: "Ended", obj: MISSION_COLLECTION_SCHEDULE[42] };
+            return { status: "Active", obj: current };
+        }
+
+        function formatMC(centavos) {
+            return '₱' + (centavos / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+
+        function formatMCDecimal(decimalVal) {
+            return '₱' + parseFloat(decimalVal).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+        }
+
+        window.toggleMcTab = function(tab) {
+            if (tab === 'dashboard') {
+                document.getElementById('mcReportsTab').classList.add('hidden');
+                document.getElementById('mcDashboardTab').classList.remove('hidden');
+                renderMcDashboard();
+            } else {
+                document.getElementById('mcDashboardTab').classList.add('hidden');
+                document.getElementById('mcReportsTab').classList.remove('hidden');
+                renderMcReports();
+            }
+        };
+
+        function renderMcDashboard() {
+            // Aggregate Data
+            let totalCentavos = 0;
+            let highestWeekObj = null;
+            let highestAmount = -1;
+            let countRecords = 0;
+
+            let labels = [];
+            let chartData = [];
+
+            MISSION_COLLECTION_SCHEDULE.forEach(item => {
+                labels.push('W' + item.week);
+                let wData = mcGlobalData['week_' + item.week];
+                if (wData) {
+                    let wTotal = Math.round(parseFloat(wData.totalCollection || 0) * 100);
+                    totalCentavos += wTotal;
+                    countRecords++;
+                    chartData.push(wTotal / 100);
+
+                    if (wTotal > highestAmount) {
+                        highestAmount = wTotal;
+                        highestWeekObj = item;
+                    }
+                } else {
+                    chartData.push(0);
+                }
+            });
+
+            // Update Summary Cards
+            document.getElementById('mcStatTotal').textContent = formatMC(totalCentavos);
+            
+            let cwInfo = getMcCurrentWeekInfo();
+            if (cwInfo.status === "Not Started") {
+                document.getElementById('mcStatCurrentWeek').textContent = "Pre-Season";
+                document.getElementById('mcStatCurrentDate').textContent = "Begins " + cwInfo.obj.display;
+            } else if (cwInfo.status === "Ended") {
+                document.getElementById('mcStatCurrentWeek').textContent = "Academic Year Ended";
+                document.getElementById('mcStatCurrentDate').textContent = "Completed";
+            } else {
+                document.getElementById('mcStatCurrentWeek').textContent = "Week " + cwInfo.obj.week;
+                document.getElementById('mcStatCurrentDate').textContent = cwInfo.obj.display;
+            }
+
+            if (highestWeekObj && highestAmount > 0) {
+                document.getElementById('mcStatHighestAmount').textContent = formatMC(highestAmount);
+                document.getElementById('mcStatHighestWeek').textContent = "Week " + highestWeekObj.week;
+            } else {
+                document.getElementById('mcStatHighestAmount').textContent = "₱0.00";
+                document.getElementById('mcStatHighestWeek').textContent = "-";
+            }
+
+            if (countRecords > 0) {
+                document.getElementById('mcStatAverage').textContent = formatMC(totalCentavos / countRecords);
+            } else {
+                document.getElementById('mcStatAverage').textContent = "₱0.00";
+            }
+            
+            document.getElementById('mcStatCount').textContent = countRecords + " / 43";
+
+            // Render Chart
+            if (mcChartObj) mcChartObj.destroy();
+            const ctx = document.getElementById('mcChart').getContext('2d');
+            mcChartObj = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Collection ₱',
+                        data: chartData,
+                        backgroundColor: '#f59e0b',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            renderMcTable();
+        }
+
+        window.renderMcTable = function() {
+            const tbody = document.getElementById('mcTableBody');
+            tbody.innerHTML = '';
+
+            const searchQuery = document.getElementById('mcSearchInput').value.trim().toLowerCase();
+            const filterVal = document.getElementById('mcFilterSelect').value;
+            const sortVal = document.getElementById('mcSortSelect').value;
+
+            let rowData = [];
+
+            MISSION_COLLECTION_SCHEDULE.forEach(item => {
+                let wData = mcGlobalData['week_' + item.week];
+                if (wData) {
+                    rowData.push({
+                        week: item.week,
+                        dateObj: item,
+                        total: parseFloat(wData.totalCollection || 0),
+                        data: wData
+                    });
+                }
+            });
+
+            // Filter
+            rowData = rowData.filter(r => {
+                let amountMatch = String(r.total.toFixed(2)).includes(searchQuery);
+                let weekMatch = String(r.week).includes(searchQuery);
+                let dateMatch = r.dateObj.display.toLowerCase().includes(searchQuery);
+                
+                if (searchQuery && !amountMatch && !weekMatch && !dateMatch) return false;
+
+                if (filterVal === 'with_collection' && r.total <= 0) return false;
+                if (filterVal === 'zero' && r.total > 0) return false;
+
+                return true;
+            });
+
+            // Sort
+            if (sortVal === 'newest') rowData.sort((a,b) => b.week - a.week);
+            if (sortVal === 'oldest') rowData.sort((a,b) => a.week - b.week);
+            if (sortVal === 'high') rowData.sort((a,b) => b.total - a.total);
+            if (sortVal === 'low') rowData.sort((a,b) => a.total - b.total);
+
+            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Treasurer');
+
+            rowData.forEach(r => {
+                let tr = document.createElement('tr');
+                
+                let acts = `<button class="bubble-comment-btn" style="color:var(--primary-green); border-color:var(--primary-green);" onclick="openMcViewModal(${r.week})">🔍 View</button>`;
+                
+                if (canEdit) {
+                    acts += `<button class="bubble-comment-btn" style="color:#d97706; border-color:#fcd34d;" onclick="openMcEditModal(${r.week})">✏️ Edit</button>
+                             <button class="bubble-comment-btn" style="color:#ef4444; border-color:#fca5a5;" onclick="deleteMcEntry(${r.week})">❌ Delete</button>`;
+                }
+
+                tr.innerHTML = `
+                    <td style="font-weight:700;">Week ${r.week}</td>
+                    <td style="color:var(--text-muted); font-size:12px;">${r.dateObj.display}</td>
+                    <td style="text-align:right; font-family:monospace; font-weight:700; font-size:14px; color:${r.total > 0 ? 'var(--primary-green)' : 'var(--text-muted)'};">${formatMCDecimal(r.total)}</td>
+                    <td style="text-align:center;">${acts}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            if (rowData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:30px; color:var(--text-muted);">No records match the current filters.</td></tr>`;
+            }
+        };
+
+        // --- MC CRUD Modals ---
+
+        window.openMcAddModal = function() {
+            mcEditModeWeek = null;
+            document.getElementById('mcEntryTitle').textContent = "💰 Add Mission Collection";
+            
+            const sel = document.getElementById('mcWeekSelect');
+            sel.innerHTML = '';
+            
+            let firstAvail = null;
+            MISSION_COLLECTION_SCHEDULE.forEach(item => {
+                let opt = document.createElement('option');
+                opt.value = item.week;
+                opt.textContent = `Week ${item.week}`;
+                if (mcGlobalData['week_' + item.week]) {
+                    opt.disabled = true;
+                    opt.textContent += " (Already Recorded)";
+                } else {
+                    if (!firstAvail) firstAvail = item.week;
+                }
+                sel.appendChild(opt);
+            });
+
+            if (firstAvail) {
+                sel.value = firstAvail;
+            }
+            
+            resetMcForm();
+            handleMcWeekSelectChange();
+            document.getElementById('mcEntryModal').classList.remove('hidden');
+        };
+
+        window.openMcEditModal = function(weekNum) {
+            mcEditModeWeek = weekNum;
+            document.getElementById('mcEntryTitle').textContent = `✏️ Edit Week ${weekNum} Collection`;
+            
+            const sel = document.getElementById('mcWeekSelect');
+            sel.innerHTML = `<option value="${weekNum}">Week ${weekNum}</option>`;
+            sel.value = weekNum;
+            
+            let record = mcGlobalData['week_' + weekNum];
+            if (record && record.denominations) {
+                document.getElementById('mc_q_1000').value = record.denominations["1000"] || 0;
+                document.getElementById('mc_q_500').value = record.denominations["500"] || 0;
+                document.getElementById('mc_q_200').value = record.denominations["200"] || 0;
+                document.getElementById('mc_q_100').value = record.denominations["100"] || 0;
+                document.getElementById('mc_q_50').value = record.denominations["50"] || 0;
+                document.getElementById('mc_q_20p').value = record.denominations["20_paper"] || 0;
+                document.getElementById('mc_q_20c').value = record.denominations["20_coin"] || 0;
+                document.getElementById('mc_q_10').value = record.denominations["10"] || 0;
+                document.getElementById('mc_q_5').value = record.denominations["5"] || 0;
+                document.getElementById('mc_q_1').value = record.denominations["1"] || 0;
+                document.getElementById('mc_q_025').value = record.denominations["0.25"] || 0;
+                document.getElementById('mc_q_010').value = record.denominations["0.10"] || 0;
+                document.getElementById('mc_q_005').value = record.denominations["0.05"] || 0;
+            } else {
+                resetMcForm();
+            }
+
+            handleMcWeekSelectChange();
+            calcMcSubtotals();
+            document.getElementById('mcEntryModal').classList.remove('hidden');
+        };
+
+        window.handleMcWeekSelectChange = function() {
+            let sel = document.getElementById('mcWeekSelect').value;
+            let found = MISSION_COLLECTION_SCHEDULE.find(x => x.week == sel);
+            if (found) {
+                document.getElementById('mcDateDisplay').value = found.display;
+            }
+        };
+
+        function resetMcForm() {
+            const inputs = document.querySelectorAll('.mc-denom-input');
+            inputs.forEach(el => el.value = 0);
+            calcMcSubtotals();
+        }
+
+        window.calcMcSubtotals = function() {
+            let totalCents = 0;
+            
+            function getV(id, multiplierCent) {
+                let el = document.getElementById(id);
+                let val = parseInt(el.value || 0);
+                if (val < 0) { val = 0; el.value = 0; }
+                let cents = val * multiplierCent;
+                document.getElementById(id.replace('_q_', '_s_')).textContent = formatMC(cents);
+                totalCents += cents;
+                return val;
+            }
+
+            getV('mc_q_1000', 100000);
+            getV('mc_q_500', 50000);
+            getV('mc_q_200', 20000);
+            getV('mc_q_100', 10000);
+            getV('mc_q_50', 5000);
+            getV('mc_q_20p', 2000);
+            getV('mc_q_20c', 2000);
+            getV('mc_q_10', 1000);
+            getV('mc_q_5', 500);
+            getV('mc_q_1', 100);
+            getV('mc_q_025', 25);
+            getV('mc_q_010', 10);
+            getV('mc_q_005', 5);
+
+            document.getElementById('mc_grand_total').textContent = formatMC(totalCents);
+            return totalCents;
+        };
+
+        window.closeMcModal = function() {
+            document.getElementById('mcEntryModal').classList.add('hidden');
+        };
+
+        function generateZeroMcPayload(weekObj) {
+            let dt = new Date().toLocaleString();
+            return {
+                weekNumber: weekObj.week,
+                collectionDate: weekObj.date,
+                denominations: {
+                    "1000": 0, "500": 0, "200": 0, "100": 0, "50": 0,
+                    "20_paper": 0, "20_coin": 0, "10": 0, "5": 0, "1": 0,
+                    "0.25": 0, "0.10": 0, "0.05": 0
+                },
+                totalCollection: 0.00,
+                createdBy: "System Auto-Fill",
+                createdByName: "System",
+                createdAt: dt,
+                lastModifiedBy: "System",
+                lastModifiedByName: "System",
+                lastModifiedAt: dt,
+                autoGeneratedZero: true
+            };
+        }
+
+        window.saveMcEntry = function() {
+            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Treasurer');
+            if (!canEdit) return;
+
+            let selWk = parseInt(document.getElementById('mcWeekSelect').value);
+            if (!selWk) return;
+
+            if (!mcEditModeWeek && mcGlobalData['week_' + selWk]) {
+                showAppAlert("Duplicate Found", `A collection record already exists for Week ${selWk}. Please use Edit instead.`);
+                return;
+            }
+
+            let weekObj = MISSION_COLLECTION_SCHEDULE.find(x => x.week === selWk);
+            let totalCents = calcMcSubtotals();
+            let totalFloat = parseFloat((totalCents / 100).toFixed(2));
+
+            showAppConfirm("Save Collection", `You are saving a collection total of ${formatMC(totalCents)} for Week ${selWk}.\n\nProceed?`, false, (confirmed) => {
+                if (!confirmed) return;
+
+                let dt = new Date().toLocaleString();
+                let payload = {
+                    weekNumber: selWk,
+                    collectionDate: weekObj.date,
+                    denominations: {
+                        "1000": parseInt(document.getElementById('mc_q_1000').value || 0),
+                        "500": parseInt(document.getElementById('mc_q_500').value || 0),
+                        "200": parseInt(document.getElementById('mc_q_200').value || 0),
+                        "100": parseInt(document.getElementById('mc_q_100').value || 0),
+                        "50": parseInt(document.getElementById('mc_q_50').value || 0),
+                        "20_paper": parseInt(document.getElementById('mc_q_20p').value || 0),
+                        "20_coin": parseInt(document.getElementById('mc_q_20c').value || 0),
+                        "10": parseInt(document.getElementById('mc_q_10').value || 0),
+                        "5": parseInt(document.getElementById('mc_q_5').value || 0),
+                        "1": parseInt(document.getElementById('mc_q_1').value || 0),
+                        "0.25": parseInt(document.getElementById('mc_q_025').value || 0),
+                        "0.10": parseInt(document.getElementById('mc_q_010').value || 0),
+                        "0.05": parseInt(document.getElementById('mc_q_005').value || 0)
+                    },
+                    totalCollection: totalFloat,
+                    lastModifiedBy: currentUser.uid,
+                    lastModifiedByName: userFullName || currentUser.email,
+                    lastModifiedAt: dt,
+                    autoGeneratedZero: false
+                };
+
+                const updates = {};
+                
+                if (mcEditModeWeek) {
+                    let oldRecord = mcGlobalData['week_' + selWk];
+                    payload.createdBy = oldRecord.createdBy;
+                    payload.createdByName = oldRecord.createdByName;
+                    payload.createdAt = oldRecord.createdAt;
+                } else {
+                    payload.createdBy = currentUser.uid;
+                    payload.createdByName = userFullName || currentUser.email;
+                    payload.createdAt = dt;
+                    
+                    // Auto-fill zeroes for missing prior weeks
+                    for(let i = 1; i < selWk; i++) {
+                        if(!mcGlobalData['week_' + i]) {
+                            updates['mission_collections/week_' + i] = generateZeroMcPayload(MISSION_COLLECTION_SCHEDULE[i-1]);
+                        }
+                    }
+                }
+
+                updates['mission_collections/week_' + selWk] = payload;
+
+                update(ref(db), updates).then(() => {
+                    closeMcModal();
+                    showAppAlert("Success", `Mission Collection for Week ${selWk} saved successfully.`);
+                }).catch(err => {
+                    showAppAlert("Database Error", "Failed to save record: " + err.message);
+                });
+            });
+        };
+
+        window.deleteMcEntry = function(weekNum) {
+            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Treasurer');
+            if (!canEdit) return;
+
+            showAppConfirm("Delete Collection?", `Are you sure you want to permanently delete the collection record for Week ${weekNum}?\n\nThis action cannot be undone.`, true, (confirmed) => {
+                if (!confirmed) return;
+                remove(ref(db, 'mission_collections/week_' + weekNum)).then(() => {
+                    showAppAlert("Deleted", `Week ${weekNum} collection was permanently deleted.`);
+                }).catch(err => showAppAlert("Error", "Failed to delete: " + err.message));
+            });
+        };
+
+        window.openMcViewModal = function(weekNum) {
+            let record = mcGlobalData['week_' + weekNum];
+            if(!record) return;
+
+            let wObj = MISSION_COLLECTION_SCHEDULE.find(x => x.week == weekNum);
+            document.getElementById('mcViewTitle').textContent = `Week ${weekNum} Collection`;
+            document.getElementById('mcViewDate').textContent = wObj.display;
+            document.getElementById('mcViewTotalBadge').textContent = formatMCDecimal(record.totalCollection);
+
+            if(record.autoGeneratedZero) {
+                document.getElementById('mcViewAutoNotice').classList.remove('hidden');
+            } else {
+                document.getElementById('mcViewAutoNotice').classList.add('hidden');
+            }
+
+            let tbody = document.getElementById('mcViewTbody');
+            tbody.innerHTML = '';
+            
+            const denoms = [
+                {k:"1000", n:"₱1,000.00", m:100000}, {k:"500", n:"₱500.00", m:50000}, {k:"200", n:"₱200.00", m:20000},
+                {k:"100", n:"₱100.00", m:10000}, {k:"50", n:"₱50.00", m:5000}, {k:"20_paper", n:"₱20.00 (Paper)", m:2000},
+                {k:"20_coin", n:"₱20.00 (Coin)", m:2000}, {k:"10", n:"₱10.00", m:1000}, {k:"5", n:"₱5.00", m:500},
+                {k:"1", n:"₱1.00", m:100}, {k:"0.25", n:"₱0.25", m:25}, {k:"0.10", n:"₱0.10", m:10}, {k:"0.05", n:"₱0.05", m:5}
+            ];
+
+            denoms.forEach(d => {
+                let q = record.denominations[d.k] || 0;
+                let subCents = q * d.m;
+                tbody.innerHTML += `<tr><td>${d.n}</td><td style="text-align:right;">${q}</td><td style="text-align:right; font-family:monospace; font-weight:600;">${formatMC(subCents)}</td></tr>`;
+            });
+
+            document.getElementById('mcViewCreated').textContent = `Created: ${record.createdAt} by ${record.createdByName}`;
+            document.getElementById('mcViewModified').textContent = `Last Modified: ${record.lastModifiedAt} by ${record.lastModifiedByName}`;
+
+            document.getElementById('mcViewModal').classList.remove('hidden');
+        };
+
+        window.closeMcViewModal = function() {
+            document.getElementById('mcViewModal').classList.add('hidden');
+        };
+
+        // --- Reports & Export ---
+        
+        window.renderMcReports = function() {
+            let totalCents = 0;
+            let highestAmount = -1;
+            let highestWeekStr = "-";
+            let countRecords = 0;
+            let zeroCount = 0;
+
+            let denomTotals = {
+                "1000":{q:0,m:100000,n:"₱1,000.00"}, "500":{q:0,m:50000,n:"₱500.00"}, "200":{q:0,m:20000,n:"₱200.00"},
+                "100":{q:0,m:10000,n:"₱100.00"}, "50":{q:0,m:5000,n:"₱50.00"}, "20_paper":{q:0,m:2000,n:"₱20.00 (Paper)"},
+                "20_coin":{q:0,m:2000,n:"₱20.00 (Coin)"}, "10":{q:0,m:1000,n:"₱10.00"}, "5":{q:0,m:500,n:"₱5.00"},
+                "1":{q:0,m:100,n:"₱1.00"}, "0.25":{q:0,m:25,n:"₱0.25"}, "0.10":{q:0,m:10,n:"₱0.10"}, "0.05":{q:0,m:5,n:"₱0.05"}
+            };
+
+            let monthTotals = {}; // e.g. "July 2026": centavos
+
+            MISSION_COLLECTION_SCHEDULE.forEach(item => {
+                let wData = mcGlobalData['week_' + item.week];
+                if (wData) {
+                    countRecords++;
+                    let wTotalCents = Math.round(parseFloat(wData.totalCollection || 0) * 100);
+                    totalCents += wTotalCents;
+                    
+                    if (wTotalCents === 0) zeroCount++;
+                    if (wTotalCents > highestAmount) {
+                        highestAmount = wTotalCents;
+                        highestWeekStr = `Week ${item.week} (${formatMC(wTotalCents)})`;
+                    }
+
+                    // Monthly Aggregate
+                    let d = new Date(item.date);
+                    let mStr = d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+                    if(!monthTotals[mStr]) monthTotals[mStr] = 0;
+                    monthTotals[mStr] += wTotalCents;
+
+                    // Denom Aggregate
+                    Object.keys(denomTotals).forEach(k => {
+                        denomTotals[k].q += parseInt(wData.denominations[k] || 0);
+                    });
+                }
+            });
+
+            document.getElementById('pdfTotalCollected').textContent = formatMC(totalCents);
+            document.getElementById('pdfAvgWeekly').textContent = countRecords > 0 ? formatMC(totalCents / countRecords) : "₱0.00";
+            document.getElementById('pdfHighest').textContent = highestAmount > 0 ? highestWeekStr : "-";
+            document.getElementById('pdfRecordedCount').textContent = `${countRecords} / 43 (Zeroes: ${zeroCount})`;
+
+            let dtbody = document.getElementById('pdfDenomTbody');
+            dtbody.innerHTML = '';
+            Object.keys(denomTotals).forEach(k => {
+                let o = denomTotals[k];
+                let subC = o.q * o.m;
+                dtbody.innerHTML += `<tr><td style="padding:6px; border:1px solid #ccc;">${o.n}</td><td style="padding:6px; text-align:right; border:1px solid #ccc;">${o.q}</td><td style="padding:6px; text-align:right; border:1px solid #ccc;">${formatMC(subCents)}</td></tr>`;
+            });
+            document.getElementById('pdfDenomGrandTotal').textContent = formatMC(totalCents);
+
+            let mtbody = document.getElementById('pdfMonthTbody');
+            mtbody.innerHTML = '';
+            Object.keys(monthTotals).forEach(m => {
+                mtbody.innerHTML += `<tr><td style="padding:6px; border:1px solid #ccc;">${m}</td><td style="padding:6px; text-align:right; border:1px solid #ccc;">${formatMC(monthTotals[m])}</td></tr>`;
+            });
+
+            document.getElementById('pdfTimestampStr').textContent = `Generated on: ${new Date().toLocaleString()}`;
+        };
+
+        window.exportMcCSV = function() {
+            const loggedWeeks = Object.keys(mcGlobalData);
+            if (loggedWeeks.length === 0) {
+                showAppAlert("Export Error", "No Mission Collection records found to export.");
+                return;
+            }
+
+            let csv = "Week,Collection Date,Total Collection,1000 Qty,500 Qty,200 Qty,100 Qty,50 Qty,20 Paper Qty,20 Coin Qty,10 Qty,5 Qty,1 Qty,0.25 Qty,0.10 Qty,0.05 Qty,Created By,Created At,Modified By,Modified At\n";
+            
+            MISSION_COLLECTION_SCHEDULE.forEach(item => {
+                let rec = mcGlobalData['week_' + item.week];
+                if (rec) {
+                    let d = rec.denominations;
+                    csv += `${item.week},"${item.display}",${rec.totalCollection},${d['1000']},${d['500']},${d['200']},${d['100']},${d['50']},${d['20_paper']},${d['20_coin']},${d['10']},${d['5']},${d['1']},${d['0.25']},${d['0.10']},${d['0.05']},"${rec.createdByName}","${rec.createdAt}","${rec.lastModifiedByName}","${rec.lastModifiedAt}"\n`;
+                } else {
+                    csv += `${item.week},"${item.display}",,,,,,,,,,,,,,,,\n`;
+                }
+            });
+
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI("data:text/csv;charset=utf-8," + csv));
+            link.setAttribute("download", `Mission_Collection_Academic_Year_2026-2027.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        window.exportMcPDF = function() {
+            renderMcReports();
+            const element = document.getElementById('mcPdfExportContainer');
+            const opt = {
+                margin:       0.5,
+                filename:     'Mission_Collection_Report_2026_2027.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        };
+
+        // Auth Listeners & Other App Init logic
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
@@ -1327,6 +2273,7 @@
 
                     if (userData) {
                         userDesignation = userData.designation || (currentUserRole === "admin" ? "Main Admin" : "Officer");
+                        userFullName = userData.fullName || "";
                         document.getElementById('displayUserRole').textContent = userDesignation;
 
                         document.getElementById('profFullName').value = userData.fullName || "";
@@ -1351,6 +2298,14 @@
 
                     configureProfileFormByRole(currentUserRole);
                     applyAttendancePermissions();
+                    
+                    if (currentUserRole === 'admin' || userDesignation === 'Treasurer') {
+                        document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.remove('hidden'));
+                        document.getElementById('mcReadOnlyNotice').classList.add('hidden');
+                    } else {
+                        document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.add('hidden'));
+                        document.getElementById('mcReadOnlyNotice').classList.remove('hidden');
+                    }
 
                     if (currentUserRole === 'admin') {
                         updateAdminOfficersDirectory();
@@ -1359,6 +2314,7 @@
 
                 bindStudentMasterlistSync();
                 bindDatabaseSync();
+                bindMissionCollectionSync();
             } else {
                 currentUser = null;
                 document.getElementById('authContainer').classList.remove('hidden');
@@ -1485,6 +2441,7 @@
             document.getElementById('dailyAttendanceSheetView').classList.add('hidden');
             document.getElementById('officerProfileView').classList.add('hidden');
             document.getElementById('adminOfficersView').classList.add('hidden');
+            document.getElementById('missionCollectionView').classList.add('hidden');
 
             if (viewName === 'dashboard') {
                 document.getElementById('dashboardMatrixView').classList.remove('hidden');
@@ -1492,6 +2449,9 @@
                 document.getElementById('officerProfileView').classList.remove('hidden');
             } else if (viewName === 'officers') {
                 document.getElementById('adminOfficersView').classList.remove('hidden');
+            } else if (viewName === 'missionCollection') {
+                document.getElementById('missionCollectionView').classList.remove('hidden');
+                renderMcDashboard();
             }
         };
 
