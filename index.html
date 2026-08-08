@@ -98,28 +98,6 @@
             display: inline-block;
         }
 
-        .brand-title {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--primary-green);
-            margin: 0;
-            letter-spacing: -0.5px;
-        }
-
-        .brand-title span {
-            color: var(--accent-gold);
-            text-transform: uppercase;
-        }
-
-        .brand-motto {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: var(--text-muted);
-            margin-top: 4px;
-            font-weight: 600;
-        }
-
         .form-group {
             margin-bottom: 16px;
         }
@@ -189,20 +167,29 @@
             opacity: 0.85;
         }
 
-        /* Top Bar Navigation */
+        /* Top Bar Navigation (MOBILE RESPONSIVE FIXES) */
         .top-navbar {
             background-color: var(--primary-green);
             color: #ffffff;
             min-height: 60px;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 16px;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 12px 16px;
             position: sticky;
             top: 0;
             z-index: 100;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .top-navbar {
+                flex-direction: row;
+                align-items: center;
+                gap: 0;
+                padding: 8px 16px;
+            }
         }
 
         .nav-brand {
@@ -220,23 +207,36 @@
             width: auto;
         }
 
-        .nav-brand span {
-            color: var(--accent-gold);
-            text-transform: uppercase;
-        }
-
         .nav-actions {
             display: flex;
             align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            gap: 8px;
+            width: 100%;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            padding-bottom: 4px;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        .nav-actions::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        @media (min-width: 768px) {
+            .nav-actions {
+                width: auto;
+                overflow-x: visible;
+                padding-bottom: 0;
+            }
         }
 
         .nav-btn {
             background: rgba(255, 255, 255, 0.12);
             color: #ffffff;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 6px 12px;
+            padding: 8px 14px;
             border-radius: 6px;
             font-weight: 600;
             font-size: 12px;
@@ -245,6 +245,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            white-space: nowrap;
         }
 
         .nav-btn:hover {
@@ -256,6 +257,7 @@
             align-items: center;
             gap: 8px;
             font-size: 13px;
+            white-space: nowrap;
         }
 
         .role-badge {
@@ -279,6 +281,7 @@
             font-size: 12px;
             cursor: pointer;
             transition: background 0.2s;
+            white-space: nowrap;
         }
 
         .logout-btn:hover {
@@ -310,6 +313,7 @@
             flex-direction: column;
             gap: 12px;
             margin-bottom: 20px;
+            align-items: flex-start;
         }
 
         @media (min-width: 640px) {
@@ -325,12 +329,31 @@
             font-weight: 700;
             margin: 0;
             color: var(--primary-green);
+            white-space: nowrap;
         }
 
+        /* Responsive Button Sets */
         .btn-set {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
+            width: 100%;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .btn-set::-webkit-scrollbar {
+            display: none;
+        }
+
+        @media (min-width: 640px) {
+            .btn-set {
+                width: auto;
+                overflow-x: visible;
+                padding-bottom: 0;
+            }
         }
 
         .btn-ui {
@@ -344,11 +367,8 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            flex: 1;
-        }
-
-        @media (min-width: 640px) {
-            .btn-ui { flex: none; }
+            white-space: nowrap;
+            transition: all 0.2s;
         }
 
         .btn-green { background-color: var(--primary-green); color: white; }
@@ -356,6 +376,7 @@
         .btn-gold { background-color: var(--accent-gold); color: white; }
         .btn-gold:hover { background-color: var(--accent-gold-hover); }
         .btn-gray { background-color: #e2e8f0; color: #475569; border-color: #cbd5e1; }
+        .btn-gray:hover { background-color: #cbd5e1; color: #1e293b; }
         .btn-red { background-color: var(--btn-red); color: white; }
         .btn-red:hover { background-color: var(--btn-red-hover); }
 
@@ -730,7 +751,7 @@
         .mc-chart-wrapper {
             position: relative;
             height: 300px;
-            min-width: 600px;
+            min-width: 600px; /* Forces scroll on mobile so bars stay visible */
         }
 
         .mc-denom-table {
@@ -838,7 +859,6 @@
 
             <div class="nav-actions">
                 <button class="nav-btn" onclick="showView('dashboard')">📋 Tracker</button>
-                <!-- NEW MISSION COLLECTION NAV BUTTON -->
                 <button class="nav-btn" onclick="showView('missionCollection')">💰 Mission Collection</button>
                 <button class="nav-btn admin-only-field hidden" onclick="showView('officers')">👥 My Officers</button>
                 <button class="nav-btn" onclick="showView('profile')">👤 My Profile</button>
@@ -1058,8 +1078,8 @@
                 <div class="view-header-flex">
                     <h2 class="view-title">💰 Mission Collection <span style="font-size:13px; color:var(--text-muted); font-weight:500;">| AY 2026–2027</span></h2>
                     <div class="btn-set">
-                        <button class="btn-ui btn-gray" onclick="toggleMcTab('dashboard')">📊 Dashboard</button>
-                        <button class="btn-ui btn-gray" onclick="toggleMcTab('reports')">📈 Reports</button>
+                        <button id="mcTabDashboardBtn" class="btn-ui btn-gold" onclick="toggleMcTab('dashboard')">📊 Dashboard</button>
+                        <button id="mcTabReportsBtn" class="btn-ui btn-gray" onclick="toggleMcTab('reports')">📈 Reports</button>
                         <button class="btn-ui btn-green mc-edit-permission hidden" onclick="openMcAddModal()">➕ Add Entry</button>
                     </div>
                 </div>
@@ -1144,7 +1164,7 @@
                 <div id="mcReportsTab" class="hidden">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                         <h3 style="margin:0; font-size:15px; color:var(--primary-green);">Mission Collection Reports</h3>
-                        <div class="btn-set">
+                        <div class="btn-set" style="width:auto;">
                             <button class="btn-ui btn-gold" onclick="exportMcCSV()">📊 Export CSV Data</button>
                             <button class="btn-ui btn-green" onclick="exportMcPDF()">📄 Export PDF Report</button>
                         </div>
@@ -1227,36 +1247,38 @@
                 </div>
             </div>
 
-            <table class="mc-denom-table">
-                <thead>
-                    <tr>
-                        <th style="text-align:left;">Denomination</th>
-                        <th style="text-align:right; width:80px;">Quantity</th>
-                        <th style="text-align:right; width:100px;">Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>₱1,000.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_1000" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_1000">₱0.00</td></tr>
-                    <tr><td>₱500.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_500" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_500">₱0.00</td></tr>
-                    <tr><td>₱200.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_200" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_200">₱0.00</td></tr>
-                    <tr><td>₱100.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_100" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_100">₱0.00</td></tr>
-                    <tr><td>₱50.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_50" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_50">₱0.00</td></tr>
-                    <tr><td>₱20.00 (Paper Bill)</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_20p" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_20p">₱0.00</td></tr>
-                    <tr><td>₱20.00 (Coin)</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_20c" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_20c">₱0.00</td></tr>
-                    <tr><td>₱10.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_10" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_10">₱0.00</td></tr>
-                    <tr><td>₱5.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_5" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_5">₱0.00</td></tr>
-                    <tr><td>₱1.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_1" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_1">₱0.00</td></tr>
-                    <tr><td>₱0.25</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_025" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_025">₱0.00</td></tr>
-                    <tr><td>₱0.10</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_010" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_010">₱0.00</td></tr>
-                    <tr><td>₱0.05</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_005" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_005">₱0.00</td></tr>
-                </tbody>
-                <tfoot>
-                    <tr class="mc-total-row">
-                        <td colspan="2" style="text-align:right; padding:12px 8px; color:var(--primary-green);">TOTAL COLLECTION:</td>
-                        <td id="mc_grand_total" style="text-align:right; padding:12px 8px; color:var(--primary-green);">₱0.00</td>
-                    </tr>
-                </tfoot>
-            </table>
+            <div class="table-scroller">
+                <table class="mc-denom-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left;">Denomination</th>
+                            <th style="text-align:right; width:80px;">Quantity</th>
+                            <th style="text-align:right; width:100px;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>₱1,000.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_1000" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_1000">₱0.00</td></tr>
+                        <tr><td>₱500.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_500" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_500">₱0.00</td></tr>
+                        <tr><td>₱200.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_200" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_200">₱0.00</td></tr>
+                        <tr><td>₱100.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_100" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_100">₱0.00</td></tr>
+                        <tr><td>₱50.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_50" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_50">₱0.00</td></tr>
+                        <tr><td>₱20.00 (Paper Bill)</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_20p" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_20p">₱0.00</td></tr>
+                        <tr><td>₱20.00 (Coin)</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_20c" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_20c">₱0.00</td></tr>
+                        <tr><td>₱10.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_10" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_10">₱0.00</td></tr>
+                        <tr><td>₱5.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_5" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_5">₱0.00</td></tr>
+                        <tr><td>₱1.00</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_1" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_1">₱0.00</td></tr>
+                        <tr><td>₱0.25</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_025" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_025">₱0.00</td></tr>
+                        <tr><td>₱0.10</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_010" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_010">₱0.00</td></tr>
+                        <tr><td>₱0.05</td><td style="text-align:right;"><input type="number" min="0" class="mc-denom-input" id="mc_q_005" oninput="calcMcSubtotals()" value="0"></td><td class="mc-subtotal-cell" id="mc_s_005">₱0.00</td></tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="mc-total-row">
+                            <td colspan="2" style="text-align:right; padding:12px 8px; color:var(--primary-green);">TOTAL COLLECTION:</td>
+                            <td id="mc_grand_total" style="text-align:right; padding:12px 8px; color:var(--primary-green);">₱0.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
 
             <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px;">
                 <button class="btn-ui btn-gray" onclick="closeMcModal()">Cancel</button>
@@ -1727,16 +1749,19 @@
             if (tab === 'dashboard') {
                 document.getElementById('mcReportsTab').classList.add('hidden');
                 document.getElementById('mcDashboardTab').classList.remove('hidden');
+                document.getElementById('mcTabDashboardBtn').className = "btn-ui btn-gold";
+                document.getElementById('mcTabReportsBtn').className = "btn-ui btn-gray";
                 renderMcDashboard();
             } else {
                 document.getElementById('mcDashboardTab').classList.add('hidden');
                 document.getElementById('mcReportsTab').classList.remove('hidden');
+                document.getElementById('mcTabDashboardBtn').className = "btn-ui btn-gray";
+                document.getElementById('mcTabReportsBtn').className = "btn-ui btn-gold";
                 renderMcReports();
             }
         };
 
         function renderMcDashboard() {
-            // Aggregate Data
             let totalCentavos = 0;
             let highestWeekObj = null;
             let highestAmount = -1;
@@ -1763,7 +1788,6 @@
                 }
             });
 
-            // Update Summary Cards
             document.getElementById('mcStatTotal').textContent = formatMC(totalCentavos);
             
             let cwInfo = getMcCurrentWeekInfo();
@@ -1794,7 +1818,6 @@
             
             document.getElementById('mcStatCount').textContent = countRecords + " / 43";
 
-            // Render Chart
             if (mcChartObj) mcChartObj.destroy();
             const ctx = document.getElementById('mcChart').getContext('2d');
             mcChartObj = new Chart(ctx, {
@@ -1841,7 +1864,6 @@
                 }
             });
 
-            // Filter
             rowData = rowData.filter(r => {
                 let amountMatch = String(r.total.toFixed(2)).includes(searchQuery);
                 let weekMatch = String(r.week).includes(searchQuery);
@@ -1855,7 +1877,6 @@
                 return true;
             });
 
-            // Sort
             if (sortVal === 'newest') rowData.sort((a,b) => b.week - a.week);
             if (sortVal === 'oldest') rowData.sort((a,b) => a.week - b.week);
             if (sortVal === 'high') rowData.sort((a,b) => b.total - a.total);
@@ -1877,7 +1898,7 @@
                     <td style="font-weight:700;">Week ${r.week}</td>
                     <td style="color:var(--text-muted); font-size:12px;">${r.dateObj.display}</td>
                     <td style="text-align:right; font-family:monospace; font-weight:700; font-size:14px; color:${r.total > 0 ? 'var(--primary-green)' : 'var(--text-muted)'};">${formatMCDecimal(r.total)}</td>
-                    <td style="text-align:center;">${acts}</td>
+                    <td style="text-align:center; white-space:nowrap;">${acts}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -2078,7 +2099,6 @@
                     payload.createdByName = userFullName || currentUser.email;
                     payload.createdAt = dt;
                     
-                    // Auto-fill zeroes for missing prior weeks
                     for(let i = 1; i < selWk; i++) {
                         if(!mcGlobalData['week_' + i]) {
                             updates['mission_collections/week_' + i] = generateZeroMcPayload(MISSION_COLLECTION_SCHEDULE[i-1]);
@@ -2166,7 +2186,7 @@
                 "1":{q:0,m:100,n:"₱1.00"}, "0.25":{q:0,m:25,n:"₱0.25"}, "0.10":{q:0,m:10,n:"₱0.10"}, "0.05":{q:0,m:5,n:"₱0.05"}
             };
 
-            let monthTotals = {}; // e.g. "July 2026": centavos
+            let monthTotals = {}; 
 
             MISSION_COLLECTION_SCHEDULE.forEach(item => {
                 let wData = mcGlobalData['week_' + item.week];
@@ -2181,13 +2201,11 @@
                         highestWeekStr = `Week ${item.week} (${formatMC(wTotalCents)})`;
                     }
 
-                    // Monthly Aggregate
                     let d = new Date(item.date);
                     let mStr = d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
                     if(!monthTotals[mStr]) monthTotals[mStr] = 0;
                     monthTotals[mStr] += wTotalCents;
 
-                    // Denom Aggregate
                     Object.keys(denomTotals).forEach(k => {
                         denomTotals[k].q += parseInt(wData.denominations[k] || 0);
                     });
@@ -2203,7 +2221,7 @@
             dtbody.innerHTML = '';
             Object.keys(denomTotals).forEach(k => {
                 let o = denomTotals[k];
-                let subC = o.q * o.m;
+                let subCents = o.q * o.m;
                 dtbody.innerHTML += `<tr><td style="padding:6px; border:1px solid #ccc;">${o.n}</td><td style="padding:6px; text-align:right; border:1px solid #ccc;">${o.q}</td><td style="padding:6px; text-align:right; border:1px solid #ccc;">${formatMC(subCents)}</td></tr>`;
             });
             document.getElementById('pdfDenomGrandTotal').textContent = formatMC(totalCents);
@@ -2256,970 +2274,6 @@
             };
             html2pdf().set(opt).from(element).save();
         };
-
-        // Auth Listeners & Other App Init logic
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('authContainer').classList.add('hidden');
-                document.getElementById('appContainer').classList.remove('hidden');
-                document.getElementById('profEmail').value = user.email;
-                
-                currentUserRole = (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? "admin" : "officer";
-
-                onValue(ref(db, 'users'), (snapshot) => {
-                    allUsersData = snapshot.val() || {};
-                    const userData = allUsersData[user.uid];
-
-                    if (userData) {
-                        userDesignation = userData.designation || (currentUserRole === "admin" ? "Main Admin" : "Officer");
-                        userFullName = userData.fullName || "";
-                        document.getElementById('displayUserRole').textContent = userDesignation;
-
-                        document.getElementById('profFullName').value = userData.fullName || "";
-                        document.getElementById('profMobile').value = userData.mobile || "";
-                        document.getElementById('profBirthday').value = userData.birthday || "";
-                        
-                        if (currentUserRole === 'admin') {
-                            document.getElementById('profDepartment').value = userData.department || "";
-                            document.getElementById('profUnit').value = userData.unit || "";
-                            document.getElementById('profCluster').value = userData.cluster || "";
-                            document.getElementById('profSubject').value = userData.subject || "";
-                        } else {
-                            document.getElementById('profDesignation').value = userDesignation;
-                            document.getElementById('profStudentId').value = userData.studentId || "";
-                        }
-
-                        if (userData.photoBase64) {
-                            profilePhotoBase64 = userData.photoBase64;
-                            document.getElementById('avatarPreview').src = userData.photoBase64;
-                        }
-                    }
-
-                    configureProfileFormByRole(currentUserRole);
-                    applyAttendancePermissions();
-                    
-                    if (currentUserRole === 'admin' || userDesignation === 'Treasurer') {
-                        document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.remove('hidden'));
-                        document.getElementById('mcReadOnlyNotice').classList.add('hidden');
-                    } else {
-                        document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.add('hidden'));
-                        document.getElementById('mcReadOnlyNotice').classList.remove('hidden');
-                    }
-
-                    if (currentUserRole === 'admin') {
-                        updateAdminOfficersDirectory();
-                    }
-                });
-
-                bindStudentMasterlistSync();
-                bindDatabaseSync();
-                bindMissionCollectionSync();
-            } else {
-                currentUser = null;
-                document.getElementById('authContainer').classList.remove('hidden');
-                document.getElementById('appContainer').classList.add('hidden');
-            }
-        });
-
-        function bindStudentMasterlistSync() {
-            onValue(ref(db, 'student_masterlist'), (snapshot) => {
-                const data = snapshot.val();
-                if (data && Array.isArray(data) && data.length > 0) {
-                    currentStudentList = sortStudentsAlphabetically(data);
-                } else {
-                    currentStudentList = sortStudentsAlphabetically(DEFAULT_STUDENT_MASTERLIST);
-                    set(ref(db, 'student_masterlist'), currentStudentList);
-                }
-                renderDashboardMatrix();
-            });
-        }
-
-        function sortStudentsAlphabetically(list) {
-            return list.sort((a, b) => a.name.localeCompare(b.name));
-        }
-
-        function configureProfileFormByRole(role) {
-            const officerFields = document.querySelectorAll('.officer-only-field');
-            const adminFields = document.querySelectorAll('.admin-only-field');
-
-            if (role === 'admin') {
-                document.getElementById('profileHeaderTitle').textContent = "Main Admin / Teacher Profile";
-                officerFields.forEach(el => el.classList.add('hidden'));
-                adminFields.forEach(el => el.classList.remove('hidden'));
-            } else {
-                document.getElementById('profileHeaderTitle').textContent = "Class Officer Profile";
-                adminFields.forEach(el => el.classList.add('hidden'));
-                officerFields.forEach(el => el.classList.remove('hidden'));
-            }
-        }
-
-        function applyAttendancePermissions() {
-            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
-            const editButtons = document.querySelectorAll('.edit-permission-btn');
-            const noticeBox = document.getElementById('readOnlyNotice');
-
-            document.getElementById('fieldModality').disabled = !canEdit;
-            document.getElementById('fieldPeriodCount').disabled = !canEdit;
-            document.getElementById('fieldRemarks').disabled = !canEdit;
-            
-            if (canEdit) {
-                editButtons.forEach(btn => btn.classList.remove('hidden'));
-                if (noticeBox) noticeBox.classList.add('hidden');
-            } else {
-                editButtons.forEach(btn => btn.classList.add('hidden'));
-                if (noticeBox) noticeBox.classList.remove('hidden');
-            }
-        }
-
-        function triggerForceRefresh() {
-            const timeStamp = new Date().getTime();
-            window.location.href = window.location.pathname + "?force_refresh=true&t=" + timeStamp;
-        }
-
-        // Form Submit Login/Register with Email Whitelist Checks
-        document.getElementById('authForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('authEmail').value.trim().toLowerCase();
-            const password = document.getElementById('authPassword').value;
-            const registerPosition = document.getElementById('registerPosition').value;
-
-            if (isSignUpMode) {
-                const allowedList = ALLOWED_OFFICER_EMAILS[registerPosition] || [];
-                const isEmailAllowed = allowedList.some(allowedEmail => allowedEmail.toLowerCase() === email);
-
-                if (!isEmailAllowed) {
-                    showAppAlert("Registration Rejected", `The email address "${email}" is not authorized to register for the position of ${registerPosition}.\n\nPlease check your credentials or consult your class adviser.`);
-                    return;
-                }
-
-                createUserWithEmailAndPassword(auth, email, password)
-                    .then((userCredential) => {
-                        set(ref(db, 'users/' + userCredential.user.uid), {
-                            email: email,
-                            role: "officer",
-                            designation: registerPosition
-                        }).then(() => {
-                            triggerForceRefresh();
-                        });
-                    })
-                    .catch((error) => showAppAlert("Registration Error", error.message));
-            } else {
-                signInWithEmailAndPassword(auth, email, password)
-                    .then(() => {
-                        triggerForceRefresh();
-                    })
-                    .catch((error) => showAppAlert("Authentication Error", error.message));
-            }
-        });
-
-        window.toggleAuthMode = function() {
-            isSignUpMode = !isSignUpMode;
-            if (isSignUpMode) {
-                document.getElementById('registerPositionGroup').classList.remove('hidden');
-                document.getElementById('authSubmitBtn').textContent = "Register Officer Account";
-                document.getElementById('authToggleMessage').textContent = "Already have an account?";
-                document.getElementById('authToggleBtn').textContent = "Sign in";
-                document.getElementById('authEmail').placeholder = "user@dlszobel.edu.ph";
-            } else {
-                document.getElementById('registerPositionGroup').classList.add('hidden');
-                document.getElementById('authSubmitBtn').textContent = "Sign In";
-                document.getElementById('authToggleMessage').textContent = "Need an officer account?";
-                document.getElementById('authToggleBtn').textContent = "Register here";
-                document.getElementById('authEmail').placeholder = "user@dlszobel.edu.ph";
-            }
-        };
-
-        window.handleLogout = function() {
-            signOut(auth).then(() => {
-                triggerForceRefresh();
-            });
-        };
-
-        window.showView = function(viewName) {
-            document.getElementById('dashboardMatrixView').classList.add('hidden');
-            document.getElementById('dailyAttendanceSheetView').classList.add('hidden');
-            document.getElementById('officerProfileView').classList.add('hidden');
-            document.getElementById('adminOfficersView').classList.add('hidden');
-            document.getElementById('missionCollectionView').classList.add('hidden');
-
-            if (viewName === 'dashboard') {
-                document.getElementById('dashboardMatrixView').classList.remove('hidden');
-            } else if (viewName === 'profile') {
-                document.getElementById('officerProfileView').classList.remove('hidden');
-            } else if (viewName === 'officers') {
-                document.getElementById('adminOfficersView').classList.remove('hidden');
-            } else if (viewName === 'missionCollection') {
-                document.getElementById('missionCollectionView').classList.remove('hidden');
-                renderMcDashboard();
-            }
-        };
-
-        // Account Deletion Modal & Magic PIN Logic
-        window.openDeleteAccountModal = function() {
-            document.getElementById('deleteMagicPinInput').value = "";
-            document.getElementById('deleteAccountModal').classList.remove('hidden');
-            document.getElementById('deleteMagicPinInput').focus();
-        };
-
-        window.closeDeleteAccountModal = function() {
-            document.getElementById('deleteAccountModal').classList.add('hidden');
-            document.getElementById('deleteMagicPinInput').value = "";
-        };
-
-        window.executeAccountDeletion = function() {
-            const enteredPin = document.getElementById('deleteMagicPinInput').value;
-            
-            if (enteredPin !== MAGIC_PIN) {
-                showAppAlert("Invalid Magic PIN", "The magic pin entered is not correct. Account deletion canceled.");
-                return;
-            }
-
-            showAppConfirm("Confirm Permanent Deletion", "Are you completely sure you want to delete this officer account? This action cannot be undone.", true, (confirmed) => {
-                if (!confirmed) return;
-                if (!currentUser) return;
-                const uidToDelete = currentUser.uid;
-
-                remove(ref(db, 'users/' + uidToDelete))
-                    .then(() => {
-                        deleteUser(currentUser)
-                            .then(() => finishAccountWipeFlow())
-                            .catch(() => finishAccountWipeFlow());
-                    })
-                    .catch((err) => showAppAlert("System Error", "Failed to wipe database record: " + err.message));
-            });
-        };
-
-        function finishAccountWipeFlow() {
-            closeDeleteAccountModal();
-            signOut(auth).then(() => {
-                const timeStamp = new Date().getTime();
-                window.location.href = window.location.pathname + "?account_wiped=true&t=" + timeStamp;
-            });
-        }
-
-        // Admin Deletion of Officers via Profile Modal
-        window.executeAdminDeleteOfficer = function() {
-            if (!activeModalOfficerUid) return;
-
-            showAppConfirm("Admin Confirmation", "Are you sure you want to delete and wipe this officer's account profile from the system?", true, (confirmed) => {
-                if (!confirmed) return;
-
-                remove(ref(db, 'users/' + activeModalOfficerUid))
-                    .then(() => {
-                        closeOfficerDetailsModal();
-                        showAppAlert("Account Wiped", "Officer account details have been successfully deleted from the directory.");
-                    })
-                    .catch((err) => showAppAlert("Error", "Failed to delete officer: " + err.message));
-            });
-        };
-
-        // Populate Officers Grid for Admin
-        function updateAdminOfficersDirectory() {
-            const positions = ["President", "Vice President", "Secretary", "Treasurer"];
-            
-            positions.forEach(pos => {
-                let foundUser = null;
-                Object.keys(allUsersData).forEach(uid => {
-                    if (allUsersData[uid].designation === pos) {
-                        foundUser = allUsersData[uid];
-                    }
-                });
-
-                const nameEl = document.getElementById(`tileName-${pos}`);
-                const imgEl = document.getElementById(`tileImg-${pos}`);
-
-                if (foundUser) {
-                    nameEl.textContent = foundUser.fullName || "Name Not Set";
-                    if (foundUser.photoBase64) {
-                        imgEl.src = foundUser.photoBase64;
-                    }
-                } else {
-                    nameEl.textContent = "Unregistered";
-                    imgEl.src = "https://cdn-icons-png.flaticon.com/512/847/847969.png";
-                }
-            });
-        }
-
-        window.openOfficerDetailsModal = function(position) {
-            let foundUser = null;
-            activeModalOfficerUid = null;
-
-            Object.keys(allUsersData).forEach(uid => {
-                if (allUsersData[uid].designation === position) {
-                    foundUser = allUsersData[uid];
-                    activeModalOfficerUid = uid;
-                }
-            });
-
-            const modalImg = document.getElementById('modalOfficerImg');
-            const modalName = document.getElementById('modalOfficerName');
-            const modalPos = document.getElementById('modalOfficerPosition');
-            const modalContent = document.getElementById('modalOfficerInfoContent');
-            const deleteBtn = document.getElementById('modalDeleteOfficerBtn');
-
-            modalPos.textContent = position;
-
-            if (foundUser) {
-                modalName.textContent = foundUser.fullName || "Name Not Set";
-                modalImg.src = foundUser.photoBase64 || "https://cdn-icons-png.flaticon.com/512/847/847969.png";
-
-                modalContent.innerHTML = `
-                    <div class="detail-info-row">
-                        <span class="detail-info-label">Student ID</span>
-                        <span class="detail-info-value">${foundUser.studentId || "N/A"}</span>
-                    </div>
-                    <div class="detail-info-row">
-                        <span class="detail-info-label">School Email</span>
-                        <span class="detail-info-value">${foundUser.email || "N/A"}</span>
-                    </div>
-                    <div class="detail-info-row">
-                        <span class="detail-info-label">Mobile Number</span>
-                        <span class="detail-info-value">${foundUser.mobile || "N/A"}</span>
-                    </div>
-                    <div class="detail-info-row">
-                        <span class="detail-info-label">Birthday</span>
-                        <span class="detail-info-value">${foundUser.birthday || "N/A"}</span>
-                    </div>
-                `;
-
-                if (currentUserRole === 'admin') deleteBtn.classList.remove('hidden');
-            } else {
-                modalName.textContent = "Unregistered Officer";
-                modalImg.src = "https://cdn-icons-png.flaticon.com/512/847/847969.png";
-                modalContent.innerHTML = `<p style="text-align:center; color: var(--text-muted); font-size:13px; margin: 20px 0;">No officer has registered for this position yet.</p>`;
-                deleteBtn.classList.add('hidden');
-            }
-
-            document.getElementById('officerDetailModal').classList.remove('hidden');
-        };
-
-        window.closeOfficerDetailsModal = function() {
-            document.getElementById('officerDetailModal').classList.add('hidden');
-            activeModalOfficerUid = null;
-        };
-
-        // ADMIN: ADD STUDENT MODAL
-        window.openAddStudentModal = function() {
-            document.getElementById('addStudentIdInput').value = "";
-            document.getElementById('addStudentNameInput').value = "";
-            document.getElementById('addStudentModal').classList.remove('hidden');
-        };
-
-        window.closeAddStudentModal = function() {
-            document.getElementById('addStudentModal').classList.add('hidden');
-        };
-
-        window.confirmAddStudent = function() {
-            const sid = document.getElementById('addStudentIdInput').value.trim();
-            const sname = document.getElementById('addStudentNameInput').value.trim().toUpperCase();
-
-            if (!sid || !sname) {
-                showAppAlert("Incomplete Form", "Please fill in both Student ID and Full Name.");
-                return;
-            }
-
-            if (currentStudentList.some(s => s.id === sid)) {
-                showAppAlert("Duplicate ID", "A student with this ID number already exists in the masterlist.");
-                return;
-            }
-
-            showAppConfirm("Add Student", `Are you sure you want to add "${sname}" (ID: ${sid}) to the roster?`, false, (confirmed) => {
-                if (!confirmed) return;
-
-                currentStudentList.push({ id: sid, name: sname });
-                currentStudentList = sortStudentsAlphabetically(currentStudentList);
-
-                set(ref(db, 'student_masterlist'), currentStudentList)
-                    .then(() => {
-                        closeAddStudentModal();
-                        showAppAlert("Student Added", `Student ${sname} has been added and auto-alphabetized in the roster!`);
-                    })
-                    .catch((err) => showAppAlert("Database Error", "Failed to add student: " + err.message));
-            });
-        };
-
-        // ADMIN: MODIFY STUDENT MODAL (EDIT NAME & REMOVE DROPDOWN)
-        window.openModifyStudentModal = function() {
-            const selectEl = document.getElementById('modifyStudentDropdown');
-            selectEl.innerHTML = '';
-
-            if (currentStudentList.length === 0) {
-                showAppAlert("Empty Roster", "No students currently found in the roster.");
-                return;
-            }
-
-            currentStudentList.forEach(student => {
-                const opt = document.createElement('option');
-                opt.value = student.id;
-                opt.textContent = `${student.name} (${student.id})`;
-                selectEl.appendChild(opt);
-            });
-
-            document.getElementById('modifyStudentModal').classList.remove('hidden');
-        };
-
-        window.closeModifyStudentModal = function() {
-            document.getElementById('modifyStudentModal').classList.add('hidden');
-        };
-
-        window.executeEditStudentName = function() {
-            const selectEl = document.getElementById('modifyStudentDropdown');
-            const studentId = selectEl.value;
-
-            const selectedStudent = currentStudentList.find(s => s.id === studentId);
-            if (!selectedStudent) return;
-
-            showAppPrompt("Edit Student Name", `Enter the updated full name for ID "${studentId}":`, selectedStudent.name, (updatedName) => {
-                if (updatedName === null) return;
-                const cleanUpdatedName = updatedName.trim().toUpperCase();
-
-                if (!cleanUpdatedName) {
-                    showAppAlert("Invalid Input", "Student name cannot be empty.");
-                    return;
-                }
-
-                showAppConfirm("Confirm Name Change", `Are you sure you want to rename "${selectedStudent.name}" to "${cleanUpdatedName}"?`, false, (confirmed) => {
-                    if (!confirmed) return;
-
-                    selectedStudent.name = cleanUpdatedName;
-                    currentStudentList = sortStudentsAlphabetically(currentStudentList);
-
-                    set(ref(db, 'student_masterlist'), currentStudentList)
-                        .then(() => {
-                            closeModifyStudentModal();
-                            showAppAlert("Update Success", "Student name updated and roster re-alphabetized successfully!");
-                        })
-                        .catch((err) => showAppAlert("Error", "Failed to update student name: " + err.message));
-                });
-            });
-        };
-
-        window.confirmRemoveStudentFromDropdown = function() {
-            const selectEl = document.getElementById('modifyStudentDropdown');
-            const studentId = selectEl.value;
-
-            const selectedStudent = currentStudentList.find(s => s.id === studentId);
-            if (!selectedStudent) return;
-
-            showAppConfirm("Remove Student", `Are you sure you want to REMOVE "${selectedStudent.name}" (ID: ${studentId})?\n\nThis action will permanently wipe their attendance logs.`, true, (confirmed) => {
-                if (!confirmed) return;
-
-                currentStudentList = currentStudentList.filter(s => s.id !== studentId);
-
-                Object.keys(globalDatabase).forEach(dateKey => {
-                    if (globalDatabase[dateKey].records && globalDatabase[dateKey].records[studentId]) {
-                        delete globalDatabase[dateKey].records[studentId];
-                    }
-                });
-
-                set(ref(db, 'student_masterlist'), currentStudentList)
-                    .then(() => saveDatabaseToDisk())
-                    .then(() => {
-                        closeModifyStudentModal();
-                        showAppAlert("Student Removed", `Student ${selectedStudent.name} has been removed and wiped from the system.`);
-                    })
-                    .catch((err) => showAppAlert("Error", "Failed to remove student: " + err.message));
-            });
-        };
-
-        // Cropper Logic
-        window.handleFileSelectedForCrop = function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imgElement = document.getElementById('imageToCrop');
-                    imgElement.src = e.target.result;
-                    document.getElementById('cropPhotoModal').classList.remove('hidden');
-
-                    if (cropperInstance) cropperInstance.destroy();
-                    
-                    cropperInstance = new Cropper(imgElement, {
-                        aspectRatio: 1,
-                        viewMode: 1,
-                        background: false
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        };
-
-        window.closeCropModal = function() {
-            document.getElementById('cropPhotoModal').classList.add('hidden');
-            if (cropperInstance) cropperInstance.destroy();
-            document.getElementById('profileImageInput').value = "";
-        };
-
-        window.executeImageCrop = function() {
-            if (!cropperInstance) return;
-            const canvas = cropperInstance.getCroppedCanvas({
-                width: 300,
-                height: 300
-            });
-            profilePhotoBase64 = canvas.toDataURL('image/jpeg');
-            document.getElementById('avatarPreview').src = profilePhotoBase64;
-            closeCropModal();
-        };
-
-        window.saveOfficerProfile = function() {
-            if (!currentUser) return;
-
-            showAppConfirm("Save Profile", "Are you sure you want to save these profile changes?", false, (confirmed) => {
-                if (!confirmed) return;
-
-                let profileData = {
-                    email: currentUser.email,
-                    role: currentUserRole,
-                    fullName: document.getElementById('profFullName').value,
-                    mobile: document.getElementById('profMobile').value,
-                    birthday: document.getElementById('profBirthday').value,
-                    photoBase64: profilePhotoBase64
-                };
-
-                if (currentUserRole === 'admin') {
-                    profileData.department = document.getElementById('profDepartment').value;
-                    profileData.unit = document.getElementById('profUnit').value;
-                    profileData.cluster = document.getElementById('profCluster').value;
-                    profileData.subject = document.getElementById('profSubject').value;
-                } else {
-                    profileData.designation = document.getElementById('profDesignation').value;
-                    profileData.studentId = document.getElementById('profStudentId').value;
-                }
-
-                set(ref(db, 'users/' + currentUser.uid), profileData)
-                    .then(() => showAppAlert("Profile Saved", "Your profile information has been updated successfully!"))
-                    .catch((err) => showAppAlert("Save Failed", "Failed to save profile: " + err.message));
-            });
-        };
-
-        function bindDatabaseSync() {
-            const dbRef = ref(db, 'attendance_records');
-            onValue(dbRef, (snapshot) => {
-                const data = snapshot.val();
-                globalDatabase = data ? data : {};
-                renderDashboardMatrix();
-                
-                if (!document.getElementById('dailyAttendanceSheetView').classList.contains('hidden') && activeEditingDateStr) {
-                    refreshSheetEditorDataOnly();
-                }
-            });
-        }
-
-        function saveDatabaseToDisk() {
-            return set(ref(db, 'attendance_records'), globalDatabase);
-        }
-
-        function navigateWeek(daysOffset) {
-            currentWeekStart.setDate(currentWeekStart.getDate() + daysOffset);
-            renderDashboardMatrix();
-        }
-
-        function getFormattedDateStr(dateObj) {
-            let y = dateObj.getFullYear();
-            let m = String(dateObj.getMonth() + 1).padStart(2, '0');
-            let d = String(dateObj.getDate()).padStart(2, '0');
-            return `${y}-${m}-${d}`;
-        }
-
-        function renderDashboardMatrix() {
-            let datesOfWeek = [];
-            let tempDate = new Date(currentWeekStart);
-            
-            for(let i = 0; i < 7; i++) {
-                datesOfWeek.push(new Date(tempDate));
-                tempDate.setDate(tempDate.getDate() + 1);
-            }
-
-            let optionsMonthDay = { month: 'short', day: '2-digit' };
-            let startRangeStr = datesOfWeek[0].toLocaleDateString('en-US', optionsMonthDay);
-            let endRangeStr = datesOfWeek[6].toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
-            document.getElementById('weeklyRangeTitle').textContent = `Summary: ${startRangeStr} - ${endRangeStr}`;
-
-            const headerRow = document.getElementById('dashboardHeaderRow');
-            headerRow.innerHTML = '<th style="width: 40px;">No.</th><th style="width: 90px;">ID</th><th>Name</th>';
-            
-            datesOfWeek.forEach(date => {
-                let th = document.createElement('th');
-                th.style.textAlign = "center";
-                th.style.cursor = "pointer";
-                th.className = "matrix-summary-cell";
-                
-                let dayLabel = date.toLocaleDateString('en-US', { month: 'short', day: '2-digit' }).toUpperCase();
-                let weekdayLabel = date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
-                th.innerHTML = `${dayLabel}<br><span style="font-size:9px; font-weight:normal; color:var(--text-muted);">${weekdayLabel}</span>`;
-                
-                let dateStr = getFormattedDateStr(date);
-                th.onclick = () => openDailyMonitoringSheet(dateStr);
-                headerRow.appendChild(th);
-            });
-
-            const tbody = document.getElementById('dashboardTableBody');
-            tbody.innerHTML = '';
-
-            currentStudentList.forEach((student, index) => {
-                let tr = document.createElement('tr');
-                tr.innerHTML = `<td>${index + 1}</td><td style="color:var(--text-muted); font-size:11px;">${student.id}</td><td style="font-weight:500; color:#334155;">${student.name}</td>`;
-                
-                datesOfWeek.forEach(date => {
-                    let td = document.createElement('td');
-                    td.className = "matrix-summary-cell";
-                    let dateStr = getFormattedDateStr(date);
-                    td.onclick = () => openDailyMonitoringSheet(dateStr);
-
-                    let dayData = globalDatabase[dateStr];
-                    if(dayData && dayData.records && dayData.records[student.id]) {
-                        let stateRow = dayData.records[student.id];
-                        let periodMax = dayData.periods || 7;
-                        let absentCount = 0;
-
-                        if(stateRow.hr === "A") absentCount++;
-                        for(let p = 1; p <= periodMax; p++) {
-                            if(stateRow['p' + p] === "A") absentCount++;
-                        }
-
-                        if(absentCount === 0) {
-                            td.innerHTML = `<span class="matrix-status-pill pill-zero">0</span>`;
-                        } else {
-                            td.innerHTML = `<span class="matrix-status-pill pill-absent">${absentCount}</span>`;
-                        }
-                    } else {
-                        td.innerHTML = `<span class="pill-empty">-</span>`;
-                    }
-                    tr.appendChild(td);
-                });
-                tbody.appendChild(tr);
-            });
-        }
-
-        function openDailyMonitoringSheet(dateStr) {
-            activeEditingDateStr = dateStr;
-            showView('dailySheet');
-            document.getElementById('dailyAttendanceSheetView').classList.remove('hidden');
-
-            let parts = dateStr.split('-');
-            let parsedLocalObj = new Date(parts[0], parts[1] - 1, parts[2]);
-            let prettyDate = parsedLocalObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            document.getElementById('dailySheetHeaderTitle').textContent = `Sheet: ${prettyDate}`;
-            
-            refreshSheetEditorDataOnly();
-        }
-
-        function refreshSheetEditorDataOnly() {
-            workingSheetRecords = {};
-            let existingDayData = globalDatabase[activeEditingDateStr];
-
-            if(existingDayData) {
-                document.getElementById('fieldModality').value = existingDayData.modality || "Face to Face";
-                document.getElementById('fieldPeriodCount').value = existingDayData.periods || "7";
-                document.getElementById('fieldRemarks').value = existingDayData.remarks || "";
-
-                currentStudentList.forEach(s => {
-                    if (existingDayData.records && existingDayData.records[s.id]) {
-                        workingSheetRecords[s.id] = { ...existingDayData.records[s.id] };
-                        if (workingSheetRecords[s.id].remark === undefined) workingSheetRecords[s.id].remark = "";
-                    } else {
-                        workingSheetRecords[s.id] = createDefaultClearRow();
-                    }
-                });
-            } else {
-                document.getElementById('fieldModality').value = "Face to Face";
-                document.getElementById('fieldPeriodCount').value = "7";
-                document.getElementById('fieldRemarks').value = "";
-
-                currentStudentList.forEach(s => {
-                    workingSheetRecords[s.id] = createDefaultClearRow();
-                });
-            }
-
-            handlePeriodRangeChange();
-            applyAttendancePermissions();
-        }
-
-        function createDefaultClearRow() {
-            return { hr: "✓", p1:"✓", p2:"✓", p3:"✓", p4:"✓", p5:"✓", p6:"✓", p7:"✓", p8:"✓", p9:"✓", remark: "" };
-        }
-
-        function handlePeriodRangeChange() {
-            const periodMax = parseInt(document.getElementById('fieldPeriodCount').value);
-            const headerRow = document.getElementById('sheetHeaderRow');
-
-            let headersHtml = `<th>No.</th><th>Student Name</th><th style="text-align: center; width: 40px;">All</th><th style="text-align: center;">HR</th>`;
-            for(let p = 1; p <= periodMax; p++) {
-                headersHtml += `<th style="text-align: center;">P${p}</th>`;
-            }
-            headersHtml += `<th style="text-align: center;">TL</th><th style="text-align: center;">DA</th><th style="text-align: center;">E</th>`;
-            headerRow.innerHTML = headersHtml;
-
-            renderSheetEditorRows();
-        }
-
-        function renderSheetEditorRows() {
-            const periodMax = parseInt(document.getElementById('fieldPeriodCount').value);
-            const tbody = document.getElementById('sheetTableBody');
-            tbody.innerHTML = '';
-
-            let aggregatedGlobalAbsence = 0;
-            let aggregatedGlobalTardiness = 0;
-            let aggregatedGlobalExcused = 0;
-
-            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
-
-            currentStudentList.forEach((student, index) => {
-                let stateRow = workingSheetRecords[student.id] || createDefaultClearRow();
-                let tr = document.createElement('tr');
-
-                let targetHasRemarkClass = (stateRow.remark && stateRow.remark.trim().length > 0) ? 'has-student-remark' : '';
-
-                let rowHtml = `
-                    <td style="color:var(--text-muted); font-size:11px;">${student.id}</td>
-                    <td>
-                        <span style="font-weight: 500; color:#334155;">${student.name}</span>
-                        <button class="bubble-comment-btn ${targetHasRemarkClass}" data-id="${student.id}" data-name="${student.name}">💬</button>
-                    </td>
-                    <td style="text-align:center;"><button class="all-row-select" data-id="${student.id}" ${!canEdit ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>✓</button></td>
-                `;
-
-                rowHtml += `<td><div class="click-status-cell ${getStatusClassStyle(stateRow.hr)}" data-id="${student.id}" data-key="hr">${stateRow.hr}</div></td>`;
-
-                for(let p = 1; p <= periodMax; p++) {
-                    let key = 'p' + p;
-                    rowHtml += `<td><div class="click-status-cell ${getStatusClassStyle(stateRow[key])}" data-id="${student.id}" data-key="${key}">${stateRow[key]}</div></td>`;
-                }
-
-                let totalTrackedColumns = periodMax + 1; 
-                let absentCount = 0;
-                let tardyCount = 0;
-                let excusedCount = 0;
-
-                if(stateRow.hr === "A") absentCount++;
-                if(stateRow.hr === "L" || stateRow.hr === "T") tardyCount++;
-                if(stateRow.hr === "E") excusedCount++;
-
-                for(let p = 1; p <= periodMax; p++) {
-                    let val = stateRow['p' + p] || "✓";
-                    if(val === "A") absentCount++;
-                    if(val === "L" || val === "T") tardyCount++;
-                    if(val === "E") excusedCount++;
-                }
-
-                aggregatedGlobalAbsence += absentCount;
-                aggregatedGlobalTardiness += tardyCount;
-                aggregatedGlobalExcused += excusedCount;
-
-                let daWeight = (absentCount / totalTrackedColumns).toFixed(2);
-                if(parseFloat(daWeight) === 0) daWeight = "0";
-
-                rowHtml += `
-                    <td style="text-align:center;"><span class="badge-metric">${tardyCount}/${totalTrackedColumns}</span></td>
-                    <td style="text-align:center;"><span class="badge-metric">${daWeight}</span></td>
-                    <td style="text-align:center;"><span class="badge-metric">${excusedCount}/${totalTrackedColumns}</span></td>
-                `;
-
-                tr.innerHTML = rowHtml;
-                tbody.appendChild(tr);
-            });
-
-            document.getElementById('statAbsenceUnits').value = aggregatedGlobalAbsence;
-            document.getElementById('statTardiness').value = aggregatedGlobalTardiness;
-            document.getElementById('statExcused').value = aggregatedGlobalExcused;
-
-            catchDynamicRowEventListeners();
-        }
-
-        function getStatusClassStyle(val) {
-            if(val === "✓") return "status-present";
-            if(val === "A") return "status-absent";
-            if(val === "L") return "status-late";
-            if(val === "T") return "status-tardy";
-            if(val === "E") return "status-excused";
-            return "";
-        }
-
-        function catchDynamicRowEventListeners() {
-            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
-
-            document.querySelectorAll('.click-status-cell').forEach(el => {
-                el.onclick = function() {
-                    if (!canEdit) return;
-                    let sid = this.getAttribute('data-id');
-                    let key = this.getAttribute('data-key');
-                    let currentVal = workingSheetRecords[sid][key] || "✓";
-                    let nextIdx = (CYCLIC_STATES.indexOf(currentVal) + 1) % CYCLIC_STATES.length;
-                    workingSheetRecords[sid][key] = CYCLIC_STATES[nextIdx];
-                    renderSheetEditorRows();
-                };
-            });
-
-            document.querySelectorAll('.all-row-select').forEach(el => {
-                el.onclick = function() {
-                    if (!canEdit) return;
-                    let sid = this.getAttribute('data-id');
-                    let currentHrVal = workingSheetRecords[sid].hr;
-                    let nextIdx = (CYCLIC_STATES.indexOf(currentHrVal) + 1) % CYCLIC_STATES.length;
-                    let targetState = CYCLIC_STATES[nextIdx];
-
-                    workingSheetRecords[sid].hr = targetState;
-                    for(let i = 1; i <= 9; i++) {
-                        workingSheetRecords[sid]['p' + i] = targetState;
-                    }
-                    renderSheetEditorRows();
-                };
-            });
-
-            document.querySelectorAll('.bubble-comment-btn').forEach(el => {
-                el.onclick = function() {
-                    let sid = this.getAttribute('data-id');
-                    let sname = this.getAttribute('data-name');
-                    openStudentRemarkModal(sid, sname);
-                };
-            });
-        }
-
-        function openStudentRemarkModal(studentId, studentName) {
-            modalActiveStudentId = studentId;
-            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
-            
-            document.getElementById('modalStudentLabel').innerText = `${studentName} | ID: ${studentId}`;
-            let currentSavedText = (workingSheetRecords[studentId] && workingSheetRecords[studentId].remark) ? workingSheetRecords[studentId].remark : "";
-            
-            const textarea = document.getElementById('modalRemarkInput');
-            textarea.value = currentSavedText;
-            textarea.readOnly = !canEdit;
-
-            document.getElementById('studentRemarkModal').classList.remove('hidden');
-        }
-
-        function closeStudentRemarkModal() {
-            document.getElementById('studentRemarkModal').classList.add('hidden');
-            modalActiveStudentId = null;
-        }
-
-        function saveStudentRemarkModal() {
-            if(!modalActiveStudentId) return;
-            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
-            if (!canEdit) return;
-
-            let currentTextInputValue = document.getElementById('modalRemarkInput').value;
-            if(!workingSheetRecords[modalActiveStudentId]) workingSheetRecords[modalActiveStudentId] = createDefaultClearRow();
-            workingSheetRecords[modalActiveStudentId].remark = currentTextInputValue;
-            closeStudentRemarkModal();
-            renderSheetEditorRows();
-        }
-
-        function resetActiveSheetForm() {
-            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
-            if (!canEdit) return;
-
-            showAppConfirm("Confirm Reset", "Are you sure you want to clear all daily sheet tracking logs for this date?", true, (confirmed) => {
-                if (!confirmed) return;
-                currentStudentList.forEach(s => {
-                    workingSheetRecords[s.id] = createDefaultClearRow();
-                });
-                renderSheetEditorRows();
-            });
-        }
-
-        function saveActiveSheetToDatabase() {
-            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
-            if (!canEdit) return;
-
-            showAppConfirm("Save Attendance", "Are you sure you want to save the active attendance sheet entries to the database?", false, (confirmed) => {
-                if (!confirmed) return;
-
-                globalDatabase[activeEditingDateStr] = {
-                    modality: document.getElementById('fieldModality').value,
-                    periods: parseInt(document.getElementById('fieldPeriodCount').value),
-                    remarks: document.getElementById('fieldRemarks').value,
-                    records: JSON.parse(JSON.stringify(workingSheetRecords))
-                };
-                saveDatabaseToDisk().then(() => {
-                    showAppAlert("Success", "Attendance sheet saved successfully!");
-                    exitToDashboard();
-                });
-            });
-        }
-
-        function exitToDashboard() {
-            showView('dashboard');
-            renderDashboardMatrix();
-        }
-
-        function exportDataToSpreadsheet() {
-            const loggedDates = Object.keys(globalDatabase).sort();
-            if (loggedDates.length === 0) {
-                showAppAlert("Export Error", "No saved attendance records were found in the database to export.");
-                return;
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            let csvHeader = "Student ID,Student Name";
-            
-            loggedDates.forEach(date => {
-                let pMax = globalDatabase[date].periods || 7;
-                csvHeader += `,${date} (HR)`;
-                for (let i = 1; i <= pMax; i++) {
-                    csvHeader += `,${date} (P${i})`;
-                }
-                csvHeader += `,${date} (Remarks)`;
-            });
-            csvContent += csvHeader + "\r\n";
-
-            currentStudentList.forEach(student => {
-                let rowStr = `"${student.id}","${student.name}"`;
-                
-                loggedDates.forEach(date => {
-                    let dayData = globalDatabase[date];
-                    let pMax = dayData.periods || 7;
-                    let record = (dayData.records && dayData.records[student.id]) ? dayData.records[student.id] : null;
-
-                    if (record) {
-                        rowStr += `,${record.hr || '✓'}`;
-                        for (let i = 1; i <= pMax; i++) {
-                            rowStr += `,${record['p' + i] || '✓'}`;
-                        }
-                        let textRemark = record.remark ? record.remark.replace(/"/g, '""') : '';
-                        rowStr += `,"${textRemark}"`;
-                    } else {
-                        rowStr += `,✓`;
-                        for (let i = 1; i <= pMax; i++) rowStr += `,✓`;
-                        rowStr += `,""`;
-                    }
-                });
-                csvContent += rowStr + "\r\n";
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const linkElement = document.createElement("a");
-            linkElement.setAttribute("href", encodedUri);
-            linkElement.setAttribute("download", `AnimoLED_Attendance_Report.csv`);
-            document.body.appendChild(linkElement);
-            linkElement.click();
-            document.body.removeChild(linkElement);
-        }
-
-        window.closeStudentRemarkModal = closeStudentRemarkModal;
-        window.saveStudentRemarkModal = saveStudentRemarkModal;
-        window.navigateWeek = navigateWeek;
-        window.exitToDashboard = exitToDashboard;
-        window.resetActiveSheetForm = resetActiveSheetForm;
-        window.saveActiveSheetToDatabase = saveActiveSheetToDatabase;
-        window.handlePeriodRangeChange = handlePeriodRangeChange;
-        window.exportDataToSpreadsheet = exportDataToSpreadsheet;
-        window.openDeleteAccountModal = openDeleteAccountModal;
-        window.closeDeleteAccountModal = closeDeleteAccountModal;
-        window.executeAccountDeletion = executeAccountDeletion;
-        window.executeAdminDeleteOfficer = executeAdminDeleteOfficer;
-        window.openAddStudentModal = openAddStudentModal;
-        window.closeAddStudentModal = closeAddStudentModal;
-        window.confirmAddStudent = confirmAddStudent;
-        window.openModifyStudentModal = openModifyStudentModal;
-        window.closeModifyStudentModal = closeModifyStudentModal;
-        window.executeEditStudentName = executeEditStudentName;
-        window.confirmRemoveStudentFromDropdown = confirmRemoveStudentFromDropdown;
-        window.closeAppAlertModal = closeAppAlertModal;
-        window.closeAppConfirmModal = closeAppConfirmModal;
-        window.closeAppPromptModal = closeAppPromptModal;
     </script>
 </body>
 </html>
