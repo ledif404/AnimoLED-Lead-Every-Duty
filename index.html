@@ -98,6 +98,28 @@
             display: inline-block;
         }
 
+        .brand-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--primary-green);
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-title span {
+            color: var(--accent-gold);
+            text-transform: uppercase;
+        }
+
+        .brand-motto {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
         .form-group {
             margin-bottom: 16px;
         }
@@ -216,12 +238,12 @@
             flex-wrap: nowrap;
             padding-bottom: 4px;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE/Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
         .nav-actions::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
+            display: none;
         }
 
         @media (min-width: 768px) {
@@ -733,7 +755,7 @@
             text-align: center;
         }
 
-        /* Image Cropper */
+        /* Image Cropper Container */
         .cropper-img-wrapper {
             width: 100%;
             max-height: 300px;
@@ -818,7 +840,8 @@
                 <img src="./AnimoLED%20Logo.png" alt="AnimoLED Logo" class="brand-logo-img">
             </div>
             
-            <form id="authForm">
+            <!-- ADDED ONSUBMIT EVENT PREVENT DEFAULT TO FIX "?" URL NATIVE SUBMISSION BUG -->
+            <form id="authForm" onsubmit="event.preventDefault();">
                 <div class="form-group hidden" id="registerPositionGroup">
                     <label>Officer Position</label>
                     <select id="registerPosition">
@@ -971,31 +994,24 @@
                 </div>
 
                 <div class="officers-2x2-grid">
-                    <!-- Top Left: President -->
                     <div class="officer-tile">
                         <span class="officer-tile-title">★ President ★</span>
                         <img id="tileImg-President" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="officer-tile-img" alt="President">
                         <div id="tileName-President" class="officer-tile-name">Unregistered</div>
                         <button class="btn-ui btn-green" style="width: 100%;" onclick="openOfficerDetailsModal('President')">View Profile</button>
                     </div>
-
-                    <!-- Top Right: Vice President -->
                     <div class="officer-tile">
                         <span class="officer-tile-title">★ Vice President ★</span>
                         <img id="tileImg-Vice President" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="officer-tile-img" alt="Vice President">
                         <div id="tileName-Vice President" class="officer-tile-name">Unregistered</div>
                         <button class="btn-ui btn-green" style="width: 100%;" onclick="openOfficerDetailsModal('Vice President')">View Profile</button>
                     </div>
-
-                    <!-- Bottom Left: Secretary -->
                     <div class="officer-tile">
                         <span class="officer-tile-title">★ Secretary ★</span>
                         <img id="tileImg-Secretary" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="officer-tile-img" alt="Secretary">
                         <div id="tileName-Secretary" class="officer-tile-name">Unregistered</div>
                         <button class="btn-ui btn-green" style="width: 100%;" onclick="openOfficerDetailsModal('Secretary')">View Profile</button>
                     </div>
-
-                    <!-- Bottom Right: Treasurer -->
                     <div class="officer-tile">
                         <span class="officer-tile-title">★ Treasurer ★</span>
                         <img id="tileImg-Treasurer" src="https://cdn-icons-png.flaticon.com/512/847/847969.png" class="officer-tile-img" alt="Treasurer">
@@ -1028,7 +1044,6 @@
                             <input type="text" id="profFullName" placeholder="e.g., Juan Dela Cruz">
                         </div>
 
-                        <!-- OFFICER FIELDS -->
                         <div class="form-group officer-only-field">
                             <label>Officer Position</label>
                             <input type="text" id="profDesignation" disabled style="background-color:#e2e8f0; font-weight: bold;">
@@ -1038,7 +1053,6 @@
                             <input type="text" id="profStudentId" placeholder="e.g., N2026101">
                         </div>
 
-                        <!-- ADMIN / TEACHER FIELDS -->
                         <div class="form-group admin-only-field hidden">
                             <label>Department</label>
                             <input type="text" id="profDepartment" placeholder="e.g., Applied Science">
@@ -1056,7 +1070,6 @@
                             <input type="text" id="profSubject" placeholder="e.g., Computer Technology">
                         </div>
 
-                        <!-- SHARED FIELDS -->
                         <div class="form-group">
                             <label>School Email</label>
                             <input type="email" id="profEmail" disabled style="background-color:#e2e8f0;">
@@ -1073,7 +1086,7 @@
                 </div>
             </div>
 
-            <!-- NEW: 💰 MISSION COLLECTION VIEW -->
+            <!-- MISSION COLLECTION VIEW -->
             <div id="missionCollectionView" class="hidden">
                 <div class="view-header-flex">
                     <h2 class="view-title">💰 Mission Collection <span style="font-size:13px; color:var(--text-muted); font-weight:500;">| AY 2026–2027</span></h2>
@@ -1084,14 +1097,12 @@
                     </div>
                 </div>
 
-                <!-- MC View-Only Notice -->
                 <div id="mcReadOnlyNotice" class="permission-notice hidden">
                     🔒 View Only Mode: Mission Collection entry and editing are strictly reserved for the Class Treasurer and Main Admin.
                 </div>
 
                 <!-- MC DASHBOARD TAB -->
                 <div id="mcDashboardTab">
-                    <!-- Summary Cards -->
                     <div class="meta-form-grid" style="margin-bottom: 20px;">
                         <div class="meta-box" style="border-left: 4px solid var(--accent-gold);">
                             <label>Total Collected (AY 26-27)</label>
@@ -1117,7 +1128,6 @@
                         </div>
                     </div>
 
-                    <!-- Main Chart -->
                     <div class="table-scroller" style="background:#fff; padding:16px; margin-bottom: 20px;">
                         <h3 style="margin:0 0 16px 0; font-size:13px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Weekly Collection Trend</h3>
                         <div class="table-scroller" style="border:none;">
@@ -1127,7 +1137,6 @@
                         </div>
                     </div>
 
-                    <!-- Search & Table -->
                     <div style="display:flex; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
                         <input type="text" id="mcSearchInput" placeholder="Search week or amount..." style="padding:8px; border:1px solid var(--border-gray); border-radius:4px; flex:1; min-width:200px; font-size:13px;" oninput="renderMcTable()">
                         <select id="mcFilterSelect" style="padding:8px; border:1px solid var(--border-gray); border-radius:4px; font-size:13px;" onchange="renderMcTable()">
@@ -1153,9 +1162,7 @@
                                     <th style="text-align:center; width:120px;">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="mcTableBody">
-                                <!-- Dynamic rows -->
-                            </tbody>
+                            <tbody id="mcTableBody"></tbody>
                         </table>
                     </div>
                 </div>
@@ -1165,12 +1172,11 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                         <h3 style="margin:0; font-size:15px; color:var(--primary-green);">Mission Collection Reports</h3>
                         <div class="btn-set" style="width:auto;">
-                            <button class="btn-ui btn-gold" onclick="exportMcCSV()">📊 Export CSV Data</button>
-                            <button class="btn-ui btn-green" onclick="exportMcPDF()">📄 Export PDF Report</button>
+                            <button class="btn-ui btn-gold" onclick="exportMcCSV()">📊 Export CSV</button>
+                            <button class="btn-ui btn-green" onclick="exportMcPDF()">📄 Export PDF</button>
                         </div>
                     </div>
                     
-                    <!-- Hidden Container specifically formatted for PDF generation -->
                     <div id="mcPdfExportContainer" style="background:#fff; padding:30px; border:1px solid var(--border-gray); border-radius:6px; color:#000;">
                         <div style="text-align:center; margin-bottom:30px; border-bottom:2px solid var(--primary-green); padding-bottom:16px;">
                             <h2 style="margin:0 0 8px 0; color:var(--primary-green); font-size:24px;">AnimoLED</h2>
@@ -1237,9 +1243,7 @@
             <div style="display:flex; gap:12px; margin-bottom:16px;">
                 <div class="form-group" style="flex:1;">
                     <label>Collection Week</label>
-                    <select id="mcWeekSelect" onchange="handleMcWeekSelectChange()">
-                        <!-- Options generated in JS -->
-                    </select>
+                    <select id="mcWeekSelect" onchange="handleMcWeekSelectChange()"></select>
                 </div>
                 <div class="form-group" style="flex:2;">
                     <label>Official Date</label>
@@ -1391,9 +1395,7 @@
             </p>
             <div class="form-group">
                 <label>Select Target Student</label>
-                <select id="modifyStudentDropdown">
-                    <!-- Dynamic option list rendered via JS -->
-                </select>
+                <select id="modifyStudentDropdown"></select>
             </div>
             <div style="display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; flex-wrap:wrap;">
                 <button class="btn-ui btn-gray" onclick="closeModifyStudentModal()">Cancel</button>
@@ -1559,7 +1561,6 @@
 
         let currentStudentList = [];
 
-        // Dynamic Themed Dialog Replacement Helpers
         window.showAppAlert = function(title, message) {
             document.getElementById('appAlertTitle').textContent = title || "Notice";
             document.getElementById('appAlertMessage').textContent = message || "";
@@ -1612,13 +1613,11 @@
             }
         };
 
-        // Force cache-busting on app load if requested
         if (window.location.search.includes('force_refresh=true')) {
             const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
             window.history.replaceState({path: cleanUrl}, '', cleanUrl);
         }
 
-        // Show temporary wipe notification if flag is present in URL
         if (window.location.search.includes('account_wiped=true')) {
             const toast = document.getElementById('toastNotification');
             toast.classList.remove('hidden');
@@ -1908,8 +1907,6 @@
             }
         };
 
-        // --- MC CRUD Modals ---
-
         window.openMcAddModal = function() {
             mcEditModeWeek = null;
             document.getElementById('mcEntryTitle').textContent = "💰 Add Mission Collection";
@@ -2170,8 +2167,6 @@
             document.getElementById('mcViewModal').classList.add('hidden');
         };
 
-        // --- Reports & Export ---
-        
         window.renderMcReports = function() {
             let totalCents = 0;
             let highestAmount = -1;
@@ -2274,6 +2269,71 @@
             };
             html2pdf().set(opt).from(element).save();
         };
+
+        // --- Auth Hooks & UI Load ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authContainer').classList.add('hidden');
+                document.getElementById('appContainer').classList.remove('hidden');
+                document.getElementById('profEmail').value = user.email;
+                
+                currentUserRole = (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? "admin" : "officer";
+
+                onValue(ref(db, 'users'), (snapshot) => {
+                    allUsersData = snapshot.val() || {};
+                    const userData = allUsersData[user.uid];
+
+                    if (userData) {
+                        userDesignation = userData.designation || (currentUserRole === "admin" ? "Main Admin" : "Officer");
+                        userFullName = userData.fullName || "Officer";
+                        document.getElementById('displayUserRole').textContent = userDesignation;
+
+                        document.getElementById('profFullName').value = userData.fullName || "";
+                        document.getElementById('profMobile').value = userData.mobile || "";
+                        document.getElementById('profBirthday').value = userData.birthday || "";
+                        
+                        if (currentUserRole === 'admin') {
+                            document.getElementById('profDepartment').value = userData.department || "";
+                            document.getElementById('profUnit').value = userData.unit || "";
+                            document.getElementById('profCluster').value = userData.cluster || "";
+                            document.getElementById('profSubject').value = userData.subject || "";
+                        } else {
+                            document.getElementById('profDesignation').value = userDesignation;
+                            document.getElementById('profStudentId').value = userData.studentId || "";
+                        }
+
+                        if (userData.photoBase64) {
+                            profilePhotoBase64 = userData.photoBase64;
+                            document.getElementById('avatarPreview').src = userData.photoBase64;
+                        }
+                    }
+
+                    configureProfileFormByRole(currentUserRole);
+                    applyAttendancePermissions();
+
+                    if (currentUserRole === 'admin' || userDesignation === 'Treasurer') {
+                        document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.remove('hidden'));
+                        document.getElementById('mcReadOnlyNotice').classList.add('hidden');
+                    } else {
+                        document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.add('hidden'));
+                        document.getElementById('mcReadOnlyNotice').classList.remove('hidden');
+                    }
+
+                    if (currentUserRole === 'admin') {
+                        updateAdminOfficersDirectory();
+                    }
+                });
+
+                bindStudentMasterlistSync();
+                bindDatabaseSync();
+                bindMissionCollectionSync();
+            } else {
+                currentUser = null;
+                document.getElementById('authContainer').classList.remove('hidden');
+                document.getElementById('appContainer').classList.add('hidden');
+            }
+        });
     </script>
 </body>
 </html>
