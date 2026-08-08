@@ -1628,6 +1628,98 @@
         // ============================================
         // MISSION COLLECTION SYSTEM (AY 2026-2027)
         // ============================================
+
+        // Centralized source of truth for Mission Collection Denominations
+        const MC_DENOMINATIONS = [
+            { key: '1000', value: 1000, cents: 100000, label: '₱1,000.00', domId: 'mc_q_1000', legacyKeys: [] },
+            { key: '500', value: 500, cents: 50000, label: '₱500.00', domId: 'mc_q_500', legacyKeys: [] },
+            { key: '200', value: 200, cents: 20000, label: '₱200.00', domId: 'mc_q_200', legacyKeys: [] },
+            { key: '100', value: 100, cents: 10000, label: '₱100.00', domId: 'mc_q_100', legacyKeys: [] },
+            { key: '50', value: 50, cents: 5000, label: '₱50.00', domId: 'mc_q_50', legacyKeys: [] },
+            { key: '20_paper', value: 20, cents: 2000, label: '₱20.00 (Paper)', domId: 'mc_q_20p', legacyKeys: ['20p', '20_paper'] },
+            { key: '20_coin', value: 20, cents: 2000, label: '₱20.00 (Coin)', domId: 'mc_q_20c', legacyKeys: ['20c', '20_coin'] },
+            { key: '10', value: 10, cents: 1000, label: '₱10.00', domId: 'mc_q_10', legacyKeys: [] },
+            { key: '5', value: 5, cents: 500, label: '₱5.00', domId: 'mc_q_5', legacyKeys: [] },
+            { key: '1', value: 1, cents: 100, label: '₱1.00', domId: 'mc_q_1', legacyKeys: [] },
+            { key: '0_25', value: 0.25, cents: 25, label: '₱0.25', domId: 'mc_q_025', legacyKeys: ['0.25', '0,25'] },
+            { key: '0_10', value: 0.10, cents: 10, label: '₱0.10', domId: 'mc_q_010', legacyKeys: ['0.10', '0,10'] },
+            { key: '0_05', value: 0.05, cents: 5, label: '₱0.05', domId: 'mc_q_005', legacyKeys: ['0.05', '0,05'] }
+        ];
+
+        // Centralized Helper: retrieve denomination quantity supporting new and legacy keys safely
+        function getMcDenominationQuantity(record, denomObj) {
+            if (!record || !record.denominations) return 0;
+            const denoms = record.denominations;
+            
+            // Check primary key first
+            if (denoms[denomObj.key] !== undefined && denoms[denomObj.key] !== null) {
+                return parseInt(denoms[denomObj.key] || 0);
+            }
+            
+            // Check legacy keys
+            if (denomObj.legacyKeys && denomObj.legacyKeys.length > 0) {
+                for (let lKey of denomObj.legacyKeys) {
+                    if (denoms[lKey] !== undefined && denoms[lKey] !== null) {
+                        return parseInt(denoms[lKey] || 0);
+                    }
+                }
+            }
+            
+            // Fallback check by string representation of value
+            let valStr = denomObj.value.toString();
+            if (denoms[valStr] !== undefined && denoms[valStr] !== null) {
+                return parseInt(denoms[valStr] || 0);
+            }
+            
+            return 0;
+        }
+
+        // Centralized Helper: sanitize any key string for Firebase storage
+        function sanitizeMcFirebaseKey(key) {
+            return String(key).replace(/[.#$/\[\]]/g, '_');
+        }
+
+        // Centralized Helper: verify record total matching & check for legacy/duplicate keys
+        function verifyMcRecordIntegrity(record) {
+            if (!record || !record.denominations) return { valid: true, calculatedCents: 0, legacyKeysFound: [], hasDuplicateKeys: false };
+            
+            let calculatedCents = 0;
+            let legacyKeysFound = [];
+            let hasDuplicateKeys = false;
+            
+            MC_DENOMINATIONS.forEach(d => {
+                let hasNewKey = record.denominations[d.key] !== undefined;
+                let foundLegacyKey = null;
+                
+                if (d.legacyKeys) {
+                    for (let lKey of d.legacyKeys) {
+                        if (record.denominations[lKey] !== undefined && lKey !== d.key) {
+                            foundLegacyKey = lKey;
+                            if (!legacyKeysFound.includes(lKey)) legacyKeysFound.push(lKey);
+                        }
+                    }
+                }
+                
+                if (hasNewKey && foundLegacyKey) {
+                    hasDuplicateKeys = true;
+                }
+                
+                let qty = getMcDenominationQuantity(record, d);
+                calculatedCents += qty * d.cents;
+            });
+            
+            let expectedCents = Math.round(parseFloat(record.totalCollection || 0) * 100);
+            let isTotalMatching = calculatedCents === expectedCents;
+            
+            return {
+                valid: isTotalMatching && !hasDuplicateKeys,
+                calculatedCents,
+                expectedCents,
+                isTotalMatching,
+                legacyKeysFound,
+                hasDuplicateKeys
+            };
+        }
         
         const MISSION_COLLECTION_SCHEDULE = [
             { week: 1, date: "2026-07-06", display: "Monday, July 06, 2026" },
@@ -1922,19 +2014,11 @@
             
             let record = mcGlobalData['week_' + weekNum];
             if (record && record.denominations) {
-                document.getElementById('mc_q_1000').value = record.denominations["1000"] || 0;
-                document.getElementById('mc_q_500').value = record.denominations["500"] || 0;
-                document.getElementById('mc_q_200').value = record.denominations["200"] || 0;
-                document.getElementById('mc_q_100').value = record.denominations["100"] || 0;
-                document.getElementById('mc_q_50').value = record.denominations["50"] || 0;
-                document.getElementById('mc_q_20p').value = record.denominations["20_paper"] || 0;
-                document.getElementById('mc_q_20c').value = record.denominations["20_coin"] || 0;
-                document.getElementById('mc_q_10').value = record.denominations["10"] || 0;
-                document.getElementById('mc_q_5').value = record.denominations["5"] || 0;
-                document.getElementById('mc_q_1').value = record.denominations["1"] || 0;
-                document.getElementById('mc_q_025').value = record.denominations["0.25"] || 0;
-                document.getElementById('mc_q_010').value = record.denominations["0.10"] || 0;
-                document.getElementById('mc_q_005').value = record.denominations["0.05"] || 0;
+                MC_DENOMINATIONS.forEach(d => {
+                    let qty = getMcDenominationQuantity(record, d);
+                    let inputEl = document.getElementById(d.domId);
+                    if (inputEl) inputEl.value = qty;
+                });
             } else {
                 resetMcForm();
             }
@@ -1961,29 +2045,18 @@
         window.calcMcSubtotals = function() {
             let totalCents = 0;
             
-            function getV(id, multiplierCent) {
-                let el = document.getElementById(id);
-                let val = parseInt(el.value || 0);
-                if (val < 0) { val = 0; el.value = 0; }
-                let cents = val * multiplierCent;
-                document.getElementById(id.replace('_q_', '_s_')).textContent = formatMC(cents);
-                totalCents += cents;
-                return val;
-            }
-
-            getV('mc_q_1000', 100000);
-            getV('mc_q_500', 50000);
-            getV('mc_q_200', 20000);
-            getV('mc_q_100', 10000);
-            getV('mc_q_50', 5000);
-            getV('mc_q_20p', 2000);
-            getV('mc_q_20c', 2000);
-            getV('mc_q_10', 1000);
-            getV('mc_q_5', 500);
-            getV('mc_q_1', 100);
-            getV('mc_q_025', 25);
-            getV('mc_q_010', 10);
-            getV('mc_q_005', 5);
+            MC_DENOMINATIONS.forEach(d => {
+                let el = document.getElementById(d.domId);
+                if (el) {
+                    let val = parseInt(el.value || 0);
+                    if (val < 0) { val = 0; el.value = 0; }
+                    let cents = val * d.cents;
+                    let subElId = d.domId.replace('_q_', '_s_');
+                    let subEl = document.getElementById(subElId);
+                    if (subEl) subEl.textContent = formatMC(cents);
+                    totalCents += cents;
+                }
+            });
 
             document.getElementById('mc_grand_total').textContent = formatMC(totalCents);
             return totalCents;
@@ -1995,14 +2068,15 @@
 
         function generateZeroMcPayload(weekObj) {
             let dt = new Date().toLocaleString();
+            let zeroDenoms = {};
+            MC_DENOMINATIONS.forEach(d => {
+                zeroDenoms[d.key] = 0;
+            });
+
             return {
                 weekNumber: weekObj.week,
                 collectionDate: weekObj.date,
-                denominations: {
-                    "1000": 0, "500": 0, "200": 0, "100": 0, "50": 0,
-                    "20_paper": 0, "20_coin": 0, "10": 0, "5": 0, "1": 0,
-                    "0.25": 0, "0.10": 0, "0.05": 0
-                },
+                denominations: zeroDenoms,
                 totalCollection: 0.00,
                 createdBy: "System Auto-Fill",
                 createdByName: "System",
@@ -2054,24 +2128,16 @@
                     let uid = currentUser ? currentUser.uid : "unknown";
                     let uname = userFullName || (currentUser ? currentUser.email : "Officer");
 
+                    let denomPayload = {};
+                    MC_DENOMINATIONS.forEach(d => {
+                        let el = document.getElementById(d.domId);
+                        denomPayload[d.key] = el ? parseInt(el.value || 0) : 0;
+                    });
+
                     let payload = {
                         weekNumber: selWk,
                         collectionDate: weekObj.date,
-                        denominations: {
-                            "1000": parseInt(document.getElementById('mc_q_1000').value || 0),
-                            "500": parseInt(document.getElementById('mc_q_500').value || 0),
-                            "200": parseInt(document.getElementById('mc_q_200').value || 0),
-                            "100": parseInt(document.getElementById('mc_q_100').value || 0),
-                            "50": parseInt(document.getElementById('mc_q_50').value || 0),
-                            "20_paper": parseInt(document.getElementById('mc_q_20p').value || 0),
-                            "20_coin": parseInt(document.getElementById('mc_q_20c').value || 0),
-                            "10": parseInt(document.getElementById('mc_q_10').value || 0),
-                            "5": parseInt(document.getElementById('mc_q_5').value || 0),
-                            "1": parseInt(document.getElementById('mc_q_1').value || 0),
-                            "0.25": parseInt(document.getElementById('mc_q_025').value || 0),
-                            "0.10": parseInt(document.getElementById('mc_q_010').value || 0),
-                            "0.05": parseInt(document.getElementById('mc_q_005').value || 0)
-                        },
+                        denominations: denomPayload,
                         totalCollection: totalFloat,
                         lastModifiedBy: uid,
                         lastModifiedByName: uname,
@@ -2091,7 +2157,7 @@
                         payload.createdByName = uname;
                         payload.createdAt = dt;
 
-                        // Auto-fill zeroes for missing prior weeks
+                        // Auto-fill zeroes for missing prior weeks using Firebase-safe keys
                         for (let i = 1; i < selWk; i++) {
                             if (!mcGlobalData['week_' + i]) {
                                 updates['week_' + i] = generateZeroMcPayload(MISSION_COLLECTION_SCHEDULE[i - 1]);
@@ -2166,21 +2232,14 @@
             let tbody = document.getElementById('mcViewTbody');
             tbody.innerHTML = '';
             
-            const denoms = [
-                {k:"1000", n:"₱1,000.00", m:100000}, {k:"500", n:"₱500.00", m:50000}, {k:"200", n:"₱200.00", m:20000},
-                {k:"100", n:"₱100.00", m:10000}, {k:"50", n:"₱50.00", m:5000}, {k:"20_paper", n:"₱20.00 (Paper)", m:2000},
-                {k:"20_coin", n:"₱20.00 (Coin)", m:2000}, {k:"10", n:"₱10.00", m:1000}, {k:"5", n:"₱5.00", m:500},
-                {k:"1", n:"₱1.00", m:100}, {k:"0.25", n:"₱0.25", m:25}, {k:"0.10", n:"₱0.10", m:10}, {k:"0.05", n:"₱0.05", m:5}
-            ];
-
-            denoms.forEach(d => {
-                let q = record.denominations[d.k] || 0;
-                let subCents = q * d.m;
-                tbody.innerHTML += `<tr><td>${d.n}</td><td style="text-align:right;">${q}</td><td style="text-align:right; font-family:monospace; font-weight:600;">${formatMC(subCents)}</td></tr>`;
+            MC_DENOMINATIONS.forEach(d => {
+                let q = getMcDenominationQuantity(record, d);
+                let subCents = q * d.cents;
+                tbody.innerHTML += `<tr><td>${d.label}</td><td style="text-align:right;">${q}</td><td style="text-align:right; font-family:monospace; font-weight:600;">${formatMC(subCents)}</td></tr>`;
             });
 
-            document.getElementById('mcViewCreated').textContent = `Created: ${record.createdAt} by ${record.createdByName}`;
-            document.getElementById('mcViewModified').textContent = `Last Modified: ${record.lastModifiedAt} by ${record.lastModifiedByName}`;
+            document.getElementById('mcViewCreated').textContent = `Created: ${record.createdAt || '-'} by ${record.createdByName || '-'}`;
+            document.getElementById('mcViewModified').textContent = `Last Modified: ${record.lastModifiedAt || '-'} by ${record.lastModifiedByName || '-'}`;
 
             document.getElementById('mcViewModal').classList.remove('hidden');
         };
@@ -2198,14 +2257,12 @@
             let countRecords = 0;
             let zeroCount = 0;
 
-            let denomTotals = {
-                "1000":{q:0,m:100000,n:"₱1,000.00"}, "500":{q:0,m:50000,n:"₱500.00"}, "200":{q:0,m:20000,n:"₱200.00"},
-                "100":{q:0,m:10000,n:"₱100.00"}, "50":{q:0,m:5000,n:"₱50.00"}, "20_paper":{q:0,m:2000,n:"₱20.00 (Paper)"},
-                "20_coin":{q:0,m:2000,n:"₱20.00 (Coin)"}, "10":{q:0,m:1000,n:"₱10.00"}, "5":{q:0,m:500,n:"₱5.00"},
-                "1":{q:0,m:100,n:"₱1.00"}, "0.25":{q:0,m:25,n:"₱0.25"}, "0.10":{q:0,m:10,n:"₱0.10"}, "0.05":{q:0,m:5,n:"₱0.05"}
-            };
+            let denomTotals = {};
+            MC_DENOMINATIONS.forEach(d => {
+                denomTotals[d.key] = { q: 0, cents: d.cents, label: d.label };
+            });
 
-            let monthTotals = {};
+            let monthTotals = {}; // e.g. "July 2026": centavos
 
             MISSION_COLLECTION_SCHEDULE.forEach(item => {
                 let wData = mcGlobalData['week_' + item.week];
@@ -2227,8 +2284,8 @@
                     monthTotals[mStr] += wTotalCents;
 
                     // Denom Aggregate
-                    Object.keys(denomTotals).forEach(k => {
-                        denomTotals[k].q += parseInt(wData.denominations[k] || 0);
+                    MC_DENOMINATIONS.forEach(denomObj => {
+                        denomTotals[denomObj.key].q += getMcDenominationQuantity(wData, denomObj);
                     });
                 }
             });
@@ -2240,10 +2297,10 @@
 
             let dtbody = document.getElementById('pdfDenomTbody');
             dtbody.innerHTML = '';
-            Object.keys(denomTotals).forEach(k => {
-                let o = denomTotals[k];
-                let subC = o.q * o.m;
-                dtbody.innerHTML += `<tr><td style="padding:6px; border:1px solid #ccc;">${o.n}</td><td style="padding:6px; text-align:right; border:1px solid #ccc;">${o.q}</td><td style="padding:6px; text-align:right; border:1px solid #ccc;">${formatMC(subC)}</td></tr>`;
+            MC_DENOMINATIONS.forEach(denomObj => {
+                let o = denomTotals[denomObj.key];
+                let subC = o.q * o.cents;
+                dtbody.innerHTML += `<tr><td style="padding:6px; border:1px solid #ccc;">${o.label}</td><td style="padding:6px; text-align:right; border:1px solid #ccc;">${o.q}</td><td style="padding:6px; text-align:right; border:1px solid #ccc;">${formatMC(subC)}</td></tr>`;
             });
             document.getElementById('pdfDenomGrandTotal').textContent = formatMC(totalCents);
 
@@ -2263,15 +2320,35 @@
                 return;
             }
 
-            let csv = "Week,Collection Date,Total Collection,1000 Qty,500 Qty,200 Qty,100 Qty,50 Qty,20 Paper Qty,20 Coin Qty,10 Qty,5 Qty,1 Qty,0.25 Qty,0.10 Qty,0.05 Qty,Created By,Created At,Modified By,Modified At\n";
+            let csvHeaders = ["Week", "Collection Date", "Total Collection"];
+            MC_DENOMINATIONS.forEach(d => {
+                csvHeaders.push(`"${d.label} Qty"`);
+            });
+            csvHeaders.push("Created By", "Created At", "Modified By", "Modified At");
+
+            let csv = csvHeaders.join(",") + "\n";
             
             MISSION_COLLECTION_SCHEDULE.forEach(item => {
                 let rec = mcGlobalData['week_' + item.week];
                 if (rec) {
-                    let d = rec.denominations;
-                    csv += `${item.week},"${item.display}",${rec.totalCollection},${d['1000']},${d['500']},${d['200']},${d['100']},${d['50']},${d['20_paper']},${d['20_coin']},${d['10']},${d['5']},${d['1']},${d['0.25']},${d['0.10']},${d['0.05']},"${rec.createdByName}","${rec.createdAt}","${rec.lastModifiedByName}","${rec.lastModifiedAt}"\n`;
+                    let row = [
+                        item.week,
+                        `"${item.display}"`,
+                        rec.totalCollection
+                    ];
+                    MC_DENOMINATIONS.forEach(d => {
+                        row.push(getMcDenominationQuantity(rec, d));
+                    });
+                    row.push(
+                        `"${rec.createdByName || ''}"`,
+                        `"${rec.createdAt || ''}"`,
+                        `"${rec.lastModifiedByName || ''}"`,
+                        `"${rec.lastModifiedAt || ''}"`
+                    );
+                    csv += row.join(",") + "\n";
                 } else {
-                    csv += `${item.week},"${item.display}",,,,,,,,,,,,,,,,\n`;
+                    let emptyCols = Array(MC_DENOMINATIONS.length + 4).fill("").join(",");
+                    csv += `${item.week},"${item.display}",${emptyCols}\n`;
                 }
             });
 
