@@ -720,62 +720,6 @@
             display: block;
         }
 
-        /* MISSION COLLECTION SPECIFIC STYLES */
-        .mc-chart-wrapper {
-            position: relative;
-            height: 300px;
-            min-width: 600px;
-        }
-
-        .mc-denom-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            margin-top: 10px;
-        }
-
-        .mc-denom-table th {
-            background-color: #f1f5f9;
-            padding: 8px;
-            border-bottom: 2px solid var(--border-gray);
-            font-size: 11px;
-        }
-
-        .mc-denom-table td {
-            padding: 8px;
-            border-bottom: 1px solid #e2e8f0;
-            vertical-align: middle;
-        }
-
-        .mc-denom-input {
-            width: 60px;
-            padding: 6px;
-            border: 1px solid var(--border-gray);
-            border-radius: 4px;
-            text-align: right;
-            font-family: monospace;
-            font-size: 14px;
-        }
-        
-        .mc-denom-input:focus {
-            outline: none;
-            border-color: var(--primary-green);
-        }
-
-        .mc-subtotal-cell {
-            text-align: right;
-            font-family: monospace;
-            font-weight: 600;
-            color: #334155;
-        }
-        
-        .mc-total-row {
-            background-color: #f8fafc;
-            border-top: 2px solid var(--primary-green);
-            font-weight: 800;
-            font-size: 16px;
-        }
-
         /* ============================================
            MOBILE APP SHELL — Hamburger Nav, Sidebar
            ============================================ */
@@ -1818,7 +1762,7 @@
 
                 <div class="meta-box" style="margin-bottom:20px;">
                     <label id="cdmSelectedDateLabel">Set Cycle Day For a Date</label>
-                    <input type="date" id="cdmDateInput" style="margin:8px 0 4px 0;" onchange="renderCycleDayPicker()">
+                    <input type="date" id="cdmDateInput" style="margin:8px 0 4px 0;" onchange="renderCycleDayPicker(false)">
                     <div class="cycle-day-picker" id="cdmDayPicker"></div>
                     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
                         <button class="btn-ui btn-green admin-cdm-edit" id="cdmSaveAnchorBtn" onclick="saveCycleDayAnchor()">💾 Save Cycle Day</button>
@@ -2262,14 +2206,10 @@
 
         // ============================================
         // CLASS SCHEDULE + CYCLE DAY MANAGER
-        // (Logically separate from Mission Collection's
-        //  43-week schedule — do not mix the two systems)
         // ============================================
 
         const HOMEROOM_TEACHER = "Mr. Mark Ledif Canoy";
 
-        // Source of truth for the 5-day rotation. Times are stored as 24h "HH:MM".
-        // type: "class" | "break" (Transition/Recess are not selectable "current classes")
         const CLASS_SCHEDULE = {
             1: [
                 { start: "14:30", end: "14:50", type: "class", subject: "HOMEROOM", teacher: HOMEROOM_TEACHER },
@@ -2361,8 +2301,6 @@
             return h12 + ":" + pad2(m) + " " + period;
         }
 
-        // Look up the cycle day info for a given calendar date (Date object).
-        // Returns { type: "weekend" } | { type: "unset" } | { type: "noclass", reason } | { type: "school", cycleDay }
         function getCycleInfoForDate(d) {
             if (isWeekend(d)) return { type: "weekend" };
             let key = formatDateKey(d);
@@ -2379,14 +2317,12 @@
                     renderScheduleHome();
                 }
                 if (!document.getElementById('cycleDayManagerView').classList.contains('hidden')) {
-                    renderCycleDayPicker();
+                    renderCycleDayPicker(false);
                     renderCycleCalendarList();
                 }
             });
         }
 
-        // Recompute and persist cycle days forward from an anchor date/cycleDay across
-        // active (non-weekend) days, pausing (not incrementing) on any date already marked "noclass".
         async function recomputeCycleForward(anchorDateStr, anchorCycleDay, horizonDays) {
             horizonDays = horizonDays || 180;
             let uid = currentUser ? currentUser.uid : "unknown";
@@ -2407,7 +2343,7 @@
                     let key = formatDateKey(d);
                     let existing = cycleCalendarData[key];
                     if (existing && existing.type === "noclass") {
-                        // Pause: keep the no-class marking, do not consume a cycle day.
+                        // Pause: keep the no-class marking
                     } else {
                         cycle = (cycle % 5) + 1;
                         updates[key] = { type: "school", cycleDay: cycle, updatedAt: now, updatedBy: uname };
@@ -2437,7 +2373,7 @@
                 if (!confirmed) return;
                 try {
                     await recomputeCycleForward(dateStr, cdmPickerSelectedDay);
-                    renderCycleDayPicker();
+                    renderCycleDayPicker(false);
                     renderCycleCalendarList();
                     renderScheduleHome();
                     showAppAlert("Saved", `Cycle Day set successfully. ${dateStr} is now Day ${cdmPickerSelectedDay}.`);
@@ -2464,13 +2400,11 @@
                     });
                     cycleCalendarData[dateStr] = { type: "noclass", reason: reason || "No Classes", updatedAt: now, updatedBy: uname };
 
-                    // Re-run the cycle forward from the most recent known school anchor so later
-                    // dates shift correctly and skip over this newly-marked no-class date.
                     let anchor = findLatestSchoolAnchorBefore(dateStr);
                     if (anchor) {
                         await recomputeCycleForward(anchor.date, anchor.cycleDay);
                     }
-                    renderCycleDayPicker();
+                    renderCycleDayPicker(false);
                     renderCycleCalendarList();
                     renderScheduleHome();
                     showAppAlert("Saved", `${dateStr} has been marked as No Classes.`);
@@ -2489,7 +2423,7 @@
                     delete cycleCalendarData[dateStr];
                     let anchor = findLatestSchoolAnchorBefore(dateStr) || findEarliestSchoolAnchorAfter(dateStr);
                     if (anchor) await recomputeCycleForward(anchor.date, anchor.cycleDay);
-                    renderCycleDayPicker();
+                    renderCycleDayPicker(false);
                     renderCycleCalendarList();
                     renderScheduleHome();
                 } catch (err) {
@@ -2522,12 +2456,15 @@
             return best;
         }
 
-        window.renderCycleDayPicker = function() {
+        window.renderCycleDayPicker = function(preserveSelection) {
             const dateInput = document.getElementById('cdmDateInput');
             if (!dateInput.value) dateInput.value = formatDateKey(new Date());
             let dateStr = dateInput.value;
             let existing = cycleCalendarData[dateStr];
-            cdmPickerSelectedDay = (existing && existing.type === "school") ? existing.cycleDay : null;
+
+            if (!preserveSelection) {
+                cdmPickerSelectedDay = (existing && existing.type === "school") ? existing.cycleDay : null;
+            }
 
             const isAdmin = (currentUserRole === 'admin');
             document.getElementById('cdmReadOnlyNotice').classList.toggle('hidden', isAdmin);
@@ -2537,12 +2474,14 @@
             picker.innerHTML = '';
             for (let i = 1; i <= 5; i++) {
                 let btn = document.createElement('button');
+                btn.type = 'button';
                 btn.className = 'cycle-day-choice' + (cdmPickerSelectedDay === i ? ' cycle-day-choice-selected' : '');
                 btn.textContent = 'Day ' + i;
                 btn.disabled = !isAdmin;
-                btn.onclick = function() {
+                btn.onclick = function(e) {
+                    e.preventDefault();
                     cdmPickerSelectedDay = i;
-                    renderCycleDayPicker();
+                    renderCycleDayPicker(true);
                 };
                 picker.appendChild(btn);
             }
@@ -2550,8 +2489,10 @@
             let label = document.getElementById('cdmSelectedDateLabel');
             if (existing && existing.type === 'noclass') {
                 label.textContent = `Set Cycle Day For ${dateStr} (currently: NO CLASSES — ${existing.reason})`;
+            } else if (existing && existing.type === 'school') {
+                label.textContent = `Set Cycle Day For ${dateStr} (currently: Day ${existing.cycleDay})`;
             } else {
-                label.textContent = 'Set Cycle Day For a Date';
+                label.textContent = `Set Cycle Day For ${dateStr}`;
             }
         };
 
@@ -2598,12 +2539,11 @@
             document.getElementById('cycleDayManagerView').classList.remove('hidden');
             setActiveNav('settings');
             setMobilePageTitle('Cycle Day Manager');
-            renderCycleDayPicker();
+            renderCycleDayPicker(false);
             renderCycleCalendarList();
         };
 
         // ---- Home Screen Time Engine ----
-        // getToday() -> getCycleDayForDate() -> getScheduleForCycleDay() -> determineHomeMessage()
         function getToday() { return new Date(); }
 
         function minutesSinceMidnight(d) { return d.getHours() * 60 + d.getMinutes(); }
@@ -2650,7 +2590,6 @@
                 return { state: "afterschool", cycleDay: info.cycleDay, next: findNextActiveSchoolDay(now) };
             }
 
-            // Find current period (class or break) and next period
             for (let i = 0; i < schedule.length; i++) {
                 let p = schedule[i];
                 let pStart = periodToMinutes(p.start);
@@ -2677,7 +2616,6 @@
                     let info = getCycleInfoForDate(d);
                     if (info.type === "school") return { date: new Date(d), cycleDay: info.cycleDay };
                     if (info.type === "unset") return { date: new Date(d), cycleDay: null };
-                    // noclass: keep looking forward
                 } else if (dow === 6) {
                     return { date: new Date(d), weekend: true };
                 }
@@ -2820,7 +2758,6 @@
         // MISSION COLLECTION SYSTEM (AY 2026-2027)
         // ============================================
 
-        // Centralized source of truth for Mission Collection Denominations
         const MC_DENOMINATIONS = [
             { key: '1000', value: 1000, cents: 100000, label: '₱1,000.00', domId: 'mc_q_1000', legacyKeys: [] },
             { key: '500', value: 500, cents: 50000, label: '₱500.00', domId: 'mc_q_500', legacyKeys: [] },
@@ -2837,81 +2774,20 @@
             { key: '0_05', value: 0.05, cents: 5, label: '₱0.05', domId: 'mc_q_005', legacyKeys: ['0.05', '0,05'] }
         ];
 
-        // Centralized Helper: retrieve denomination quantity supporting new and legacy keys safely
         function getMcDenominationQuantity(record, denomObj) {
             if (!record || !record.denominations) return 0;
             const denoms = record.denominations;
-            
-            // Check primary key first
-            if (denoms[denomObj.key] !== undefined && denoms[denomObj.key] !== null) {
-                return parseInt(denoms[denomObj.key] || 0);
-            }
-            
-            // Check legacy keys
+            if (denoms[denomObj.key] !== undefined && denoms[denomObj.key] !== null) return parseInt(denoms[denomObj.key] || 0);
             if (denomObj.legacyKeys && denomObj.legacyKeys.length > 0) {
                 for (let lKey of denomObj.legacyKeys) {
-                    if (denoms[lKey] !== undefined && denoms[lKey] !== null) {
-                        return parseInt(denoms[lKey] || 0);
-                    }
+                    if (denoms[lKey] !== undefined && denoms[lKey] !== null) return parseInt(denoms[lKey] || 0);
                 }
             }
-            
-            // Fallback check by string representation of value
             let valStr = denomObj.value.toString();
-            if (denoms[valStr] !== undefined && denoms[valStr] !== null) {
-                return parseInt(denoms[valStr] || 0);
-            }
-            
+            if (denoms[valStr] !== undefined && denoms[valStr] !== null) return parseInt(denoms[valStr] || 0);
             return 0;
         }
 
-        // Centralized Helper: sanitize any key string for Firebase storage
-        function sanitizeMcFirebaseKey(key) {
-            return String(key).replace(/[.#$/\[\]]/g, '_');
-        }
-
-        // Centralized Helper: verify record total matching & check for legacy/duplicate keys
-        function verifyMcRecordIntegrity(record) {
-            if (!record || !record.denominations) return { valid: true, calculatedCents: 0, legacyKeysFound: [], hasDuplicateKeys: false };
-            
-            let calculatedCents = 0;
-            let legacyKeysFound = [];
-            let hasDuplicateKeys = false;
-            
-            MC_DENOMINATIONS.forEach(d => {
-                let hasNewKey = record.denominations[d.key] !== undefined;
-                let foundLegacyKey = null;
-                
-                if (d.legacyKeys) {
-                    for (let lKey of d.legacyKeys) {
-                        if (record.denominations[lKey] !== undefined && lKey !== d.key) {
-                            foundLegacyKey = lKey;
-                            if (!legacyKeysFound.includes(lKey)) legacyKeysFound.push(lKey);
-                        }
-                    }
-                }
-                
-                if (hasNewKey && foundLegacyKey) {
-                    hasDuplicateKeys = true;
-                }
-                
-                let qty = getMcDenominationQuantity(record, d);
-                calculatedCents += qty * d.cents;
-            });
-            
-            let expectedCents = Math.round(parseFloat(record.totalCollection || 0) * 100);
-            let isTotalMatching = calculatedCents === expectedCents;
-            
-            return {
-                valid: isTotalMatching && !hasDuplicateKeys,
-                calculatedCents,
-                expectedCents,
-                isTotalMatching,
-                legacyKeysFound,
-                hasDuplicateKeys
-            };
-        }
-        
         const MISSION_COLLECTION_SCHEDULE = [
             { week: 1, date: "2026-07-06", display: "Monday, July 06, 2026" },
             { week: 2, date: "2026-07-13", display: "Monday, July 13, 2026" },
@@ -3012,7 +2888,6 @@
         };
 
         function renderMcDashboard() {
-            // Aggregate Data
             let totalCentavos = 0;
             let highestWeekObj = null;
             let highestAmount = -1;
@@ -3039,7 +2914,6 @@
                 }
             });
 
-            // Update Summary Cards
             document.getElementById('mcStatTotal').textContent = formatMC(totalCentavos);
             
             let cwInfo = getMcCurrentWeekInfo();
@@ -3070,7 +2944,6 @@
             
             document.getElementById('mcStatCount').textContent = countRecords + " / 43";
 
-            // Render Chart
             if (mcChartObj) mcChartObj.destroy();
             const ctx = document.getElementById('mcChart').getContext('2d');
             mcChartObj = new Chart(ctx, {
@@ -3117,7 +2990,6 @@
                 }
             });
 
-            // Filter
             rowData = rowData.filter(r => {
                 let amountMatch = String(r.total.toFixed(2)).includes(searchQuery);
                 let weekMatch = String(r.week).includes(searchQuery);
@@ -3131,7 +3003,6 @@
                 return true;
             });
 
-            // Sort
             if (sortVal === 'newest') rowData.sort((a,b) => b.week - a.week);
             if (sortVal === 'oldest') rowData.sort((a,b) => a.week - b.week);
             if (sortVal === 'high') rowData.sort((a,b) => b.total - a.total);
@@ -3162,8 +3033,6 @@
                 tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:30px; color:var(--text-muted);">No records match the current filters.</td></tr>`;
             }
         };
-
-        // --- MC CRUD Modals ---
 
         window.openMcAddModal = function() {
             mcEditModeWeek = null;
@@ -3348,7 +3217,6 @@
                         payload.createdByName = uname;
                         payload.createdAt = dt;
 
-                        // Auto-fill zeroes for missing prior weeks using Firebase-safe keys
                         for (let i = 1; i < selWk; i++) {
                             if (!mcGlobalData['week_' + i]) {
                                 updates['week_' + i] = generateZeroMcPayload(MISSION_COLLECTION_SCHEDULE[i - 1]);
@@ -3363,13 +3231,8 @@
 
                     console.log('[Mission Collection] Firebase write succeeded.');
 
-                    // Immediately sync local state
                     Object.assign(mcGlobalData, updates);
-
-                    // Close entry modal on success
                     closeMcModal();
-
-                    // Refresh UI components
                     renderMcDashboard();
                     renderMcReports();
 
@@ -3439,8 +3302,6 @@
             document.getElementById('mcViewModal').classList.add('hidden');
         };
 
-        // --- Reports & Export ---
-        
         window.renderMcReports = function() {
             let totalCents = 0;
             let highestAmount = -1;
@@ -3453,7 +3314,7 @@
                 denomTotals[d.key] = { q: 0, cents: d.cents, label: d.label };
             });
 
-            let monthTotals = {}; // e.g. "July 2026": centavos
+            let monthTotals = {};
 
             MISSION_COLLECTION_SCHEDULE.forEach(item => {
                 let wData = mcGlobalData['week_' + item.week];
@@ -3468,13 +3329,11 @@
                         highestWeekStr = `Week ${item.week} (${formatMC(wTotalCents)})`;
                     }
 
-                    // Monthly Aggregate
                     let d = new Date(item.date);
                     let mStr = d.toLocaleString('en-US', { month: 'long', year: 'numeric' });
                     if(!monthTotals[mStr]) monthTotals[mStr] = 0;
                     monthTotals[mStr] += wTotalCents;
 
-                    // Denom Aggregate
                     MC_DENOMINATIONS.forEach(denomObj => {
                         denomTotals[denomObj.key].q += getMcDenominationQuantity(wData, denomObj);
                     });
@@ -3616,9 +3475,13 @@
 
                     if (currentUserRole === 'admin') {
                         updateAdminOfficersDirectory();
+                        document.querySelectorAll('.admin-only-field').forEach(el => el.classList.remove('hidden'));
+                    } else {
+                        document.querySelectorAll('.admin-only-field').forEach(el => el.classList.add('hidden'));
                     }
 
-                    document.getElementById('sidebarUserRole').textContent = userDesignation || (currentUserRole === 'admin' ? 'Main Admin' : 'Officer');
+                    const sidebarRoleEl = document.getElementById('sidebarUserRole');
+                    if (sidebarRoleEl) sidebarRoleEl.textContent = userDesignation || (currentUserRole === 'admin' ? 'Main Admin' : 'Officer');
                 });
 
                 bindStudentMasterlistSync();
@@ -3626,7 +3489,6 @@
                 bindMissionCollectionSync();
                 bindCycleDaySync();
 
-                // Default landing screen after authentication is the Class Schedule Home.
                 showView('schedule');
                 setActiveNav('schedule');
                 setMobilePageTitle('Class Schedule');
@@ -3636,7 +3498,7 @@
                     if (!document.getElementById('classScheduleView').classList.contains('hidden')) {
                         renderScheduleHome();
                     }
-                }, 30000); // lightweight 30s refresh — no Firebase writes, purely local time recalculation
+                }, 30000);
             } else {
                 currentUser = null;
                 document.getElementById('authContainer').classList.remove('hidden');
@@ -3700,7 +3562,6 @@
             window.location.href = window.location.pathname + "?force_refresh=true&t=" + timeStamp;
         }
 
-        // Form Submit Login/Register with Email Whitelist Checks
         document.getElementById('authForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('authEmail').value.trim().toLowerCase();
@@ -3780,11 +3641,14 @@
             } else if (viewName === 'settings') {
                 document.getElementById('settingsView').classList.remove('hidden');
                 document.getElementById('adminSettingsSection').classList.toggle('hidden', currentUserRole !== 'admin');
+            } else if (viewName === 'cycleDayManager') {
+                document.getElementById('cycleDayManagerView').classList.remove('hidden');
+                renderCycleDayManager();
+            } else if (viewName === 'dailySheet') {
+                document.getElementById('dailyAttendanceSheetView').classList.remove('hidden');
             }
         };
 
-        // Unified navigation entry point used by both the sidebar (mobile) and the
-        // top navbar (desktop) so there is exactly one navigation system.
         window.navigateTo = function(viewName) {
             showView(viewName);
             setActiveNav(viewName);
