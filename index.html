@@ -1255,7 +1255,76 @@
         }
         .cycle-calendar-row.cycle-row-noclass { background: #fef2f2; border-color: #fca5a5; }
         .cycle-calendar-row.cycle-row-today { border-color: var(--primary-green); box-shadow: 0 0 0 2px rgba(0,71,37,0.12); }
-    </style>
+    
+        .cdm-section-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            color: var(--text-muted);
+            margin: 16px 0 8px 0;
+        }
+
+        .class-mode-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 4px; }
+        .class-mode-choice {
+            padding: 12px 6px;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            background: #f8fafc;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            min-height: 52px;
+            line-height: 1.3;
+        }
+        .class-mode-choice.class-mode-selected.mode-regular { background: var(--primary-green); color: #fff; border-color: var(--primary-green); }
+        .class-mode-choice.class-mode-selected.mode-synchronous { background: #2563eb; color: #fff; border-color: #2563eb; }
+        .class-mode-choice.class-mode-selected.mode-noclass { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+        .cdm-inline-field { margin: 10px 0; }
+        .cdm-inline-field label { display:block; font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+        .cdm-inline-field select, .cdm-inline-field textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid var(--border-gray);
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 13px;
+            font-family: inherit;
+            min-height: 44px;
+        }
+        .cdm-inline-field textarea { min-height: 60px; resize: vertical; }
+
+        .sync-preview-box {
+            background: #eff6ff;
+            border: 1px solid #93c5fd;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 10px 0;
+        }
+        .sync-preview-title { font-size: 12px; font-weight: 800; color: #1e40af; text-transform: uppercase; margin-bottom: 8px; }
+        .sync-preview-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px dashed #bfdbfe;
+            font-size: 12px;
+        }
+        .sync-preview-row:last-child { border-bottom: none; }
+        .sync-preview-time { color: #1e3a8a; font-weight: 700; white-space: nowrap; }
+        .sync-preview-subject { font-weight: 700; color: var(--text-dark); text-align: right; }
+        .sync-preview-teacher { display: block; font-weight: 400; color: var(--text-muted); font-size: 11px; }
+        .sync-warning-box {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            color: #92400e;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+</style>
 </head>
 <body>
 
@@ -1763,16 +1832,45 @@
                 <div class="meta-box" style="margin-bottom:20px;">
                     <label id="cdmSelectedDateLabel">Set Cycle Day For a Date</label>
                     <input type="date" id="cdmDateInput" style="margin:8px 0 4px 0;" onchange="renderCycleDayPicker(false)">
+
+                    <div class="cdm-section-label">1. Cycle Day</div>
                     <div class="cycle-day-picker" id="cdmDayPicker"></div>
+
+                    <div class="cdm-section-label">2. Class Mode</div>
+                    <div class="class-mode-picker" id="cdmModePicker"></div>
+
+                    <div id="cdmNoClassFields" class="hidden">
+                        <div class="cdm-inline-field">
+                            <label>Reason for No Classes</label>
+                            <select id="cdmNoClassReason">
+                                <option value="Suspension">Suspension</option>
+                                <option value="Holiday">Holiday</option>
+                                <option value="School Event">School Event</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="cdmSyncPreviewContainer"></div>
+
+                    <div class="cdm-inline-field">
+                        <label>Admin Note (optional)</label>
+                        <textarea id="cdmAdminNote" placeholder="e.g., Classes shifted online due to weather conditions"></textarea>
+                    </div>
+
                     <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
-                        <button class="btn-ui btn-green admin-cdm-edit" id="cdmSaveAnchorBtn" onclick="saveCycleDayAnchor()">💾 Save Cycle Day</button>
-                        <button class="btn-ui btn-red admin-cdm-edit" onclick="openMarkNoClassPrompt()">🚫 Mark as No Classes</button>
+                        <button class="btn-ui btn-green admin-cdm-edit" id="cdmSaveAnchorBtn" onclick="saveCdmChanges()">💾 Save Changes</button>
                     </div>
                 </div>
 
                 <h3 style="font-size:14px; color:var(--primary-green); margin:20px 0 10px 0;">Cycle Calendar</h3>
                 <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Showing the 10 school days before and after today's date.</p>
                 <div id="cdmCalendarList"></div>
+
+                <div id="cdmAuditSection" class="admin-cdm-edit hidden">
+                    <h3 style="font-size:14px; color:var(--primary-green); margin:20px 0 10px 0;">Recent Changes</h3>
+                    <div class="settings-list" id="cdmAuditList" style="display:block;"></div>
+                </div>
             </div>
 
         </div>
@@ -2273,26 +2371,79 @@
             ]
         };
 
-        let cycleCalendarData = {}; // { "YYYY-MM-DD": { type: "school"|"noclass", cycleDay, reason, updatedAt, updatedBy } }
-        let selectedMobileScheduleDay = 1;
+        let cycleCalendarData = {}; 
+        let cycleAuditLog = []; 
+        let selectedMobileScheduleDay = null; // Changed from 1 to null, driven purely by enterScheduleHome
+        let scheduleHomeUserBrowsing = false; 
         let homeHighlightIntervalId = null;
         let cdmPickerSelectedDay = null;
+        let cdmPickerSelectedMode = 'regular'; 
+
+        const SYNC_TEMPLATE = [
+            { start: "10:30", end: "10:40", role: "homeroom" },
+            { start: "10:40", end: "11:05", role: "period", periodNum: 1 },
+            { start: "11:05", end: "11:30", role: "period", periodNum: 2 },
+            { start: "11:30", end: "11:55", role: "period", periodNum: 3 },
+            { start: "11:55", end: "12:35", role: "lunch" },
+            { start: "12:35", end: "13:00", role: "period", periodNum: 4 },
+            { start: "13:00", end: "13:25", role: "period", periodNum: 5 },
+            { start: "13:25", end: "13:50", role: "period", periodNum: 6 },
+            { start: "13:50", end: "14:15", role: "period", periodNum: 7 },
+            { start: "14:15", end: "16:00", role: "async" }
+        ];
+
+        function generateSynchronousSchedule(cycleDay) {
+            const regular = CLASS_SCHEDULE[cycleDay];
+            const errors = [];
+            if (!regular) return { valid: false, errors: ["Unknown cycle day."], periods: [] };
+
+            const homeroomSrc = regular.find(p => p.type === 'class' && p.subject === 'HOMEROOM');
+            const instructional = regular.filter(p => p.type === 'class' && p.subject !== 'HOMEROOM');
+
+            if (!homeroomSrc) errors.push("Homeroom period not found in the regular schedule.");
+            if (instructional.length !== 7) errors.push(`Expected exactly 7 instructional periods, found ${instructional.length}.`);
+
+            let periods = [];
+            let instrIdx = 0;
+            SYNC_TEMPLATE.forEach(slot => {
+                if (slot.role === 'homeroom') {
+                    periods.push({ start: slot.start, end: slot.end, type: 'class', subject: 'HOMEROOM', teacher: homeroomSrc ? homeroomSrc.teacher : HOMEROOM_TEACHER, syncLabel: 'Homeroom' });
+                } else if (slot.role === 'lunch') {
+                    periods.push({ start: slot.start, end: slot.end, type: 'break', subject: 'LUNCH BREAK' });
+                } else if (slot.role === 'async') {
+                    periods.push({ start: slot.start, end: slot.end, type: 'async', subject: 'ASYNCHRONOUS TASKS' });
+                } else {
+                    let src = instructional[instrIdx];
+                    instrIdx++;
+                    if (src) {
+                        periods.push({ start: slot.start, end: slot.end, type: 'class', subject: src.subject, teacher: src.teacher, syncLabel: 'Period ' + slot.periodNum });
+                    } else {
+                        errors.push(`No source subject available for Period ${slot.periodNum}.`);
+                        periods.push({ start: slot.start, end: slot.end, type: 'class', subject: '(Unassigned)', teacher: '', syncLabel: 'Period ' + slot.periodNum });
+                    }
+                }
+            });
+
+            let last = periods[periods.length - 1];
+            if (!last || last.end !== "16:00") errors.push("Generated schedule does not end at 4:00 PM.");
+
+            return { valid: errors.length === 0, errors, periods };
+        }
+
+        function getEffectiveScheduleForCycleDay(cycleDay, mode) {
+            if (mode === 'synchronous') return generateSynchronousSchedule(cycleDay).periods;
+            return CLASS_SCHEDULE[cycleDay];
+        }
+
+        function samePeriod(a, b) {
+            if (!a || !b) return false;
+            return a.start === b.start && a.end === b.end;
+        }
 
         function pad2(n) { return n < 10 ? "0" + n : "" + n; }
-
-        function formatDateKey(d) {
-            return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
-        }
-
-        function parseDateKey(key) {
-            let parts = key.split("-").map(Number);
-            return new Date(parts[0], parts[1] - 1, parts[2]);
-        }
-
-        function isWeekend(d) {
-            let dow = d.getDay();
-            return dow === 0 || dow === 6;
-        }
+        function formatDateKey(d) { return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate()); }
+        function parseDateKey(key) { let parts = key.split("-").map(Number); return new Date(parts[0], parts[1] - 1, parts[2]); }
+        function isWeekend(d) { let dow = d.getDay(); return dow === 0 || dow === 6; }
 
         function formatTime12h(hhmm) {
             let [h, m] = hhmm.split(":").map(Number);
@@ -2306,31 +2457,67 @@
             let key = formatDateKey(d);
             let entry = cycleCalendarData[key];
             if (!entry) return { type: "unset" };
-            if (entry.type === "noclass") return { type: "noclass", reason: entry.reason || "No Classes" };
-            return { type: "school", cycleDay: entry.cycleDay };
+            if (entry.type === "noclass") return { type: "noclass", reason: entry.reason || "No Classes", note: entry.note || "" };
+            return { type: "school", cycleDay: entry.cycleDay, mode: entry.mode || "regular", note: entry.note || "" };
         }
+
+        let cycleDataEverLoaded = false; 
 
         function bindCycleDaySync() {
             onValue(ref(db, 'cycle_day_calendar'), (snapshot) => {
                 cycleCalendarData = snapshot.val() || {};
-                if (!document.getElementById('classScheduleView').classList.contains('hidden')) {
-                    renderScheduleHome();
+
+                const onScheduleView = !document.getElementById('classScheduleView').classList.contains('hidden');
+                if (onScheduleView) {
+                    if (!cycleDataEverLoaded && !scheduleHomeUserBrowsing) {
+                        enterScheduleHome();
+                    } else {
+                        renderScheduleHome();
+                    }
                 }
+                cycleDataEverLoaded = true;
+
                 if (!document.getElementById('cycleDayManagerView').classList.contains('hidden')) {
-                    renderCycleDayPicker(false);
+                    renderCycleDayPicker(true);
                     renderCycleCalendarList();
+                }
+            });
+
+            onValue(ref(db, 'cycle_day_audit'), (snapshot) => {
+                let val = snapshot.val() || {};
+                cycleAuditLog = Object.values(val).sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 20);
+                if (!document.getElementById('cycleDayManagerView').classList.contains('hidden')) {
+                    renderAuditLog();
                 }
             });
         }
 
+        function writeAuditEntry(dateStr, action, details) {
+            let uname = userFullName || (currentUser ? currentUser.email : "Admin");
+            try {
+                push(ref(db, 'cycle_day_audit'), {
+                    dateStr, action, details: details || "",
+                    changedBy: uname, ts: Date.now(),
+                    timestamp: new Date().toLocaleString()
+                });
+            } catch (err) {
+                console.error("Audit log write failed:", err);
+            }
+        }
+
         async function recomputeCycleForward(anchorDateStr, anchorCycleDay, horizonDays) {
             horizonDays = horizonDays || 180;
-            let uid = currentUser ? currentUser.uid : "unknown";
             let uname = userFullName || (currentUser ? currentUser.email : "Admin");
             let now = new Date().toLocaleString();
 
+            function mergedSchoolEntry(key, cycleDay) {
+                let existing = cycleCalendarData[key];
+                let base = (existing && existing.type === 'school') ? existing : {};
+                return Object.assign({}, base, { type: "school", cycleDay, updatedAt: now, updatedBy: uname });
+            }
+
             let updates = {};
-            updates[anchorDateStr] = { type: "school", cycleDay: anchorCycleDay, updatedAt: now, updatedBy: uname };
+            updates[anchorDateStr] = mergedSchoolEntry(anchorDateStr, anchorCycleDay);
 
             let cycle = anchorCycleDay;
             let cursor = parseDateKey(anchorDateStr);
@@ -2343,10 +2530,10 @@
                     let key = formatDateKey(d);
                     let existing = cycleCalendarData[key];
                     if (existing && existing.type === "noclass") {
-                        // Pause: keep the no-class marking
+                        // Pause
                     } else {
                         cycle = (cycle % 5) + 1;
-                        updates[key] = { type: "school", cycleDay: cycle, updatedAt: now, updatedBy: uname };
+                        updates[key] = mergedSchoolEntry(key, cycle);
                     }
                     scanned++;
                 }
@@ -2357,59 +2544,133 @@
             Object.assign(cycleCalendarData, updates);
         }
 
-        window.saveCycleDayAnchor = function() {
+        async function applyDateClassMode(dateStr, mode, extra) {
+            let uname = userFullName || (currentUser ? currentUser.email : "Admin");
+            let now = new Date().toLocaleString();
+            let payload;
+
+            if (mode === 'noclass') {
+                payload = { type: "noclass", reason: (extra && extra.reason) || "No Classes", note: (extra && extra.note) || "", updatedAt: now, updatedBy: uname };
+            } else {
+                let existing = cycleCalendarData[dateStr];
+                let cycleDay = (existing && existing.type === 'school') ? existing.cycleDay : (extra && extra.cycleDay);
+                payload = { type: "school", cycleDay, mode: mode, note: (extra && extra.note) || "", updatedAt: now, updatedBy: uname };
+            }
+
+            await update(ref(db, 'cycle_day_calendar'), { [dateStr]: payload });
+            cycleCalendarData[dateStr] = payload;
+        }
+
+        window.selectClassMode = function(mode) {
+            cdmPickerSelectedMode = mode;
+            renderClassModeUI();
+        };
+
+        function renderClassModeUI() {
+            const isAdmin = (currentUserRole === 'admin');
+            const picker = document.getElementById('cdmModePicker');
+            const modes = [
+                { key: 'regular', icon: '🏫', label: 'Regular F2F' },
+                { key: 'synchronous', icon: '💻', label: 'Synchronous Class' },
+                { key: 'noclass', icon: '🚫', label: 'No Classes' }
+            ];
+            if (picker) {
+                picker.innerHTML = '';
+                modes.forEach(m => {
+                    let btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'class-mode-choice mode-' + m.key + (cdmPickerSelectedMode === m.key ? ' class-mode-selected' : '');
+                    btn.innerHTML = m.icon + '<br>' + m.label;
+                    btn.disabled = !isAdmin;
+                    btn.onclick = function(e) { e.preventDefault(); selectClassMode(m.key); };
+                    picker.appendChild(btn);
+                });
+            }
+
+            const noClassFields = document.getElementById('cdmNoClassFields');
+            if (noClassFields) noClassFields.classList.toggle('hidden', cdmPickerSelectedMode !== 'noclass');
+            renderSyncPreview();
+        }
+
+        function renderSyncPreview() {
+            const container = document.getElementById('cdmSyncPreviewContainer');
+            if (!container) return;
+            if (cdmPickerSelectedMode !== 'synchronous' || !cdmPickerSelectedDay) {
+                container.innerHTML = '';
+                return;
+            }
+            const result = generateSynchronousSchedule(cdmPickerSelectedDay);
+            let html = '';
+            if (!result.valid) {
+                html += `<div class="sync-warning-box">⚠️ Schedule Conversion Warning<br>${result.errors.join(' ')} Please review Day ${cdmPickerSelectedDay}'s regular schedule before saving.</div>`;
+            }
+            html += `<div class="sync-preview-box"><div class="sync-preview-title">Synchronous Schedule Preview — Day ${cdmPickerSelectedDay}</div>`;
+            result.periods.forEach(p => {
+                let label = p.type === 'class' ? (p.syncLabel === 'Homeroom' ? '' : p.syncLabel + ' — ') : '';
+                let icon = p.type === 'async' ? '📝 ' : (p.subject === 'LUNCH BREAK' ? '🍱 ' : '');
+                html += `<div class="sync-preview-row">
+                    <span class="sync-preview-time">${formatTime12h(p.start)}–${formatTime12h(p.end)}</span>
+                    <span class="sync-preview-subject">${icon}${label}${p.subject}${p.teacher ? `<span class="sync-preview-teacher">${p.teacher}</span>` : ''}</span>
+                </div>`;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        window.saveCdmChanges = function() {
             if (currentUserRole !== 'admin') return;
-            if (!cdmPickerSelectedDay) {
+            let dateStr = document.getElementById('cdmDateInput').value;
+            if (!dateStr) { showAppAlert("Select a Date", "Please choose a calendar date first."); return; }
+
+            let mode = cdmPickerSelectedMode;
+            let note = document.getElementById('cdmAdminNote').value.trim();
+
+            if (mode !== 'noclass' && !cdmPickerSelectedDay) {
                 showAppAlert("Select a Day", "Please choose Day 1 through Day 5 first.");
                 return;
             }
-            let dateStr = document.getElementById('cdmDateInput').value;
-            if (!dateStr) {
-                showAppAlert("Select a Date", "Please choose a calendar date first.");
-                return;
+
+            if (mode === 'synchronous') {
+                let check = generateSynchronousSchedule(cdmPickerSelectedDay);
+                if (!check.valid) {
+                    showAppAlert("Cannot Save", "⚠️ Schedule Conversion Warning\nThis day's regular schedule could not be cleanly converted into the 7-period synchronous schedule:\n" + check.errors.join("\n"));
+                    return;
+                }
             }
 
-            showAppConfirm("Set Cycle Day", `Set ${dateStr} as Day ${cdmPickerSelectedDay}? This will recalculate the cycle for the following school days.`, false, async (confirmed) => {
+            let existing = cycleCalendarData[dateStr];
+            let dayChanged = mode !== 'noclass' && (!existing || existing.type !== 'school' || existing.cycleDay !== cdmPickerSelectedDay);
+            let modeLabel = { regular: '🏫 Regular F2F', synchronous: '💻 Synchronous Class', noclass: '🚫 No Classes' }[mode];
+
+            let confirmMsg = mode === 'noclass'
+                ? `Mark ${dateStr} as No Classes?`
+                : `Save ${dateStr} as Day ${cdmPickerSelectedDay} · ${modeLabel}?` + (dayChanged ? ' This will recalculate the cycle for following school days.' : '');
+
+            showAppConfirm("Save Changes", confirmMsg, false, async (confirmed) => {
                 if (!confirmed) return;
                 try {
-                    await recomputeCycleForward(dateStr, cdmPickerSelectedDay);
-                    renderCycleDayPicker(false);
-                    renderCycleCalendarList();
-                    renderScheduleHome();
-                    showAppAlert("Saved", `Cycle Day set successfully. ${dateStr} is now Day ${cdmPickerSelectedDay}.`);
-                } catch (err) {
-                    showAppAlert("Database Error", "Unable to save the cycle day.\nFirebase returned: " + err.message);
-                }
-            });
-        };
+                    let prevSummary = existing ? (existing.type === 'noclass' ? 'No Classes' : `Day ${existing.cycleDay} · ${existing.mode === 'synchronous' ? 'Synchronous' : 'Regular F2F'}`) : 'Not configured';
 
-        window.openMarkNoClassPrompt = function() {
-            if (currentUserRole !== 'admin') return;
-            let dateStr = document.getElementById('cdmDateInput').value;
-            if (!dateStr) {
-                showAppAlert("Select a Date", "Please choose a calendar date first.");
-                return;
-            }
-            showAppPrompt("Mark as No Classes", `Reason for no classes on ${dateStr}? (e.g., Suspension, Holiday, School Event)`, "Suspension", async (reason) => {
-                if (reason === null) return;
-                try {
-                    let uname = userFullName || (currentUser ? currentUser.email : "Admin");
-                    let now = new Date().toLocaleString();
-                    await update(ref(db, 'cycle_day_calendar'), {
-                        [dateStr]: { type: "noclass", reason: reason || "No Classes", updatedAt: now, updatedBy: uname }
-                    });
-                    cycleCalendarData[dateStr] = { type: "noclass", reason: reason || "No Classes", updatedAt: now, updatedBy: uname };
-
-                    let anchor = findLatestSchoolAnchorBefore(dateStr);
-                    if (anchor) {
-                        await recomputeCycleForward(anchor.date, anchor.cycleDay);
+                    if (mode === 'noclass') {
+                        let reason = document.getElementById('cdmNoClassReason').value;
+                        await applyDateClassMode(dateStr, 'noclass', { reason, note });
+                        let anchor = findLatestSchoolAnchorBefore(dateStr);
+                        if (anchor) await recomputeCycleForward(anchor.date, anchor.cycleDay);
+                    } else if (dayChanged) {
+                        await recomputeCycleForward(dateStr, cdmPickerSelectedDay);
+                        await applyDateClassMode(dateStr, mode, { cycleDay: cdmPickerSelectedDay, note });
+                    } else {
+                        await applyDateClassMode(dateStr, mode, { cycleDay: cdmPickerSelectedDay, note });
                     }
+
+                    writeAuditEntry(dateStr, `${prevSummary} → ${modeLabel}`, note);
+
                     renderCycleDayPicker(false);
                     renderCycleCalendarList();
                     renderScheduleHome();
-                    showAppAlert("Saved", `${dateStr} has been marked as No Classes.`);
+                    showAppAlert("Schedule Updated", `${dateStr} is now set to ${modeLabel}.`);
                 } catch (err) {
-                    showAppAlert("Database Error", "Unable to save.\nFirebase returned: " + err.message);
+                    showAppAlert("Database Error", "Unable to save the change.\nFirebase returned: " + err.message);
                 }
             });
         };
@@ -2423,6 +2684,7 @@
                     delete cycleCalendarData[dateStr];
                     let anchor = findLatestSchoolAnchorBefore(dateStr) || findEarliestSchoolAnchorAfter(dateStr);
                     if (anchor) await recomputeCycleForward(anchor.date, anchor.cycleDay);
+                    writeAuditEntry(dateStr, "No Classes → Restored", "");
                     renderCycleDayPicker(false);
                     renderCycleCalendarList();
                     renderScheduleHome();
@@ -2430,6 +2692,25 @@
                     showAppAlert("Database Error", "Unable to update.\nFirebase returned: " + err.message);
                 }
             });
+        };
+
+        window.renderAuditLog = function() {
+            const isAdmin = (currentUserRole === 'admin');
+            const sec = document.getElementById('cdmAuditSection');
+            if (sec) sec.classList.toggle('hidden', !isAdmin);
+            if (!isAdmin) return;
+            const list = document.getElementById('cdmAuditList');
+            if (!list) return;
+            if (!cycleAuditLog.length) {
+                list.innerHTML = '<div class="cdm-audit-row cdm-audit-meta">No changes recorded yet.</div>';
+                return;
+            }
+            list.innerHTML = cycleAuditLog.map(entry => `
+                <div class="cdm-audit-row">
+                    <div><strong>${entry.dateStr}</strong>: ${entry.action}</div>
+                    <div class="cdm-audit-meta">${entry.changedBy || 'Admin'} · ${entry.timestamp || ''}${entry.details ? ' · "' + entry.details + '"' : ''}</div>
+                </div>
+            `).join('');
         };
 
         function findLatestSchoolAnchorBefore(dateStr) {
@@ -2458,46 +2739,71 @@
 
         window.renderCycleDayPicker = function(preserveSelection) {
             const dateInput = document.getElementById('cdmDateInput');
+            if (!dateInput) return;
             if (!dateInput.value) dateInput.value = formatDateKey(new Date());
             let dateStr = dateInput.value;
             let existing = cycleCalendarData[dateStr];
 
             if (!preserveSelection) {
                 cdmPickerSelectedDay = (existing && existing.type === "school") ? existing.cycleDay : null;
+                if (existing && existing.type === 'noclass') cdmPickerSelectedMode = 'noclass';
+                else if (existing && existing.type === 'school') cdmPickerSelectedMode = existing.mode === 'synchronous' ? 'synchronous' : 'regular';
+                else cdmPickerSelectedMode = 'regular';
+
+                const noteEl = document.getElementById('cdmAdminNote');
+                const reasonEl = document.getElementById('cdmNoClassReason');
+                if (noteEl) noteEl.value = (existing && existing.note) || '';
+                if (reasonEl) reasonEl.value = (existing && existing.reason) || 'Suspension';
             }
 
             const isAdmin = (currentUserRole === 'admin');
-            document.getElementById('cdmReadOnlyNotice').classList.toggle('hidden', isAdmin);
+            const roNotice = document.getElementById('cdmReadOnlyNotice');
+            if (roNotice) roNotice.classList.toggle('hidden', isAdmin);
             document.querySelectorAll('.admin-cdm-edit').forEach(el => el.classList.toggle('hidden', !isAdmin));
+            
+            const adminNoteEl = document.getElementById('cdmAdminNote');
+            const noClassReasonEl = document.getElementById('cdmNoClassReason');
+            if (adminNoteEl) adminNoteEl.disabled = !isAdmin;
+            if (noClassReasonEl) noClassReasonEl.disabled = !isAdmin;
 
             const picker = document.getElementById('cdmDayPicker');
-            picker.innerHTML = '';
-            for (let i = 1; i <= 5; i++) {
-                let btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'cycle-day-choice' + (cdmPickerSelectedDay === i ? ' cycle-day-choice-selected' : '');
-                btn.textContent = 'Day ' + i;
-                btn.disabled = !isAdmin;
-                btn.onclick = function(e) {
-                    e.preventDefault();
-                    cdmPickerSelectedDay = i;
-                    renderCycleDayPicker(true);
-                };
-                picker.appendChild(btn);
+            if (picker) {
+                picker.innerHTML = '';
+                for (let i = 1; i <= 5; i++) {
+                    let btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'cycle-day-choice' + (cdmPickerSelectedDay === i ? ' cycle-day-choice-selected' : '');
+                    btn.textContent = 'Day ' + i;
+                    btn.disabled = !isAdmin;
+                    btn.onclick = function(e) {
+                        e.preventDefault();
+                        cdmPickerSelectedDay = i;
+                        document.querySelectorAll('#cdmDayPicker .cycle-day-choice').forEach((b, idx) => {
+                            b.classList.toggle('cycle-day-choice-selected', cdmPickerSelectedDay === idx + 1);
+                        });
+                        renderSyncPreview();
+                    };
+                    picker.appendChild(btn);
+                }
             }
 
             let label = document.getElementById('cdmSelectedDateLabel');
-            if (existing && existing.type === 'noclass') {
-                label.textContent = `Set Cycle Day For ${dateStr} (currently: NO CLASSES — ${existing.reason})`;
-            } else if (existing && existing.type === 'school') {
-                label.textContent = `Set Cycle Day For ${dateStr} (currently: Day ${existing.cycleDay})`;
-            } else {
-                label.textContent = `Set Cycle Day For ${dateStr}`;
+            if (label) {
+                if (existing && existing.type === 'noclass') {
+                    label.textContent = `${dateStr} — currently: NO CLASSES (${existing.reason})`;
+                } else if (existing && existing.type === 'school') {
+                    label.textContent = `${dateStr} — currently: Day ${existing.cycleDay} · ${existing.mode === 'synchronous' ? 'Synchronous' : 'Regular F2F'}`;
+                } else {
+                    label.textContent = `${dateStr} — not yet configured`;
+                }
             }
+
+            renderClassModeUI();
         };
 
         window.renderCycleCalendarList = function() {
             const container = document.getElementById('cdmCalendarList');
+            if (!container) return;
             container.innerHTML = '';
             const isAdmin = (currentUserRole === 'admin');
             let today = new Date();
@@ -2515,18 +2821,22 @@
                 let key = formatDateKey(dateObj);
                 let info = getCycleInfoForDate(dateObj);
                 let isToday = (key === formatDateKey(today));
+                let isSync = (info.type === 'school' && info.mode === 'synchronous');
                 let row = document.createElement('div');
-                row.className = 'cycle-calendar-row' + (info.type === 'noclass' ? ' cycle-row-noclass' : '') + (isToday ? ' cycle-row-today' : '');
+                row.className = 'cycle-calendar-row' + (info.type === 'noclass' ? ' cycle-row-noclass' : (isSync ? ' cycle-row-sync' : '')) + (isToday ? ' cycle-row-today' : '');
 
                 let dispDate = dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: '2-digit' });
                 let statusHtml = '';
-                if (info.type === 'school') statusHtml = `<strong>DAY ${info.cycleDay}</strong>`;
+                if (info.type === 'school') statusHtml = `<strong>DAY ${info.cycleDay}</strong>` + (isSync ? ' <span style="color:#2563eb; font-size:11px; font-weight:700;">💻 SYNC</span>' : '');
                 else if (info.type === 'noclass') statusHtml = `<strong>NO CLASS</strong> <span style="color:var(--text-muted); font-size:11px;">(${info.reason})</span>`;
                 else statusHtml = `<span style="color:var(--text-muted);">Not Set</span>`;
 
                 let actionHtml = '';
                 if (isAdmin && info.type === 'noclass') {
-                    actionHtml = `<button class="action-pill-btn action-pill-edit" onclick="clearNoClassMark('${key}')">↺ Restore</button>`;
+                    actionHtml = `<button class="action-pill-btn action-pill-edit" onclick="event.stopPropagation(); clearNoClassMark('${key}')">↺ Restore</button>`;
+                }
+                if (isAdmin) {
+                    actionHtml += `<button class="action-pill-btn action-pill-view" onclick="event.stopPropagation(); loadCdmDate('${key}')">✏️ Edit</button>`;
                 }
 
                 row.innerHTML = `<span>${dispDate}${isToday ? ' <strong>· Today</strong>' : ''}</span><span style="display:flex; align-items:center; gap:8px;">${statusHtml} ${actionHtml}</span>`;
@@ -2534,13 +2844,25 @@
             });
         };
 
+        window.loadCdmDate = function(dateStr) {
+            const dateInput = document.getElementById('cdmDateInput');
+            if (dateInput) {
+                dateInput.value = dateStr;
+                renderCycleDayPicker(false);
+                dateInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        };
+
         window.openCycleDayManager = function() {
-            document.getElementById('settingsView').classList.add('hidden');
-            document.getElementById('cycleDayManagerView').classList.remove('hidden');
+            const sv = document.getElementById('settingsView');
+            const cv = document.getElementById('cycleDayManagerView');
+            if (sv) sv.classList.add('hidden');
+            if (cv) cv.classList.remove('hidden');
             setActiveNav('settings');
             setMobilePageTitle('Cycle Day Manager');
             renderCycleDayPicker(false);
             renderCycleCalendarList();
+            renderAuditLog();
         };
 
         // ---- Home Screen Time Engine ----
@@ -2572,22 +2894,23 @@
 
             let info = getCycleInfoForDate(now);
             if (info.type === "noclass") {
-                return { state: "noclass", reason: info.reason, next: findNextActiveSchoolDay(now) };
+                return { state: "noclass", reason: info.reason, note: info.note, next: findNextActiveSchoolDay(now) };
             }
             if (info.type === "unset") {
                 return { state: "unset" };
             }
 
-            let schedule = CLASS_SCHEDULE[info.cycleDay];
+            let mode = info.mode || 'regular';
+            let schedule = getEffectiveScheduleForCycleDay(info.cycleDay, mode);
             let nowMins = minutesSinceMidnight(now);
             let firstStart = periodToMinutes(schedule[0].start);
             let lastEnd = periodToMinutes(schedule[schedule.length - 1].end);
 
             if (nowMins < firstStart) {
-                return { state: "before", cycleDay: info.cycleDay, minutesUntil: firstStart - nowMins, firstPeriod: schedule[0] };
+                return { state: "before", cycleDay: info.cycleDay, mode, note: info.note, minutesUntil: firstStart - nowMins, firstPeriod: schedule[0] };
             }
             if (nowMins >= lastEnd) {
-                return { state: "afterschool", cycleDay: info.cycleDay, next: findNextActiveSchoolDay(now) };
+                return { state: "afterschool", cycleDay: info.cycleDay, mode, note: info.note, next: findNextActiveSchoolDay(now) };
             }
 
             for (let i = 0; i < schedule.length; i++) {
@@ -2597,13 +2920,15 @@
                 if (nowMins >= pStart && nowMins < pEnd) {
                     let next = schedule[i + 1] || null;
                     if (p.type === "class") {
-                        return { state: "current", cycleDay: info.cycleDay, period: p, next };
+                        return { state: "current", cycleDay: info.cycleDay, mode, note: info.note, period: p, next };
+                    } else if (p.type === "async") {
+                        return { state: "async", cycleDay: info.cycleDay, mode, note: info.note, period: p, next };
                     } else {
-                        return { state: "break", cycleDay: info.cycleDay, period: p, next };
+                        return { state: "break", cycleDay: info.cycleDay, mode, note: info.note, period: p, next };
                     }
                 }
             }
-            return { state: "afterschool", cycleDay: info.cycleDay, next: findNextActiveSchoolDay(now) };
+            return { state: "afterschool", cycleDay: info.cycleDay, mode, note: info.note, next: findNextActiveSchoolDay(now) };
         }
 
         function addDays(d, n) { let r = new Date(d); r.setDate(r.getDate() + n); return r; }
@@ -2624,6 +2949,21 @@
             return null;
         }
 
+        function enterScheduleHome() {
+            scheduleHomeUserBrowsing = false;
+            const state = determineHomeState();
+            
+            if (state.state === 'saturday' || state.state === 'sunday' || state.state === 'noclass' || state.state === 'unset') {
+                selectedMobileScheduleDay = null;
+            } else if (state.cycleDay >= 1 && state.cycleDay <= 5) {
+                selectedMobileScheduleDay = state.cycleDay;
+            } else {
+                selectedMobileScheduleDay = null;
+            }
+            
+            renderScheduleHome();
+        }
+
         function renderScheduleHome() {
             renderHomeHighlight();
             renderMobileDayTabs();
@@ -2631,95 +2971,139 @@
             renderDesktopScheduleGrid();
         }
 
+        function modeBadgeText(mode) {
+            return mode === 'synchronous' ? 'SYNCHRONOUS CLASS' : 'REGULAR F2F';
+        }
+
         function renderHomeHighlight() {
             const el = document.getElementById('homeHighlightBody');
+            if (!el) return;
             const state = determineHomeState();
             const now = getToday();
             const dowLabel = now.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
+            const noteHtml = state.note ? `<div class="home-highlight-sub" style="margin-top:8px;">${state.note}</div>` : '';
 
             if (state.state === "saturday") {
-                el.innerHTML = `<div class="home-highlight-message">HAPPY WEEKEND! 🎉</div><div class="home-highlight-sub">Enjoy your weekend. See you next week!</div>`;
+                el.innerHTML = `<div class="home-highlight-daybadge">WEEKEND</div><div class="home-highlight-message">HAPPY WEEKEND! 🎉</div><div class="home-highlight-sub">Enjoy your weekend. See you next week!</div>`;
                 return;
             }
             if (state.state === "sunday") {
-                el.innerHTML = `<div class="home-highlight-message">ONE MORE DAY ☀️</div><div class="home-highlight-sub">Last day of rest day. Ready for tomorrow's classes?</div>`;
+                el.innerHTML = `<div class="home-highlight-daybadge">WEEKEND</div><div class="home-highlight-message">ONE MORE DAY ☀️</div><div class="home-highlight-sub">Last day of rest day. Ready for tomorrow's classes?</div>`;
                 return;
             }
             if (state.state === "noclass") {
                 el.innerHTML = `<div class="home-highlight-daybadge">${dowLabel}</div>
                     <div class="home-highlight-message">NO CLASSES TODAY</div>
-                    <div class="home-highlight-sub">🚫 SUSPENDED (${state.reason})<br>The class-day rotation will continue on the next active school day.</div>`;
+                    <div class="home-highlight-sub">🚫 SUSPENDED (${state.reason})<br>The class-day rotation will continue on the next active school day.</div>${noteHtml}`;
                 return;
             }
             if (state.state === "unset") {
                 el.innerHTML = `<div class="home-highlight-daybadge">${dowLabel}</div>
-                    <div class="home-highlight-message">CYCLE DAY NOT SET</div>
+                    <div class="home-highlight-message">⚠️ CYCLE DAY NOT CONFIGURED</div>
                     <div class="home-highlight-sub">The Main Admin hasn't set today's cycle day yet. Check Settings → Cycle Day Manager.</div>`;
                 return;
             }
             if (state.state === "before") {
-                el.innerHTML = `<div class="home-highlight-daybadge">DAY ${state.cycleDay} · ${dowLabel}</div>
-                    <div class="home-highlight-status">☀️ GOOD MORNING!</div>
-                    <div class="home-highlight-meta">Classes start in <strong>${humanizeDuration(state.minutesUntil)}</strong></div>
-                    <div class="home-highlight-subject">${state.firstPeriod.subject}</div>
-                    <div class="home-highlight-time">${formatTime12h(state.firstPeriod.start)}</div>`;
+                let startLabel = state.mode === 'synchronous' ? 'Synchronous classes start in:' : 'Classes start in:';
+                el.innerHTML = `<div class="home-highlight-daybadge">DAY ${state.cycleDay} · ${modeBadgeText(state.mode)}</div>
+                    <div class="home-highlight-message">GOOD MORNING!</div>
+                    <div class="home-highlight-subject" style="font-size: 18px; margin-top: 16px; margin-bottom: 4px;">First Class: Homeroom</div>
+                    <div class="home-highlight-meta" style="margin-bottom: 16px;">Mr. Mark Ledif Canoy</div>
+                    <div class="home-highlight-sub">${startLabel}</div>
+                    <div class="home-highlight-meta" style="font-size: 16px; margin-bottom: 12px;"><strong>${humanizeDuration(state.minutesUntil)}</strong></div>
+                    <div class="home-highlight-time">${formatTime12h(state.firstPeriod.start)}</div>${noteHtml}`;
                 return;
             }
             if (state.state === "current") {
-                el.innerHTML = `<div class="home-highlight-daybadge">DAY ${state.cycleDay} · TODAY</div>
+                let syncPrefix = state.mode === 'synchronous' && state.period.syncLabel && state.period.syncLabel !== 'Homeroom' ? `💻 ${state.period.syncLabel} · ` : (state.mode === 'synchronous' ? '💻 ' : '');
+                el.innerHTML = `<div class="home-highlight-daybadge">DAY ${state.cycleDay} · ${modeBadgeText(state.mode)}</div>
+                    <div class="home-highlight-status">${syncPrefix}</div>
                     <div class="home-highlight-subject">${state.period.subject}</div>
                     <div class="home-highlight-meta">${state.period.teacher || ''}</div>
                     <div class="home-highlight-time">${formatTime12h(state.period.start)} – ${formatTime12h(state.period.end)}</div>
-                    <div class="home-highlight-status" style="margin-top:8px;">🟢 CURRENT CLASS</div>`;
+                    <div class="home-highlight-status" style="margin-top:8px;">🟢 CURRENT CLASS</div>${noteHtml}`;
+                return;
+            }
+            if (state.state === "async") {
+                el.innerHTML = `<div class="home-highlight-daybadge">DAY ${state.cycleDay} · ${modeBadgeText(state.mode)}</div>
+                    <div class="home-highlight-subject">📝 ASYNCHRONOUS TASKS</div>
+                    <div class="home-highlight-time">${formatTime12h(state.period.start)} – ${formatTime12h(state.period.end)}</div>${noteHtml}`;
                 return;
             }
             if (state.state === "break") {
+                let icon = state.period.subject === 'LUNCH BREAK' ? '🍱 ' : '';
                 let nextTxt = state.next ? `Next: <strong>${state.next.subject}</strong> at ${formatTime12h(state.next.start)}` : '';
-                el.innerHTML = `<div class="home-highlight-daybadge">DAY ${state.cycleDay} · TODAY</div>
-                    <div class="home-highlight-subject">${state.period.subject}</div>
+                el.innerHTML = `<div class="home-highlight-daybadge">DAY ${state.cycleDay} · ${modeBadgeText(state.mode)}</div>
+                    <div class="home-highlight-subject">${icon}${state.period.subject}</div>
                     <div class="home-highlight-time">${formatTime12h(state.period.start)} – ${formatTime12h(state.period.end)}</div>
-                    <div class="home-highlight-meta" style="margin-top:8px;">${nextTxt}</div>`;
+                    <div class="home-highlight-meta" style="margin-top:8px;">${nextTxt}</div>${noteHtml}`;
                 return;
             }
             if (state.state === "afterschool") {
                 let nextMsg = "See you tomorrow!";
                 if (state.next && state.next.weekend) nextMsg = "Happy weekend! See you next week.";
-                el.innerHTML = `<div class="home-highlight-daybadge">DAY ${state.cycleDay} · ${dowLabel}</div>
+                el.innerHTML = `<div class="home-highlight-daybadge">DAY ${state.cycleDay} · ${modeBadgeText(state.mode)}</div>
                     <div class="home-highlight-message">THAT'S IT FOR TODAY!</div>
-                    <div class="home-highlight-sub">${nextMsg}</div>`;
+                    <div class="home-highlight-sub">${nextMsg}</div>${noteHtml}`;
                 return;
             }
         }
 
         function renderMobileDayTabs() {
             const bar = document.getElementById('mobileDayTabBar');
+            if(!bar) return;
             bar.innerHTML = '';
+            const state = determineHomeState();
             for (let i = 1; i <= 5; i++) {
                 let btn = document.createElement('button');
-                btn.className = 'day-tab-btn' + (selectedMobileScheduleDay === i ? ' day-tab-active' : '');
-                btn.textContent = 'DAY ' + i;
-                btn.onclick = function() { selectedMobileScheduleDay = i; renderScheduleHome(); };
+                let isActive = (selectedMobileScheduleDay === i);
+                btn.className = 'day-tab-btn' + (isActive ? ' day-tab-active' : '');
+                
+                let isActualToday = (state.cycleDay === i) && (state.state !== 'saturday' && state.state !== 'sunday' && state.state !== 'noclass' && state.state !== 'unset');
+                btn.textContent = 'DAY ' + i + (isActualToday ? ' •' : '');
+                
+                btn.onclick = function() {
+                    scheduleHomeUserBrowsing = true;
+                    selectedMobileScheduleDay = i;
+                    renderScheduleHome();
+                };
                 bar.appendChild(btn);
             }
         }
 
         function renderMobileScheduleForDay(dayNum) {
             const list = document.getElementById('mobileScheduleList');
+            if(!list) return;
             list.innerHTML = '';
-            const state = determineHomeState();
-            const isTodayThisCycleDay = (state.cycleDay === dayNum) && (state.state === 'current' || state.state === 'break' || state.state === 'before' || state.state === 'afterschool');
+            
+            if(!dayNum) return; // Prevent render loop error if no day is selected.
 
-            CLASS_SCHEDULE[dayNum].forEach(p => {
-                let isCurrent = isTodayThisCycleDay && state.period && state.period === p;
+            const state = determineHomeState();
+            const isTodayThisCycleDay = (state.cycleDay === dayNum) && (state.state === 'current' || state.state === 'break' || state.state === 'before' || state.state === 'afterschool' || state.state === 'async');
+            const showSync = isTodayThisCycleDay && state.mode === 'synchronous';
+            const schedule = showSync ? getEffectiveScheduleForCycleDay(dayNum, 'synchronous') : CLASS_SCHEDULE[dayNum];
+
+            if (showSync) {
+                let banner = document.createElement('div');
+                banner.className = 'sync-preview-title';
+                banner.style.marginBottom = '8px';
+                banner.innerHTML = `💻 Today is running on the Synchronous Class schedule`;
+                list.appendChild(banner);
+            }
+
+            schedule.forEach(p => {
+                let isCurrent = isTodayThisCycleDay && state.period && samePeriod(state.period, p);
                 let card = document.createElement('div');
-                if (p.type === 'break') {
-                    card.className = 'schedule-period-card period-break';
-                    card.innerHTML = `<div><div class="schedule-period-time">${formatTime12h(p.start)} – ${formatTime12h(p.end)}</div><div style="font-weight:700; color:var(--text-muted); font-style:italic;">${p.subject}</div></div>`;
+                if (p.type === 'break' || p.type === 'async') {
+                    card.className = 'schedule-period-card period-break' + (isCurrent ? ' period-current' : '');
+                    let icon = p.type === 'async' ? '📝 ' : (p.subject === 'LUNCH BREAK' ? '🍱 ' : '');
+                    card.innerHTML = `<div><div class="schedule-period-time">${formatTime12h(p.start)} – ${formatTime12h(p.end)}</div><div style="font-weight:700; color:var(--text-muted); font-style:italic;">${icon}${p.subject}</div></div>${isCurrent ? '<span class="schedule-period-badge">🟢 Now</span>' : ''}`;
                 } else {
                     card.className = 'schedule-period-card' + (isCurrent ? ' period-current' : '');
+                    let syncTag = p.syncLabel && p.syncLabel !== 'Homeroom' ? `<span style="color:#2563eb; font-weight:700;">${p.syncLabel}</span> · ` : '';
                     card.innerHTML = `<div>
                             <div class="schedule-period-time">${formatTime12h(p.start)} – ${formatTime12h(p.end)}</div>
-                            <div class="schedule-period-subject">${p.subject}</div>
+                            <div class="schedule-period-subject">${syncTag}${p.subject}</div>
                             <div class="schedule-period-teacher">${p.teacher}</div>
                         </div>
                         ${isCurrent ? '<span class="schedule-period-badge">🟢 Now</span>' : ''}`;
@@ -2730,6 +3114,7 @@
 
         function renderDesktopScheduleGrid() {
             const table = document.getElementById('desktopScheduleTable');
+            if(!table) return;
             const state = determineHomeState();
             const allStarts = CLASS_SCHEDULE[1].map(p => p.start);
 
@@ -2744,7 +3129,7 @@
                 html += `<tr><td class="sg-time-col">${formatTime12h(refPeriod.start)}<br>${formatTime12h(refPeriod.end)}</td>`;
                 for (let day = 1; day <= 5; day++) {
                     let p = CLASS_SCHEDULE[day][rowIdx];
-                    let isCurrentCell = (state.state === 'current' && state.cycleDay === day && state.period === p);
+                    let isCurrentCell = (state.state === 'current' && state.mode !== 'synchronous' && state.cycleDay === day && state.period === p);
                     html += `<td class="${isCurrentCell ? 'sg-current-cell' : ''}"><div class="sg-subject">${p.subject}</div><div class="sg-teacher">${p.teacher}</div></td>`;
                 }
                 html += '</tr>';
@@ -2752,9 +3137,35 @@
 
             html += '</tbody>';
             table.innerHTML = html;
+
+            renderDesktopTodayBanner(state);
         }
 
-        // ============================================
+        function renderDesktopTodayBanner(state) {
+            let existing = document.getElementById('desktopTodayBanner');
+            if (existing) existing.remove();
+
+            if (!state.cycleDay || state.mode !== 'synchronous') return;
+
+            let gen = generateSynchronousSchedule(state.cycleDay);
+            let banner = document.createElement('div');
+            banner.id = 'desktopTodayBanner';
+            banner.className = 'sync-preview-box';
+            banner.style.marginBottom = '16px';
+            let rows = gen.periods.map(p => {
+                let icon = p.type === 'async' ? '📝 ' : (p.subject === 'LUNCH BREAK' ? '🍱 ' : '');
+                let isCurrent = samePeriod(state.period, p);
+                return `<div class="sync-preview-row" style="${isCurrent ? 'font-weight:800; color:#1e40af;' : ''}">
+                    <span class="sync-preview-time">${formatTime12h(p.start)}–${formatTime12h(p.end)}</span>
+                    <span class="sync-preview-subject">${icon}${p.subject}${p.teacher ? `<span class="sync-preview-teacher">${p.teacher}</span>` : ''}${isCurrent ? ' 🟢' : ''}</span>
+                </div>`;
+            }).join('');
+            banner.innerHTML = `<div class="sync-preview-title">💻 Today (Day ${state.cycleDay}) is running Synchronous Class</div>${rows}`;
+
+            const grid = document.querySelector('.schedule-desktop-grid');
+            if (grid && grid.parentNode) grid.parentNode.insertBefore(banner, grid);
+        }
+
         // MISSION COLLECTION SYSTEM (AY 2026-2027)
         // ============================================
 
@@ -3628,7 +4039,7 @@
 
             if (viewName === 'schedule') {
                 document.getElementById('classScheduleView').classList.remove('hidden');
-                renderScheduleHome();
+                enterScheduleHome();
             } else if (viewName === 'dashboard') {
                 document.getElementById('dashboardMatrixView').classList.remove('hidden');
             } else if (viewName === 'profile') {
@@ -3643,7 +4054,9 @@
                 document.getElementById('adminSettingsSection').classList.toggle('hidden', currentUserRole !== 'admin');
             } else if (viewName === 'cycleDayManager') {
                 document.getElementById('cycleDayManagerView').classList.remove('hidden');
-                renderCycleDayManager();
+                renderCycleDayPicker(false);
+                renderCycleCalendarList();
+                renderAuditLog();
             } else if (viewName === 'dailySheet') {
                 document.getElementById('dailyAttendanceSheetView').classList.remove('hidden');
             }
