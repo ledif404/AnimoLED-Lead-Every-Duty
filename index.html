@@ -1324,6 +1324,89 @@
             font-size: 12px;
             margin: 10px 0;
         }
+
+        /* ============================================
+           CLASS FUNDS — Daily Treasury System
+           ============================================ */
+        .cf-subnav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+        .cf-tab-btn { border:1px solid var(--border-gray); background:#fff; color:#475569; border-radius:8px; padding:9px 12px; font-size:12px; font-weight:700; cursor:pointer; }
+        .cf-tab-btn.cf-tab-active { background:var(--primary-green); color:#fff; border-color:var(--primary-green); }
+        .cf-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-bottom:18px; }
+        .cf-stat-card { background:#fff; border:1px solid var(--border-gray); border-radius:10px; padding:14px; min-width:0; }
+        .cf-stat-card label { display:block; color:var(--text-muted); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.45px; margin-bottom:6px; }
+        .cf-stat-value { color:var(--primary-green); font-size:20px; font-weight:800; word-break:break-word; }
+        .cf-stat-sub { color:var(--text-muted); font-size:11px; margin-top:4px; line-height:1.4; }
+        .cf-panel { background:#fff; border:1px solid var(--border-gray); border-radius:10px; padding:14px; margin-bottom:16px; }
+        .cf-panel-title { font-size:13px; color:var(--primary-green); font-weight:800; text-transform:uppercase; letter-spacing:.4px; margin:0 0 12px 0; }
+        .cf-toolbar { display:flex; gap:8px; flex-wrap:wrap; align-items:end; margin-bottom:12px; }
+        .cf-toolbar .form-group { margin-bottom:0; flex:1; min-width:150px; }
+        .cf-money-positive { color:#047857; font-weight:800; }
+        .cf-money-negative { color:#b91c1c; font-weight:800; }
+        .cf-money-neutral { color:#475569; font-weight:700; }
+        .cf-status { display:inline-flex; align-items:center; gap:4px; padding:4px 8px; border-radius:999px; font-size:10px; font-weight:800; white-space:nowrap; }
+        .cf-status-draft { background:#e2e8f0; color:#475569; }
+        .cf-status-pending { background:#fef3c7; color:#92400e; }
+        .cf-status-partial { background:#ffedd5; color:#9a3412; }
+        .cf-status-verified { background:#d1fae5; color:#065f46; }
+        .cf-status-danger { background:#fee2e2; color:#991b1b; }
+        .cf-status-info { background:#dbeafe; color:#1e40af; }
+        .cf-readonly-note { background:#f8fafc; border:1px solid #cbd5e1; color:#475569; padding:10px 12px; border-radius:8px; font-size:12px; margin-bottom:14px; }
+        .cf-daily-summary { position:sticky; top:76px; z-index:20; background:#fffdf5; border:1px solid #fcd34d; border-left:4px solid var(--accent-gold); border-radius:8px; padding:10px 12px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-bottom:12px; box-shadow:0 4px 10px rgba(0,0,0,.05); }
+        .cf-daily-summary div { min-width:0; }
+        .cf-daily-summary span { display:block; font-size:9px; text-transform:uppercase; color:#92400e; font-weight:800; }
+        .cf-daily-summary strong { display:block; color:#78350f; font-size:14px; margin-top:2px; }
+        .cf-student-row { display:grid; grid-template-columns:minmax(180px,2fr) minmax(155px,1fr) minmax(120px,1fr); gap:10px; align-items:center; padding:10px 8px; border-bottom:1px solid #e2e8f0; }
+        .cf-student-row:last-child { border-bottom:none; }
+        .cf-student-name { font-weight:700; color:#334155; font-size:13px; }
+        .cf-student-id { font-size:10px; color:var(--text-muted); margin-top:2px; }
+        .cf-attendance-hint { font-size:10px; color:#0369a1; margin-top:3px; }
+        .cf-student-row select, .cf-student-row input { width:100%; box-sizing:border-box; border:1px solid var(--border-gray); border-radius:6px; padding:9px; font-size:13px; background:#fff; }
+        .cf-action-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; margin-top:12px; }
+        .cf-queue-item, .cf-activity-item { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:10px 0; border-bottom:1px solid #f1f5f9; }
+        .cf-queue-item:last-child, .cf-activity-item:last-child { border-bottom:none; }
+        .cf-queue-main { min-width:0; }
+        .cf-queue-title { font-size:12px; font-weight:800; color:#334155; }
+        .cf-queue-sub { font-size:10px; color:var(--text-muted); margin-top:2px; }
+        .cf-chart-wrap { position:relative; min-height:260px; }
+        .cf-detail-section { margin-top:16px; }
+        .cf-detail-title { font-size:11px; font-weight:800; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px; }
+        .cf-audit-row { padding:9px 0; border-bottom:1px solid #f1f5f9; font-size:11px; line-height:1.45; }
+        .cf-audit-row:last-child { border-bottom:none; }
+        .cf-audit-meta { color:var(--text-muted); margin-top:2px; font-size:10px; }
+        .cf-calendar { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; }
+        .cf-calendar-cell { min-height:58px; border:1px solid #e2e8f0; border-radius:7px; padding:6px; font-size:10px; background:#fff; cursor:pointer; }
+        .cf-calendar-cell strong { display:block; font-size:11px; }
+        .cf-calendar-contributed { background:#ecfdf5; border-color:#a7f3d0; }
+        .cf-calendar-none { background:#fef2f2; border-color:#fecaca; }
+        .cf-calendar-excused { background:#eff6ff; border-color:#bfdbfe; }
+        .cf-calendar-nocollection { background:#f8fafc; color:#64748b; }
+        .cf-report-grid { display:grid; grid-template-columns:1fr; gap:16px; }
+        .cf-report-filter-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin-bottom:14px; }
+        .cf-report-filter-grid .form-group { margin:0; }
+        .cf-muted { color:var(--text-muted); font-size:11px; }
+        .cf-warning { background:#fff7ed; border:1px solid #fdba74; color:#9a3412; border-radius:8px; padding:10px 12px; font-size:12px; margin-bottom:12px; }
+        .cf-danger-box { background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; border-radius:8px; padding:10px 12px; font-size:12px; margin-bottom:12px; }
+        .cf-success-box { background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; border-radius:8px; padding:10px 12px; font-size:12px; margin-bottom:12px; }
+        .cf-transaction-mobile-balance { font-size:11px; color:var(--text-muted); }
+        .cf-pdf-container { background:#fff; color:#000; padding:28px; font-family:Arial,sans-serif; }
+
+        @media (min-width: 760px) {
+            .cf-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+            .cf-report-grid { grid-template-columns:1fr 1fr; }
+        }
+        @media (max-width: 860px) {
+            .cf-subnav { display:grid; grid-template-columns:repeat(2,1fr); }
+            .cf-tab-btn { min-height:44px; }
+            .cf-daily-summary { top:72px; grid-template-columns:repeat(2,1fr); }
+            .cf-student-row { display:block; border:1px solid var(--border-gray); border-radius:10px; margin-bottom:10px; padding:12px; box-shadow:0 1px 4px rgba(0,0,0,.04); }
+            .cf-student-row > div { margin-bottom:10px; }
+            .cf-student-row > div:last-child { margin-bottom:0; }
+            .cf-student-row select, .cf-student-row input { min-height:44px; font-size:15px; }
+            .cf-report-filter-grid { grid-template-columns:1fr; }
+            .cf-calendar { grid-template-columns:repeat(4,minmax(0,1fr)); }
+            .cf-chart-wrap { min-height:220px; }
+        }
+
 </style>
 </head>
 <body>
@@ -1386,6 +1469,7 @@
                 <button class="sidebar-link" data-nav="schedule" onclick="navigateTo('schedule')"><span class="sidebar-icon">📅</span> Class Schedule</button>
                 <button class="sidebar-link" data-nav="dashboard" onclick="navigateTo('dashboard')"><span class="sidebar-icon">📋</span> Attendance Tracker</button>
                 <button class="sidebar-link" data-nav="missionCollection" onclick="navigateTo('missionCollection')"><span class="sidebar-icon">💰</span> Mission Collection</button>
+                <button class="sidebar-link" data-nav="classFunds" onclick="navigateTo('classFunds')"><span class="sidebar-icon">💵</span> Class Funds</button>
                 <button class="sidebar-link admin-only-field hidden" data-nav="officers" onclick="navigateTo('officers')"><span class="sidebar-icon">👥</span> My Officers</button>
                 <button class="sidebar-link" data-nav="profile" onclick="navigateTo('profile')"><span class="sidebar-icon">👤</span> My Profile</button>
                 <button class="sidebar-link" data-nav="settings" onclick="navigateTo('settings')"><span class="sidebar-icon">⚙</span> Settings</button>
@@ -1405,6 +1489,7 @@
                 <button class="nav-btn" onclick="navigateTo('schedule')">📅 Class Schedule</button>
                 <button class="nav-btn" onclick="navigateTo('dashboard')">📋 Tracker</button>
                 <button class="nav-btn" onclick="navigateTo('missionCollection')">💰 Mission Collection</button>
+                <button class="nav-btn" onclick="navigateTo('classFunds')">💵 Class Funds</button>
                 <button class="nav-btn admin-only-field hidden" onclick="navigateTo('officers')">👥 My Officers</button>
                 <button class="nav-btn" onclick="navigateTo('profile')">👤 My Profile</button>
                 <button class="nav-btn" onclick="navigateTo('settings')">⚙ Settings</button>
@@ -1796,6 +1881,189 @@
                 </div>
             </div>
 
+
+            <!-- 💵 CLASS FUNDS TREASURY VIEW -->
+            <div id="classFundsView" class="hidden">
+                <div class="view-header-flex">
+                    <div>
+                        <h2 class="view-title">💵 Class Funds <span style="font-size:13px; color:var(--text-muted); font-weight:500;">| AY 2026–2027</span></h2>
+                        <div class="cf-muted" style="margin-top:4px;">Voluntary daily student contributions, treasury ledger, expenses, verification, and audit.</div>
+                    </div>
+                </div>
+
+                <div id="cfRoleNotice" class="cf-readonly-note hidden"></div>
+
+                <div class="cf-subnav" id="cfSubnav">
+                    <button id="cfDashboardTabBtn" class="cf-tab-btn cf-tab-active" onclick="toggleCfTab('dashboard')">📊 Dashboard</button>
+                    <button id="cfDailyTabBtn" class="cf-tab-btn" onclick="toggleCfTab('daily')">💵 Daily Collection</button>
+                    <button id="cfStudentsTabBtn" class="cf-tab-btn" onclick="toggleCfTab('students')">👥 Students</button>
+                    <button id="cfLedgerTabBtn" class="cf-tab-btn" onclick="toggleCfTab('ledger')">📖 Ledger</button>
+                    <button id="cfExpensesTabBtn" class="cf-tab-btn" onclick="toggleCfTab('expenses')">🧾 Expenses</button>
+                    <button id="cfReportsTabBtn" class="cf-tab-btn" onclick="toggleCfTab('reports')">📈 Reports</button>
+                </div>
+
+                <!-- CLASS FUNDS DASHBOARD -->
+                <div id="cfDashboardTab">
+                    <div class="cf-grid">
+                        <div class="cf-stat-card" style="border-left:4px solid var(--primary-green);"><label>Available Class Fund</label><div id="cfDashAvailable" class="cf-stat-value">₱0.00</div><div class="cf-stat-sub">Derived from active ledger transactions</div></div>
+                        <div class="cf-stat-card"><label>Total Contributions</label><div id="cfDashContributions" class="cf-stat-value">₱0.00</div></div>
+                        <div class="cf-stat-card"><label>Total Expenses</label><div id="cfDashExpenses" class="cf-stat-value">₱0.00</div></div>
+                        <div class="cf-stat-card"><label>Pending Verification</label><div id="cfDashPending" class="cf-stat-value">0</div><div class="cf-stat-sub">Daily sheets, expenses, and adjustments</div></div>
+                        <div class="cf-stat-card"><label>Today's Contributors</label><div id="cfDashTodayContributors" class="cf-stat-value">—</div></div>
+                        <div class="cf-stat-card"><label>Today's Participation Rate</label><div id="cfDashTodayRate" class="cf-stat-value">—</div></div>
+                        <div class="cf-stat-card"><label>Average Daily Participation</label><div id="cfDashAvgParticipation" class="cf-stat-value">—</div></div>
+                        <div class="cf-stat-card"><label>Perfect Participation Students</label><div id="cfDashPerfect" class="cf-stat-value">0</div><div class="cf-stat-sub">No recorded No Contribution day</div></div>
+                    </div>
+
+                    <div class="cf-panel">
+                        <h3 class="cf-panel-title">Today's Class Fund</h3>
+                        <div id="cfTodayStatusPanel" class="cf-muted">Loading today's status…</div>
+                    </div>
+
+                    <div id="cfOverduePanel" class="cf-warning hidden"></div>
+
+                    <div class="cf-report-grid">
+                        <div class="cf-panel">
+                            <h3 class="cf-panel-title">Verification Required</h3>
+                            <div id="cfVerificationQueue"></div>
+                        </div>
+                        <div class="cf-panel">
+                            <h3 class="cf-panel-title">Recent Activity</h3>
+                            <div id="cfRecentActivity"></div>
+                        </div>
+                    </div>
+
+                    <div class="cf-panel">
+                        <h3 class="cf-panel-title">Fund Balance Over Time</h3>
+                        <div class="cf-chart-wrap"><canvas id="cfBalanceChart"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- DAILY COLLECTION -->
+                <div id="cfDailyTab" class="hidden">
+                    <div class="cf-toolbar">
+                        <div class="form-group" style="max-width:220px;">
+                            <label>Collection Date</label>
+                            <input type="date" id="cfDailyDate" onchange="openCfDailyCollection(this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Search Student</label>
+                            <input type="text" id="cfDailySearch" placeholder="Name / ID" oninput="renderCfDailySheet()">
+                        </div>
+                        <div class="form-group" style="max-width:210px;">
+                            <label>Filter</label>
+                            <select id="cfDailyFilter" onchange="renderCfDailySheet()">
+                                <option value="all">All</option>
+                                <option value="contributed">Contributed</option>
+                                <option value="no_contribution">No Contribution</option>
+                                <option value="excused">Excused / Absent</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="cfDailyEligibility"></div>
+                    <div id="cfDailyStateBanner"></div>
+
+                    <div class="cf-daily-summary" id="cfDailyLiveSummary">
+                        <div><span>Contributors</span><strong id="cfLiveContributors">0 / 0</strong></div>
+                        <div><span>No Contribution</span><strong id="cfLiveNoContribution">0</strong></div>
+                        <div><span>Excused / Absent</span><strong id="cfLiveExcused">0</strong></div>
+                        <div><span>Total Collected</span><strong id="cfLiveTotal">₱0.00</strong></div>
+                    </div>
+
+                    <div class="cf-panel" style="padding:8px;">
+                        <div id="cfDailyStudentList"></div>
+                    </div>
+
+                    <div id="cfDailyActions" class="cf-action-row"></div>
+                </div>
+
+                <!-- STUDENTS -->
+                <div id="cfStudentsTab" class="hidden">
+                    <div class="cf-toolbar">
+                        <div class="form-group"><label>Search Student</label><input type="text" id="cfStudentSearch" placeholder="Name / ID" oninput="renderCfStudents()"></div>
+                    </div>
+                    <div class="table-scroller mobile-card-scroller">
+                        <table class="mobile-card-table">
+                            <thead><tr><th>Student</th><th>Total Contributed</th><th>Contribution Days</th><th>No Contribution</th><th>Current Streak</th><th>Participation</th><th>Action</th></tr></thead>
+                            <tbody id="cfStudentsTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- LEDGER -->
+                <div id="cfLedgerTab" class="hidden">
+                    <div class="view-header-flex" style="margin-bottom:12px;">
+                        <h3 style="margin:0; color:var(--primary-green); font-size:15px;">Bank-Style Class Fund Ledger</h3>
+                        <div class="btn-set">
+                            <button id="cfOpeningBalanceBtn" class="btn-ui btn-gold cf-admin-only hidden" onclick="openCfOpeningBalanceModal()">🏦 Set Opening Balance</button>
+                            <button class="btn-ui btn-green cf-finance-edit hidden" onclick="openCfAdjustmentModal()">± Adjustment</button>
+                        </div>
+                    </div>
+                    <div class="cf-grid" style="grid-template-columns:repeat(3,minmax(0,1fr));">
+                        <div class="cf-stat-card"><label>Opening Balance</label><div id="cfLedgerOpening" class="cf-stat-value">₱0.00</div></div>
+                        <div class="cf-stat-card"><label>Net Movement</label><div id="cfLedgerNet" class="cf-stat-value">₱0.00</div></div>
+                        <div class="cf-stat-card"><label>Available Fund</label><div id="cfLedgerAvailable" class="cf-stat-value">₱0.00</div></div>
+                    </div>
+                    <div class="table-scroller mobile-card-scroller">
+                        <table class="mobile-card-table">
+                            <thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th><th>Running Balance</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody id="cfLedgerTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- EXPENSES -->
+                <div id="cfExpensesTab" class="hidden">
+                    <div class="view-header-flex" style="margin-bottom:12px;">
+                        <h3 style="margin:0; color:var(--primary-green); font-size:15px;">Class Fund Expenses</h3>
+                        <div class="btn-set"><button class="btn-ui btn-green cf-finance-edit hidden" onclick="openCfExpenseModal()">🧾 Record Expense</button></div>
+                    </div>
+                    <div class="table-scroller mobile-card-scroller">
+                        <table class="mobile-card-table">
+                            <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Paid To</th><th>Amount</th><th>Verification</th><th>Actions</th></tr></thead>
+                            <tbody id="cfExpensesTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- REPORTS -->
+                <div id="cfReportsTab" class="hidden">
+                    <div class="view-header-flex" style="margin-bottom:12px;">
+                        <h3 style="margin:0; color:var(--primary-green); font-size:15px;">Class Funds Reports</h3>
+                        <div class="btn-set">
+                            <select id="cfExportType" style="padding:8px; border:1px solid var(--border-gray); border-radius:6px; font-size:12px;">
+                                <option value="financial">Financial Statement</option>
+                                <option value="ledger">Complete Ledger</option>
+                                <option value="daily">Daily Collections</option>
+                                <option value="students">Student Contribution Summary</option>
+                                <option value="expenses">Expense Report</option>
+                                <option value="verification">Verification Report</option>
+                                <option value="audit">Audit History</option>
+                            </select>
+                            <button class="btn-ui btn-gold" onclick="exportCfCSV()">📊 Export CSV</button>
+                            <button class="btn-ui btn-green" onclick="exportCfPDF()">📄 Export PDF</button>
+                        </div>
+                    </div>
+
+                    <div class="cf-report-filter-grid">
+                        <div class="form-group"><label>Search</label><input type="text" id="cfReportSearch" placeholder="Student, description, merchant, reference, transaction ID" oninput="renderCfReports()"></div>
+                        <div class="form-group"><label>From Date</label><input type="date" id="cfReportFrom" onchange="renderCfReports()"></div>
+                        <div class="form-group"><label>To Date</label><input type="date" id="cfReportTo" onchange="renderCfReports()"></div>
+                        <div class="form-group"><label>Month</label><input type="month" id="cfReportMonth" onchange="renderCfReports()"></div>
+                        <div class="form-group"><label>Student</label><select id="cfReportStudent" onchange="renderCfReports()"><option value="">All Students</option></select></div>
+                        <div class="form-group"><label>Transaction Type</label><select id="cfReportType" onchange="renderCfReports()"><option value="">All Types</option><option value="opening_balance">Opening Balance</option><option value="daily_contribution">Daily Contribution</option><option value="expense">Expense</option><option value="adjustment">Adjustment</option></select></div>
+                        <div class="form-group"><label>Expense Category</label><select id="cfReportCategory" onchange="renderCfReports()"><option value="">All Categories</option><option>Classroom Supplies</option><option>Printing / Photocopying</option><option>Decorations</option><option>Class Activity</option><option>Food / Refreshments</option><option>Transportation</option><option>School Project</option><option>Emergency / Unexpected</option><option>Other</option></select></div>
+                        <div class="form-group"><label>Verification Status</label><select id="cfReportVerification" onchange="renderCfReports()"><option value="">All Verification</option><option value="pending">Pending</option><option value="partial">Partially Verified</option><option value="verified">Fully Verified</option><option value="reverification">Reverification Required</option></select></div>
+                        <div class="form-group"><label>Record Status</label><select id="cfReportActive" onchange="renderCfReports()"><option value="">Active + Voided</option><option value="active">Active</option><option value="voided">Voided</option></select></div>
+                        <div class="form-group"><label>Sort</label><select id="cfReportSort" onchange="renderCfReports()"><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="high">Highest Amount</option><option value="low">Lowest Amount</option></select></div>
+                    </div>
+
+                    <div id="cfReportContent"></div>
+                    <div id="cfPdfExportContainer" class="cf-pdf-container hidden"></div>
+                </div>
+            </div>
+
             <!-- SETTINGS VIEW -->
             <div id="settingsView" class="hidden">
                 <div class="view-header-flex">
@@ -2120,11 +2388,82 @@
         </div>
     </div>
 
+
+    <!-- CLASS FUNDS: DAILY RECONCILIATION MODAL -->
+    <div id="cfReconcileModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window" style="max-width:560px; border-top:5px solid var(--primary-green);">
+            <h3 style="margin:0 0 8px 0; color:var(--primary-green);">💵 Submit / Close Daily Collection</h3>
+            <div id="cfReconcileSummary" class="cf-panel" style="margin-bottom:14px;"></div>
+            <div class="form-group"><label>Cash Counted by Treasurer</label><input type="number" id="cfCashCountedInput" min="0" step="0.01" placeholder="0.00" oninput="updateCfReconcileDifference()"></div>
+            <div id="cfReconcileDifferenceBox"></div>
+            <div id="cfDiscrepancyGroup" class="form-group hidden"><label>Discrepancy Explanation (required when difference is not zero)</label><textarea id="cfDiscrepancyReason" placeholder="Explain why cash counted differs from the computed student total."></textarea></div>
+            <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:16px;">
+                <button class="btn-ui btn-gray" onclick="closeCfReconcileModal()">Cancel</button>
+                <button id="cfSubmitDailyBtn" class="btn-ui btn-green" onclick="confirmCfDailySubmission()">✅ Submit Collection</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLASS FUNDS: EXPENSE MODAL -->
+    <div id="cfExpenseModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window" style="max-width:600px; border-top:5px solid var(--accent-gold);">
+            <h3 id="cfExpenseModalTitle" style="margin:0 0 8px 0; color:var(--primary-green);">🧾 Record Expense</h3>
+            <div class="profile-form-grid">
+                <div class="form-group"><label>Expense Date</label><input type="date" id="cfExpenseDate"></div>
+                <div class="form-group"><label>Expense Category</label><select id="cfExpenseCategory" onchange="document.getElementById('cfExpenseOtherGroup').classList.toggle('hidden', this.value!=='Other')"><option value="">Select category</option><option>Classroom Supplies</option><option>Printing / Photocopying</option><option>Decorations</option><option>Class Activity</option><option>Food / Refreshments</option><option>Transportation</option><option>School Project</option><option>Emergency / Unexpected</option><option>Other</option></select></div>
+                <div id="cfExpenseOtherGroup" class="form-group hidden"><label>Custom Category</label><input type="text" id="cfExpenseOtherCategory" placeholder="Describe the category"></div>
+                <div class="form-group"><label>Amount</label><input type="number" id="cfExpenseAmount" min="0.01" step="0.01" placeholder="0.00"></div>
+                <div class="form-group" style="grid-column:1/-1;"><label>Description</label><input type="text" id="cfExpenseDescription" placeholder="What was purchased / paid for?"></div>
+                <div class="form-group"><label>Paid To / Merchant</label><input type="text" id="cfExpensePaidTo" placeholder="Merchant / recipient"></div>
+                <div class="form-group"><label>Receipt / Reference No. (optional)</label><input type="text" id="cfExpenseReference" placeholder="OR-123"></div>
+                <div class="form-group" style="grid-column:1/-1;"><label>Notes (optional)</label><textarea id="cfExpenseNotes" placeholder="Additional information"></textarea></div>
+                <div id="cfExpenseCorrectionGroup" class="form-group hidden" style="grid-column:1/-1;"><label>Correction Reason (required)</label><textarea id="cfExpenseCorrectionReason" placeholder="Why is this expense being changed?"></textarea></div>
+            </div>
+            <div id="cfExpenseOverdraftBox"></div>
+            <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:16px;"><button class="btn-ui btn-gray" onclick="closeCfExpenseModal()">Cancel</button><button id="cfExpenseSaveBtn" class="btn-ui btn-green" onclick="saveCfExpense()">Save Expense</button></div>
+        </div>
+    </div>
+
+    <!-- CLASS FUNDS: ADJUSTMENT MODAL -->
+    <div id="cfAdjustmentModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window" style="max-width:520px;">
+            <h3 id="cfAdjustmentModalTitle" style="margin:0 0 8px 0; color:var(--primary-green);">± Class Fund Adjustment</h3>
+            <div class="profile-form-grid">
+                <div class="form-group"><label>Date</label><input type="date" id="cfAdjustmentDate"></div>
+                <div class="form-group"><label>Direction</label><select id="cfAdjustmentDirection"><option value="in">Increase Fund</option><option value="out">Decrease Fund</option></select></div>
+                <div class="form-group"><label>Amount</label><input type="number" id="cfAdjustmentAmount" min="0.01" step="0.01" placeholder="0.00"></div>
+                <div class="form-group" style="grid-column:1/-1;"><label>Reason (required)</label><input type="text" id="cfAdjustmentReason" placeholder="Cash reconciliation correction"></div>
+                <div class="form-group" style="grid-column:1/-1;"><label>Notes (optional)</label><textarea id="cfAdjustmentNotes"></textarea></div>
+                <div id="cfAdjustmentCorrectionGroup" class="form-group hidden" style="grid-column:1/-1;"><label>Correction Reason (required)</label><textarea id="cfAdjustmentCorrectionReason"></textarea></div>
+            </div>
+            <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:16px;"><button class="btn-ui btn-gray" onclick="closeCfAdjustmentModal()">Cancel</button><button id="cfAdjustmentSaveBtn" class="btn-ui btn-green" onclick="saveCfAdjustment()">Save Adjustment</button></div>
+        </div>
+    </div>
+
+    <!-- CLASS FUNDS: DETAIL / VERIFICATION MODAL -->
+    <div id="cfDetailModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window" style="max-width:760px;">
+            <h3 id="cfDetailTitle" style="margin:0 0 8px 0; color:var(--primary-green);">Class Fund Record</h3>
+            <div id="cfDetailBody"></div>
+            <div id="cfDetailActions" class="cf-action-row"></div>
+            <div style="display:flex; justify-content:flex-end; margin-top:14px;"><button class="btn-ui btn-gray" onclick="closeCfDetailModal()">Close</button></div>
+        </div>
+    </div>
+
+    <!-- CLASS FUNDS: STUDENT PROFILE MODAL -->
+    <div id="cfStudentProfileModal" class="modal-backdrop top-dialog-modal hidden">
+        <div class="modal-window" style="max-width:820px;">
+            <h3 id="cfStudentProfileTitle" style="margin:0 0 8px 0; color:var(--primary-green);">Student Class Fund Profile</h3>
+            <div id="cfStudentProfileBody"></div>
+            <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:16px;"><button class="btn-ui btn-gold" onclick="exportCfIndividualStudentCSV()">📊 Export Statement CSV</button><button class="btn-ui btn-green" onclick="exportCfIndividualStudentPDF()">📄 Export Statement PDF</button><button class="btn-ui btn-gray" onclick="closeCfStudentProfileModal()">Close</button></div>
+        </div>
+    </div>
+
     <!-- SCRIPT MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, set, remove, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, remove, onValue, update, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDf9e2U7UdfLS8zGGMGWk0w5hzdt3LZ_c8",
@@ -3834,6 +4173,1784 @@
             html2pdf().set(opt).from(element).save();
         };
 
+
+        // ============================================
+        // CLASS FUNDS TREASURY SYSTEM (AY 2026-2027)
+        // ============================================
+
+        const CF_AY_KEY = 'ay_2026_2027';
+        const CF_ROOT = 'class_funds/' + CF_AY_KEY;
+        const CF_AY_LABEL = 'AY 2026–2027';
+        const CF_EXPENSE_CATEGORIES = ['Classroom Supplies','Printing / Photocopying','Decorations','Class Activity','Food / Refreshments','Transportation','School Project','Emergency / Unexpected','Other'];
+
+        let cfGlobalData = { daily_collections: {}, transactions: {}, audit_log: {} };
+        let cfDailyData = {};
+        let cfTransactions = {};
+        let cfAuditData = {};
+        let cfBalanceChart = null;
+        let cfActiveTab = 'dashboard';
+        let cfWorkingDate = '';
+        let cfWorkingStudents = {};
+        let cfDailySourceRecord = null;
+        let cfSyncUnsubscribe = null;
+        let cfSyncBoundUid = null;
+        let cfExpenseEditId = null;
+        let cfAdjustmentEditId = null;
+        let cfSelectedStudentId = null;
+
+        function cfEsc(value) {
+            return String(value == null ? '' : value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+        }
+
+        function cfMoney(centavos) {
+            let cents = Number(centavos || 0);
+            let sign = cents < 0 ? '-' : '';
+            return sign + '₱' + (Math.abs(cents) / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function cfInputToCentavos(value) {
+            let num = Number(value);
+            if (!Number.isFinite(num)) return 0;
+            return Math.round(num * 100);
+        }
+
+        function cfDateLabel(dateStr, withWeekday) {
+            if (!dateStr) return '—';
+            let d = parseDateKey(dateStr);
+            return d.toLocaleDateString('en-US', withWeekday ? { weekday:'short', month:'short', day:'numeric', year:'numeric' } : { month:'short', day:'numeric', year:'numeric' });
+        }
+
+        function cfDateSortTs(dateStr) {
+            if (!dateStr) return 0;
+            let d = parseDateKey(dateStr);
+            d.setHours(12,0,0,0);
+            return d.getTime();
+        }
+
+        function cfActor() {
+            return {
+                uid: currentUser ? currentUser.uid : 'unknown',
+                name: userFullName || (currentUser ? currentUser.email : 'Unknown User'),
+                designation: currentUserRole === 'admin' ? 'Main Admin' : (userDesignation || 'Officer')
+            };
+        }
+
+        function cfCanFinanceEdit() { return currentUserRole === 'admin' || userDesignation === 'Treasurer'; }
+        function cfCanAdmin() { return currentUserRole === 'admin'; }
+        function cfCanPresidentVerify() { return currentUserRole !== 'admin' && userDesignation === 'President'; }
+        function cfCanVpVerify() { return currentUserRole !== 'admin' && userDesignation === 'Vice President'; }
+
+        function cfRequireFinance(actionLabel) {
+            if (!cfCanFinanceEdit()) {
+                showAppAlert('Permission Denied', (actionLabel || 'This action') + ' is reserved for the Class Treasurer and Main Admin.');
+                return false;
+            }
+            return true;
+        }
+
+        function cfRequireAdmin(actionLabel) {
+            if (!cfCanAdmin()) {
+                showAppAlert('Permission Denied', (actionLabel || 'This action') + ' requires Main Admin privileges.');
+                return false;
+            }
+            return true;
+        }
+
+        function cfMakeAuditEntry(actionType, targetId, summary, reason, extra) {
+            const actor = cfActor();
+            return Object.assign({
+                actionType,
+                timestampMs: Date.now(),
+                timestamp: new Date().toLocaleString('en-PH'),
+                uid: actor.uid,
+                displayNameSnapshot: actor.name,
+                designationSnapshot: actor.designation,
+                affectedRecordId: targetId || '',
+                summary: summary || '',
+                reason: reason || ''
+            }, extra || {});
+        }
+
+        function cfAddAuditToUpdates(updates, actionType, targetId, summary, reason, extra) {
+            const auditKey = push(ref(db, CF_ROOT + '/audit_log')).key;
+            updates['audit_log/' + auditKey] = cfMakeAuditEntry(actionType, targetId, summary, reason, extra);
+            return auditKey;
+        }
+
+        function cfShowSaving(button, savingText) {
+            if (!button) return null;
+            let old = { text: button.textContent, disabled: button.disabled };
+            button.disabled = true;
+            button.textContent = savingText || 'Saving...';
+            return old;
+        }
+
+        function cfRestoreButton(button, old) {
+            if (!button || !old) return;
+            button.disabled = old.disabled;
+            button.textContent = old.text;
+        }
+
+        function cfGetVerificationState(record) {
+            const verification = (record && record.verification) || {};
+            const p = !!(verification.president && verification.president.verified);
+            const v = !!(verification.vicePresident && verification.vicePresident.verified);
+            const count = (p ? 1 : 0) + (v ? 1 : 0);
+            if (record && record.reverificationRequired && count < 2) return { key:'reverification', count, label:'⚠️ Reverification Required' };
+            if (count === 2) return { key:'verified', count, label:'🟢 Fully Verified' };
+            if (count === 1) return { key:'partial', count, label:'🟡 Partially Verified — 1 of 2' };
+            return { key:'pending', count, label:'⏳ Awaiting Verification — 0 of 2' };
+        }
+
+        function cfStatusBadge(state) {
+            let cls = 'cf-status-pending';
+            if (state.key === 'verified') cls = 'cf-status-verified';
+            else if (state.key === 'partial') cls = 'cf-status-partial';
+            else if (state.key === 'draft') cls = 'cf-status-draft';
+            else if (state.key === 'reverification' || state.key === 'voided') cls = 'cf-status-danger';
+            else if (state.key === 'no_collection') cls = 'cf-status-info';
+            return `<span class="cf-status ${cls}">${cfEsc(state.label)}</span>`;
+        }
+
+        function cfDailyDisplayState(record) {
+            if (!record) return { key:'missing', label:'⚠️ Collection Not Recorded' };
+            if (record.status === 'draft') return { key:'draft', label:'📝 Draft — Not Yet Submitted' };
+            if (record.status === 'no_collection') return { key:'no_collection', label:'— No Class Fund Collection' };
+            if (record.status === 'voided') return { key:'voided', label:'VOIDED' };
+            return cfGetVerificationState(record);
+        }
+
+        function cfApplyPermissions() {
+            const canFinance = cfCanFinanceEdit();
+            document.querySelectorAll('.cf-finance-edit').forEach(el => el.classList.toggle('hidden', !canFinance));
+            document.querySelectorAll('.cf-admin-only').forEach(el => el.classList.toggle('hidden', !cfCanAdmin()));
+            const notice = document.getElementById('cfRoleNotice');
+            if (!notice) return;
+            if (currentUserRole === 'admin') {
+                notice.classList.add('hidden');
+            } else if (userDesignation === 'Treasurer') {
+                notice.classList.add('hidden');
+            } else if (userDesignation === 'President') {
+                notice.textContent = '🔎 Review Mode: You may view all Class Funds records and verify the President slot only. Financial values remain read-only.';
+                notice.classList.remove('hidden');
+            } else if (userDesignation === 'Vice President') {
+                notice.textContent = '🔎 Review Mode: You may view all Class Funds records and verify the Vice President slot only. Financial values remain read-only.';
+                notice.classList.remove('hidden');
+            } else {
+                notice.textContent = '🔒 View Only Mode: Class Fund entry and editing are reserved for the Class Treasurer and Main Admin. President and Vice President may perform verification only.';
+                notice.classList.remove('hidden');
+            }
+        }
+
+        function bindClassFundsSync() {
+            if (!currentUser) return;
+            if (cfSyncBoundUid === currentUser.uid && cfSyncUnsubscribe) return;
+            if (cfSyncUnsubscribe) {
+                try { cfSyncUnsubscribe(); } catch (e) { console.warn('[Class Funds] Failed to unbind old listener', e); }
+            }
+            cfSyncBoundUid = currentUser.uid;
+            cfSyncUnsubscribe = onValue(ref(db, CF_ROOT), (snapshot) => {
+                cfGlobalData = snapshot.val() || {};
+                cfDailyData = cfGlobalData.daily_collections || {};
+                cfTransactions = cfGlobalData.transactions || {};
+                cfAuditData = cfGlobalData.audit_log || {};
+                if (!document.getElementById('classFundsView').classList.contains('hidden')) renderCfCurrentTab();
+            }, (err) => {
+                console.error('[Class Funds] Live sync failed:', err);
+                showAppAlert('Class Funds Sync Error', 'Unable to synchronize Class Funds data.\nFirebase returned: ' + err.message);
+            });
+        }
+
+        function cfGetDateEligibility(dateStr) {
+            if (!dateStr) return { eligible:false, reason:'Select a date.' };
+            const d = parseDateKey(dateStr);
+            const todayKey = formatDateKey(new Date());
+            if (dateStr > todayKey) return { eligible:false, future:true, reason:'Future collection records cannot be created.' };
+            if (isWeekend(d)) return { eligible:false, reason:'Weekend — No Collection Day.' };
+            const info = getCycleInfoForDate(d);
+            if (info.type === 'noclass') return { eligible:false, reason:'Cycle Day Manager: No Classes' + (info.reason ? ' — ' + info.reason : '') + '.' };
+            if (info.type === 'school') return { eligible:true, info, reason: info.mode === 'synchronous' ? 'Synchronous school day — collection eligible.' : 'Regular school day — collection eligible.' };
+            return { eligible:false, unknown:true, reason:'Cycle day is not configured for this date. Class Funds will not guess eligibility.' };
+        }
+
+        function cfDetectAttendanceStatus(dateStr, studentId) {
+            const day = globalDatabase[dateStr];
+            const rec = day && day.records ? day.records[studentId] : null;
+            if (!day || !rec) return { clear:false };
+            const periodMax = parseInt(day.periods || 7);
+            const vals = [rec.hr];
+            for (let i=1; i<=periodMax; i++) vals.push(rec['p'+i]);
+            const tracked = vals.filter(v => v !== undefined && v !== null && v !== '');
+            if (!tracked.length) return { clear:false };
+            const absentLike = tracked.every(v => v === 'A' || v === 'E');
+            if (absentLike) return { clear:true, suggestedStatus:'excused', label:'Attendance indicates absent/excused for all tracked periods.' };
+            return { clear:false };
+        }
+
+        function cfDefaultStudentRecord(dateStr, student) {
+            const attendance = cfDetectAttendanceStatus(dateStr, student.id);
+            return {
+                studentId: student.id,
+                studentNameSnapshot: student.name,
+                status: attendance.clear ? 'excused' : 'no_contribution',
+                amountCentavos: 0,
+                attendanceSuggested: !!attendance.clear,
+                attendanceNote: attendance.label || ''
+            };
+        }
+
+        function cfPrepareWorkingStudents(dateStr, record) {
+            const result = {};
+            const existingStudents = record && record.students ? record.students : {};
+            if (record && record.status !== 'draft') {
+                Object.keys(existingStudents).forEach(id => result[id] = Object.assign({}, existingStudents[id]));
+                return result;
+            }
+            currentStudentList.forEach(student => {
+                if (existingStudents[student.id]) result[student.id] = Object.assign({}, existingStudents[student.id]);
+                else result[student.id] = cfDefaultStudentRecord(dateStr, student);
+            });
+            return result;
+        }
+
+        function cfCalculateWorkingSummary() {
+            let contributors = 0, noContribution = 0, excused = 0, total = 0;
+            Object.values(cfWorkingStudents).forEach(r => {
+                if (r.status === 'contributed') { contributors++; total += Number(r.amountCentavos || 0); }
+                else if (r.status === 'excused') excused++;
+                else noContribution++;
+            });
+            return { contributors, noContribution, excused, total, rosterCount:Object.keys(cfWorkingStudents).length, eligibleStudents:contributors + noContribution };
+        }
+
+        function cfValidateWorkingSheet() {
+            const seen = new Set();
+            for (const [id, r] of Object.entries(cfWorkingStudents)) {
+                if (seen.has(id)) return { ok:false, message:'Duplicate student ID detected: ' + id };
+                seen.add(id);
+                if (!['contributed','no_contribution','excused'].includes(r.status)) return { ok:false, message:'Invalid Class Fund status for ' + (r.studentNameSnapshot || id) + '.' };
+                const amt = Number(r.amountCentavos || 0);
+                if (amt < 0) return { ok:false, message:'Negative student contributions are not allowed.' };
+                if (r.status === 'contributed' && amt <= 0) return { ok:false, message:(r.studentNameSnapshot || id) + ' is marked Contributed but has no positive contribution amount.' };
+                if ((r.status === 'no_contribution' || r.status === 'excused') && amt !== 0) return { ok:false, message:(r.studentNameSnapshot || id) + ' must have ₱0.00 for the selected status.' };
+            }
+            return { ok:true };
+        }
+
+        function cfRenderDailyStateBanner(record, eligibility) {
+            const el = document.getElementById('cfDailyStateBanner');
+            const elig = document.getElementById('cfDailyEligibility');
+            if (elig) {
+                elig.className = eligibility.eligible ? 'cf-success-box' : (eligibility.unknown ? 'cf-warning' : 'cf-readonly-note');
+                elig.textContent = eligibility.reason;
+            }
+            if (!el) return;
+            if (!record) { el.innerHTML = eligibility.eligible ? '<div class="cf-warning">⚠️ Collection Not Recorded. No student No Contribution records are created until the Treasurer/Admin records this date.</div>' : ''; return; }
+            const state = cfDailyDisplayState(record);
+            let extra = '';
+            if (record.status === 'draft') extra = '<div class="cf-muted" style="margin-top:5px;">DRAFT — NOT YET SUBMITTED. This amount does not affect Available Class Fund.</div>';
+            if (record.reconciliationDiscrepancy) extra += `<div class="cf-danger-box" style="margin-top:8px;">⚠️ Reconciliation Discrepancy: ${cfMoney(record.differenceCentavos)}${record.discrepancyReason ? ' — ' + cfEsc(record.discrepancyReason) : ''}</div>`;
+            if (record.status === 'no_collection' && record.noCollectionReason) extra += `<div class="cf-muted" style="margin-top:5px;">Reason: ${cfEsc(record.noCollectionReason)}</div>`;
+            el.innerHTML = `<div style="margin-bottom:10px;">${cfStatusBadge(state)}${extra}</div>`;
+        }
+
+        window.openCfDailyCollection = function(dateStr) {
+            const input = document.getElementById('cfDailyDate');
+            const today = formatDateKey(new Date());
+            if (input) {
+                input.max = today;
+                if (!dateStr) dateStr = input.value || today;
+                input.value = dateStr;
+            }
+            if (!dateStr) dateStr = today;
+            cfWorkingDate = dateStr;
+            cfDailySourceRecord = cfDailyData[dateStr] || null;
+            cfWorkingStudents = cfPrepareWorkingStudents(dateStr, cfDailySourceRecord);
+            renderCfDailySheet();
+        };
+
+        window.renderCfDailySheet = function() {
+            const list = document.getElementById('cfDailyStudentList');
+            if (!list) return;
+            if (!cfWorkingDate) cfWorkingDate = formatDateKey(new Date());
+            const eligibility = cfGetDateEligibility(cfWorkingDate);
+            const record = cfDailySourceRecord || cfDailyData[cfWorkingDate] || null;
+            cfRenderDailyStateBanner(record, eligibility);
+            const summary = cfCalculateWorkingSummary();
+            document.getElementById('cfLiveContributors').textContent = summary.contributors + ' / ' + summary.eligibleStudents;
+            document.getElementById('cfLiveNoContribution').textContent = summary.noContribution;
+            document.getElementById('cfLiveExcused').textContent = summary.excused;
+            document.getElementById('cfLiveTotal').textContent = cfMoney(summary.total);
+
+            const liveSummary = document.getElementById('cfDailyLiveSummary');
+            const hideStudents = !eligibility.eligible || (record && record.status === 'no_collection');
+            liveSummary.classList.toggle('hidden', hideStudents);
+            if (hideStudents) {
+                list.innerHTML = record && record.status === 'no_collection' ? '<div class="cf-muted" style="padding:12px;">No student participation records were created for this No Collection Day.</div>' : '<div class="cf-muted" style="padding:12px;">A normal Class Fund collection sheet is not available for this date.</div>';
+                renderCfDailyActions(record, eligibility);
+                return;
+            }
+
+            const canEdit = cfCanFinanceEdit() && (!record || record.status === 'draft');
+            const q = (document.getElementById('cfDailySearch').value || '').trim().toLowerCase();
+            const filter = document.getElementById('cfDailyFilter').value || 'all';
+            let rows = Object.values(cfWorkingStudents).filter(r => {
+                if (q && !((r.studentNameSnapshot || '').toLowerCase().includes(q) || (r.studentId || '').toLowerCase().includes(q))) return false;
+                if (filter !== 'all' && r.status !== filter) return false;
+                return true;
+            }).sort((a,b) => (a.studentNameSnapshot || '').localeCompare(b.studentNameSnapshot || ''));
+
+            list.innerHTML = rows.map(r => {
+                const hint = r.attendanceSuggested ? `<div class="cf-attendance-hint">⚪ ${cfEsc(r.attendanceNote || 'Attendance suggests Excused / Absent')}</div>` : '';
+                return `<div class="cf-student-row">
+                    <div><div class="cf-student-name">${cfEsc(r.studentNameSnapshot)}</div><div class="cf-student-id">${cfEsc(r.studentId)}</div>${hint}</div>
+                    <div><select data-student-id="${cfEsc(r.studentId)}" ${canEdit ? '' : 'disabled'} onchange="cfChangeDailyStatus('${cfEsc(r.studentId)}', this.value)">
+                        <option value="contributed" ${r.status==='contributed'?'selected':''}>✅ Contributed</option>
+                        <option value="no_contribution" ${r.status==='no_contribution'?'selected':''}>❌ No Contribution</option>
+                        <option value="excused" ${r.status==='excused'?'selected':''}>⚪ Excused / Absent</option>
+                    </select></div>
+                    <div><input type="number" min="0" step="0.01" inputmode="decimal" ${canEdit ? '' : 'disabled'} value="${(Number(r.amountCentavos||0)/100).toFixed(2)}" aria-label="Contribution amount for ${cfEsc(r.studentNameSnapshot)}" oninput="cfChangeDailyAmount('${cfEsc(r.studentId)}', this.value)"></div>
+                </div>`;
+            }).join('') || '<div class="cf-muted" style="padding:16px; text-align:center;">No students match the current search/filter.</div>';
+            renderCfDailyActions(record, eligibility);
+        };
+
+        window.cfChangeDailyStatus = function(studentId, status) {
+            if (!cfRequireFinance('Editing a daily Class Fund sheet')) return;
+            const source = cfDailySourceRecord || cfDailyData[cfWorkingDate];
+            if (source && source.status !== 'draft') return showAppAlert('Collection Locked', 'Use Reopen / Correct Collection before changing a submitted record.');
+            const r = cfWorkingStudents[studentId];
+            if (!r) return;
+            if (r.attendanceSuggested && r.status === 'excused' && status !== 'excused') {
+                showAppPrompt('Attendance Status Override', 'Attendance indicates this student was absent/excused. Enter a short reason for overriding that suggestion.', '', (reason) => {
+                    if (!reason || !reason.trim()) { renderCfDailySheet(); return; }
+                    r.attendanceOverrideReason = reason.trim();
+                    r.attendanceOverride = true;
+                    r.status = status;
+                    if (status !== 'contributed') r.amountCentavos = 0;
+                    renderCfDailySheet();
+                });
+                return;
+            }
+            r.status = status;
+            if (status === 'no_contribution' || status === 'excused') r.amountCentavos = 0;
+            renderCfDailySheet();
+        };
+
+        window.cfChangeDailyAmount = function(studentId, value) {
+            if (!cfCanFinanceEdit()) return;
+            const source = cfDailySourceRecord || cfDailyData[cfWorkingDate];
+            if (source && source.status !== 'draft') return;
+            const r = cfWorkingStudents[studentId];
+            if (!r) return;
+            let cents = Math.max(0, cfInputToCentavos(value));
+            r.amountCentavos = cents;
+            if (cents > 0) {
+                if (r.attendanceSuggested && r.status === 'excused' && !r.attendanceOverrideReason) {
+                    r.attendanceOverride = true;
+                    r.attendanceOverrideReason = 'Positive contribution recorded despite attendance absence suggestion.';
+                }
+                r.status = 'contributed';
+            } else {
+                r.status = r.attendanceSuggested ? 'excused' : 'no_contribution';
+            }
+            const statusSelect = document.querySelector('#cfDailyStudentList select[data-student-id="' + studentId + '"]');
+            if (statusSelect) statusSelect.value = r.status;
+            const summary = cfCalculateWorkingSummary();
+            document.getElementById('cfLiveContributors').textContent = summary.contributors + ' / ' + summary.eligibleStudents;
+            document.getElementById('cfLiveNoContribution').textContent = summary.noContribution;
+            document.getElementById('cfLiveExcused').textContent = summary.excused;
+            document.getElementById('cfLiveTotal').textContent = cfMoney(summary.total);
+        };
+
+        function renderCfDailyActions(record, eligibility) {
+            const el = document.getElementById('cfDailyActions');
+            if (!el) return;
+            let html = '';
+            if (!eligibility.eligible) { el.innerHTML = ''; return; }
+            if (record && record.status === 'no_collection') {
+                html += `<button class="btn-ui btn-gray" onclick="openCfDailyDetail('${cfWorkingDate}')">🔍 View Details</button>`;
+                if (cfCanFinanceEdit()) html += `<button class="btn-ui btn-gold" onclick="revertCfNoCollectionDay('${cfWorkingDate}')">↺ Revert No Collection</button>`;
+                el.innerHTML = html; return;
+            }
+            if (!record || record.status === 'draft') {
+                if (cfCanFinanceEdit()) {
+                    html += `<button class="btn-ui btn-gray" onclick="markCfNoCollectionDay('${cfWorkingDate}')">— No Class Fund Collection</button>`;
+                    html += `<button class="btn-ui btn-gold" onclick="saveCfDraft()">💾 Save Draft</button>`;
+                    html += `<button class="btn-ui btn-green" onclick="openCfReconcileModal()">✅ Submit / Close Daily Collection</button>`;
+                } else html += '<span class="cf-muted">DRAFT — NOT YET SUBMITTED. View only.</span>';
+            } else if (record.status === 'voided') {
+                html += `<button class="btn-ui btn-gray" onclick="openCfDailyDetail('${cfWorkingDate}')">🔍 View Voided Record</button>`;
+            } else {
+                html += `<button class="btn-ui btn-gray" onclick="openCfDailyDetail('${cfWorkingDate}')">🔍 View Details</button>`;
+                if (cfCanFinanceEdit()) {
+                    html += `<button class="btn-ui btn-gold" onclick="reopenCfDailyCollection('${cfWorkingDate}')">✏️ Reopen / Correct Collection</button>`;
+                    html += `<button class="btn-ui btn-red" onclick="voidCfDailyCollection('${cfWorkingDate}')">Void Daily Collection</button>`;
+                }
+            }
+            el.innerHTML = html;
+        }
+
+        function cfBuildDailyPayload(status) {
+            const sum = cfCalculateWorkingSummary();
+            const actor = cfActor();
+            const old = cfDailySourceRecord || cfDailyData[cfWorkingDate] || {};
+            return {
+                date: cfWorkingDate,
+                status,
+                totalCentavos: sum.total,
+                contributorCount: sum.contributors,
+                noContributionCount: sum.noContribution,
+                excusedCount: sum.excused,
+                rosterCountSnapshot: sum.rosterCount,
+                students: cfWorkingStudents,
+                linkedTransactionId: 'daily_' + cfWorkingDate,
+                lastModifiedByUid: actor.uid,
+                lastModifiedByName: actor.name,
+                lastModifiedDesignation: actor.designation,
+                lastModifiedAtMs: Date.now(),
+                lastModifiedAt: new Date().toLocaleString('en-PH'),
+                createdByUid: old.createdByUid || actor.uid,
+                createdByName: old.createdByName || actor.name,
+                createdAtMs: old.createdAtMs || Date.now(),
+                createdAt: old.createdAt || new Date().toLocaleString('en-PH'),
+                revision: Number(old.revision || 0),
+                reverificationRequired: !!old.reverificationRequired,
+                correctionReason: old.correctionReason || '',
+                correctionBase: old.correctionBase || null,
+                verification: old.verification || { president:{verified:false}, vicePresident:{verified:false} },
+                editHistory: old.editHistory || {}
+            };
+        }
+
+        window.saveCfDraft = async function() {
+            if (!cfRequireFinance('Saving a Class Fund draft')) return;
+            const eligibility = cfGetDateEligibility(cfWorkingDate);
+            if (!eligibility.eligible) return showAppAlert('Not a Collection Day', eligibility.reason);
+            const existing = cfDailyData[cfWorkingDate];
+            if (existing && existing.status !== 'draft') return showAppAlert('Collection Locked', 'Use Reopen / Correct Collection before editing a submitted record.');
+            const validation = cfValidateWorkingSheet();
+            if (!validation.ok) return showAppAlert('Check Daily Sheet', validation.message);
+            const payload = cfBuildDailyPayload('draft');
+            const isNew = !existing;
+            const updates = {};
+            updates['daily_collections/' + cfWorkingDate] = payload;
+            cfAddAuditToUpdates(updates, isNew ? 'daily_draft_created' : 'daily_draft_edited', cfWorkingDate, `Draft saved: ${payload.contributorCount} contributors, ${cfMoney(payload.totalCentavos)} computed.`, '', { date:cfWorkingDate });
+            Object.values(cfWorkingStudents).filter(r => r.attendanceOverride && r.attendanceOverrideReason).forEach(r => {
+                cfAddAuditToUpdates(updates, 'attendance_status_override', cfWorkingDate + '/' + r.studentId, `${r.studentNameSnapshot}: Attendance suggestion overridden to ${r.status}.`, r.attendanceOverrideReason, { date:cfWorkingDate, studentId:r.studentId });
+            });
+            if (cfWorkingDate < formatDateKey(new Date()) && isNew) cfAddAuditToUpdates(updates, 'backdated_collection_entry', cfWorkingDate, 'Backdated Collection Entry created as draft.', '', { date:cfWorkingDate });
+            try {
+                await update(ref(db, CF_ROOT), updates);
+                cfDailySourceRecord = payload;
+                showAppAlert('Daily Collection Saved', `Draft saved for ${cfDateLabel(cfWorkingDate)}.\nComputed total: ${cfMoney(payload.totalCentavos)}\n\nDrafts do not affect the Available Class Fund.`);
+            } catch (err) {
+                console.error('[Class Funds] Draft save failed:', err);
+                showAppAlert('Database Error', 'Daily draft was not saved. Your entries remain on screen.\nFirebase returned: ' + err.message);
+            }
+        };
+
+        window.markCfNoCollectionDay = function(dateStr) {
+            if (!cfRequireFinance('Marking a No Collection Day')) return;
+            const eligibility = cfGetDateEligibility(dateStr);
+            if (!eligibility.eligible) return showAppAlert('Not Eligible', eligibility.reason);
+            const existing = cfDailyData[dateStr];
+            if (existing && !['draft','no_collection'].includes(existing.status)) return showAppAlert('Collection Already Submitted', 'Reopen/void the submitted collection before replacing it with a No Collection Day.');
+            showAppPrompt('No Class Fund Collection', 'Enter the required reason why Class Fund was not collected on ' + cfDateLabel(dateStr) + '.', '', (reason) => {
+                if (!reason || !reason.trim()) return;
+                showAppConfirm('Mark No Collection Day', `No student No Contribution records will be created for ${cfDateLabel(dateStr)}.\n\nReason: ${reason.trim()}\n\nProceed?`, false, async (confirmed) => {
+                    if (!confirmed) return;
+                    const actor = cfActor();
+                    const payload = {
+                        date:dateStr, status:'no_collection', noCollectionReason:reason.trim(), totalCentavos:0,
+                        contributorCount:0, noContributionCount:0, excusedCount:0,
+                        markedByUid:actor.uid, markedByName:actor.name, markedAtMs:Date.now(), markedAt:new Date().toLocaleString('en-PH')
+                    };
+                    const updates = { ['daily_collections/' + dateStr]: payload };
+                    cfAddAuditToUpdates(updates, 'no_collection_day_marked', dateStr, 'No Class Fund Collection marked.', reason.trim(), { date:dateStr });
+                    try { await update(ref(db, CF_ROOT), updates); showAppAlert('No Collection Day Saved', `${cfDateLabel(dateStr)} is excluded from contribution opportunities and streak calculations.`); }
+                    catch(err) { console.error(err); showAppAlert('Database Error', 'Unable to mark No Collection Day.\n' + err.message); }
+                });
+            });
+        };
+
+        window.revertCfNoCollectionDay = function(dateStr) {
+            if (!cfRequireFinance('Reverting a No Collection Day')) return;
+            const existing = cfDailyData[dateStr];
+            if (!existing || existing.status !== 'no_collection') return;
+            showAppPrompt('Revert No Collection Day', 'Enter a reason for restoring this date as a collection opportunity.', '', (reason) => {
+                if (!reason || !reason.trim()) return;
+                showAppConfirm('Restore Collection Day', `Restore ${cfDateLabel(dateStr)} so a daily collection sheet can be recorded?`, false, async confirmed => {
+                    if (!confirmed) return;
+                    const updates = { ['daily_collections/' + dateStr]: null };
+                    cfAddAuditToUpdates(updates, 'no_collection_day_reverted', dateStr, 'No Collection Day reverted; date returned to unrecorded collection state.', reason.trim(), { date:dateStr });
+                    try { await update(ref(db, CF_ROOT), updates); cfDailySourceRecord = null; cfWorkingStudents = cfPrepareWorkingStudents(dateStr, null); showAppAlert('Collection Day Restored', 'The date is now available for normal Class Fund recording.'); }
+                    catch(err) { console.error(err); showAppAlert('Database Error', 'Unable to restore collection day.\n' + err.message); }
+                });
+            });
+        };
+
+        window.openCfReconcileModal = function() {
+            if (!cfRequireFinance('Submitting a daily collection')) return;
+            const eligibility = cfGetDateEligibility(cfWorkingDate);
+            if (!eligibility.eligible) return showAppAlert('Not a Collection Day', eligibility.reason);
+            const validation = cfValidateWorkingSheet();
+            if (!validation.ok) return showAppAlert('Check Daily Sheet', validation.message);
+            const sum = cfCalculateWorkingSummary();
+            document.getElementById('cfReconcileSummary').innerHTML = `
+                <div class="detail-info-row"><span class="detail-info-label">Date</span><span class="detail-info-value">${cfEsc(cfDateLabel(cfWorkingDate,true))}</span></div>
+                <div class="detail-info-row"><span class="detail-info-label">Contributors</span><span class="detail-info-value">${sum.contributors}</span></div>
+                <div class="detail-info-row"><span class="detail-info-label">No Contribution</span><span class="detail-info-value">${sum.noContribution}</span></div>
+                <div class="detail-info-row"><span class="detail-info-label">Excused</span><span class="detail-info-value">${sum.excused}</span></div>
+                <div class="detail-info-row"><span class="detail-info-label">Computed Student Total</span><span class="detail-info-value" style="font-weight:800; color:var(--primary-green);">${cfMoney(sum.total)}</span></div>`;
+            const input = document.getElementById('cfCashCountedInput');
+            input.value = (sum.total / 100).toFixed(2);
+            document.getElementById('cfDiscrepancyReason').value = '';
+            document.getElementById('cfReconcileModal').classList.remove('hidden');
+            updateCfReconcileDifference();
+        };
+
+        window.closeCfReconcileModal = function() { document.getElementById('cfReconcileModal').classList.add('hidden'); };
+
+        window.updateCfReconcileDifference = function() {
+            const sum = cfCalculateWorkingSummary();
+            const cash = cfInputToCentavos(document.getElementById('cfCashCountedInput').value);
+            const diff = cash - sum.total;
+            const box = document.getElementById('cfReconcileDifferenceBox');
+            const group = document.getElementById('cfDiscrepancyGroup');
+            if (diff === 0) {
+                box.innerHTML = `<div class="cf-success-box"><strong>Difference: ${cfMoney(0)}</strong><br>Cash count matches the computed student total.</div>`;
+                group.classList.add('hidden');
+            } else {
+                box.innerHTML = `<div class="cf-danger-box"><strong>⚠️ Reconciliation Discrepancy — Difference: ${cfMoney(diff)}</strong><br>Submission is allowed only with a discrepancy explanation.</div>`;
+                group.classList.remove('hidden');
+            }
+        };
+
+        function cfComputeCorrectionChanges(oldStudents, newStudents) {
+            const changes = [];
+            const ids = new Set([...Object.keys(oldStudents || {}), ...Object.keys(newStudents || {})]);
+            ids.forEach(id => {
+                const a = (oldStudents || {})[id];
+                const b = (newStudents || {})[id];
+                if (!a && b) changes.push({ studentId:id, studentName:b.studentNameSnapshot || '', previousStatus:'not_in_sheet', newStatus:b.status, previousAmountCentavos:0, newAmountCentavos:Number(b.amountCentavos||0) });
+                else if (a && !b) changes.push({ studentId:id, studentName:a.studentNameSnapshot || '', previousStatus:a.status, newStatus:'removed_from_active_sheet', previousAmountCentavos:Number(a.amountCentavos||0), newAmountCentavos:0 });
+                else if (a && b && (a.status !== b.status || Number(a.amountCentavos||0) !== Number(b.amountCentavos||0))) {
+                    changes.push({ studentId:id, studentName:b.studentNameSnapshot || a.studentNameSnapshot || '', previousStatus:a.status, newStatus:b.status, previousAmountCentavos:Number(a.amountCentavos||0), newAmountCentavos:Number(b.amountCentavos||0) });
+                }
+            });
+            return changes;
+        }
+
+        window.confirmCfDailySubmission = async function() {
+            if (!cfRequireFinance('Submitting a daily collection')) return;
+            const validation = cfValidateWorkingSheet();
+            if (!validation.ok) return showAppAlert('Check Daily Sheet', validation.message);
+            const sum = cfCalculateWorkingSummary();
+            const cash = cfInputToCentavos(document.getElementById('cfCashCountedInput').value);
+            if (cash < 0) return showAppAlert('Invalid Cash Count', 'Cash Counted cannot be negative.');
+            const diff = cash - sum.total;
+            const discrepancyReason = document.getElementById('cfDiscrepancyReason').value.trim();
+            if (diff !== 0 && !discrepancyReason) return showAppAlert('Explanation Required', 'Enter a discrepancy explanation before submitting a mismatched cash count.');
+
+            showAppConfirm('Submit Daily Collection', `${cfDateLabel(cfWorkingDate,true)}\n\nComputed Student Total: ${cfMoney(sum.total)}\nCash Counted: ${cfMoney(cash)}\nDifference: ${cfMoney(diff)}\n\nSubmitting posts exactly one linked daily contribution transaction to the Class Fund ledger. Proceed?`, diff !== 0, async confirmed => {
+                if (!confirmed) return;
+                const btn = document.getElementById('cfSubmitDailyBtn');
+                const oldBtn = cfShowSaving(btn, 'Saving...');
+                const old = cfDailyData[cfWorkingDate] || cfDailySourceRecord || {};
+                const actor = cfActor();
+                const txId = 'daily_' + cfWorkingDate;
+                const nowMs = Date.now();
+                const base = cfBuildDailyPayload('submitted');
+                const wasCorrection = !!old.reverificationRequired || !!old.correctionBase;
+                const correctionBase = old.correctionBase || null;
+                const correctionChanges = correctionBase ? cfComputeCorrectionChanges(correctionBase.students || {}, cfWorkingStudents) : [];
+                const verification = { president:{verified:false}, vicePresident:{verified:false} };
+                const dailyPayload = Object.assign({}, base, {
+                    status:'submitted', cashCountedCentavos:cash, differenceCentavos:diff,
+                    reconciliationDiscrepancy:diff !== 0, discrepancyReason:discrepancyReason,
+                    submittedByUid:actor.uid, submittedByName:actor.name, submittedByDesignation:actor.designation,
+                    submittedAtMs:nowMs, submittedAt:new Date().toLocaleString('en-PH'),
+                    revision:Number(old.revision || 0) + 1,
+                    verification,
+                    reverificationRequired:wasCorrection,
+                    correctionBase:null
+                });
+                const oldTx = cfTransactions[txId] || {};
+                const txPayload = {
+                    transactionId:txId, type:'daily_contribution', direction:'in', amountCentavos:sum.total,
+                    effectiveDate:cfWorkingDate, effectiveTs:cfDateSortTs(cfWorkingDate),
+                    description:'Daily Class Fund Collection', sourceDailyCollection:cfWorkingDate,
+                    status:'active', createdAtMs:oldTx.createdAtMs || nowMs, createdAt:oldTx.createdAt || new Date().toLocaleString('en-PH'),
+                    createdByUid:oldTx.createdByUid || actor.uid, createdByName:oldTx.createdByName || actor.name,
+                    lastModifiedAtMs:nowMs, lastModifiedByUid:actor.uid, lastModifiedByName:actor.name
+                };
+                const updates = {
+                    ['daily_collections/' + cfWorkingDate]:dailyPayload,
+                    ['transactions/' + txId]:txPayload
+                };
+                if (wasCorrection) {
+                    const editKey = push(ref(db, CF_ROOT + '/daily_collections/' + cfWorkingDate + '/editHistory')).key;
+                    dailyPayload.editHistory = Object.assign({}, old.editHistory || {});
+                    dailyPayload.editHistory[editKey] = {
+                        timestampMs:nowMs, editedByUid:actor.uid, editedByName:actor.name,
+                        correctionReason:old.correctionReason || 'Correction after reopening',
+                        previousTotalCentavos:correctionBase ? Number(correctionBase.totalCentavos || 0) : Number(old.totalCentavos || 0),
+                        newTotalCentavos:sum.total, changes:correctionChanges
+                    };
+                    cfAddAuditToUpdates(updates, 'daily_collection_corrected', cfWorkingDate, `Corrected daily collection and reposted linked ledger transaction: ${cfMoney(sum.total)}.`, old.correctionReason || '', { date:cfWorkingDate, changeCount:correctionChanges.length });
+                } else {
+                    cfAddAuditToUpdates(updates, 'daily_collection_submitted', cfWorkingDate, `Daily collection submitted: ${sum.contributors} contributors, ${cfMoney(sum.total)}.`, discrepancyReason, { date:cfWorkingDate, cashCountedCentavos:cash, differenceCentavos:diff });
+                    if (cfWorkingDate < formatDateKey(new Date()) && !old.submittedAtMs) cfAddAuditToUpdates(updates, 'backdated_collection_entry', cfWorkingDate, 'Backdated Collection Entry submitted.', '', { date:cfWorkingDate });
+                }
+                Object.values(cfWorkingStudents).filter(r => r.attendanceOverride && r.attendanceOverrideReason).forEach(r => {
+                    cfAddAuditToUpdates(updates, 'attendance_status_override', cfWorkingDate + '/' + r.studentId, `${r.studentNameSnapshot}: Attendance suggestion overridden to ${r.status}.`, r.attendanceOverrideReason, { date:cfWorkingDate, studentId:r.studentId });
+                });
+                try {
+                    await update(ref(db, CF_ROOT), updates);
+                    closeCfReconcileModal();
+                    cfDailySourceRecord = dailyPayload;
+                    showAppAlert('Daily Collection Submitted', `${cfDateLabel(cfWorkingDate)} submitted successfully.\nTotal: ${cfMoney(sum.total)}${diff !== 0 ? '\n\n⚠️ Reconciliation Discrepancy recorded: ' + cfMoney(diff) : ''}\n\nThe linked ledger transaction is now active.`);
+                } catch (err) {
+                    console.error('[Class Funds] Daily submission failed:', err);
+                    showAppAlert('Database Error', 'The daily collection was not submitted. Your sheet remains available.\nFirebase returned: ' + err.message);
+                } finally { cfRestoreButton(btn, oldBtn); }
+            });
+        };
+
+        window.reopenCfDailyCollection = function(dateStr) {
+            if (!cfRequireFinance('Reopening a daily collection')) return;
+            const rec = cfDailyData[dateStr];
+            if (!rec || rec.status !== 'submitted') return showAppAlert('Cannot Reopen', 'Only an active submitted daily collection can be reopened.');
+            showAppPrompt('Reopen / Correct Collection', 'Enter the required reason for correction.', '', reason => {
+                if (!reason || !reason.trim()) return;
+                showAppConfirm('Reopen Collection', `Reopen ${cfDateLabel(dateStr)} for correction?\n\nReason: ${reason.trim()}\n\nActive President/VP verification will be invalidated and the linked daily ledger entry will be temporarily excluded until resubmission.`, true, async confirmed => {
+                    if (!confirmed) return;
+                    const txId = rec.linkedTransactionId || ('daily_' + dateStr);
+                    const priorVerification = rec.verification || {};
+                    const hadVerification = !!((priorVerification.president && priorVerification.president.verified) || (priorVerification.vicePresident && priorVerification.vicePresident.verified));
+                    const updates = {
+                        ['daily_collections/' + dateStr + '/status']:'draft',
+                        ['daily_collections/' + dateStr + '/reverificationRequired']:true,
+                        ['daily_collections/' + dateStr + '/correctionReason']:reason.trim(),
+                        ['daily_collections/' + dateStr + '/correctionBase']:{ totalCentavos:Number(rec.totalCentavos||0), cashCountedCentavos:Number(rec.cashCountedCentavos||0), differenceCentavos:Number(rec.differenceCentavos||0), students:rec.students || {}, verification:priorVerification, revision:Number(rec.revision||0) },
+                        ['daily_collections/' + dateStr + '/verification']:{ president:{verified:false}, vicePresident:{verified:false} },
+                        ['daily_collections/' + dateStr + '/reopenedAtMs']:Date.now(),
+                        ['daily_collections/' + dateStr + '/reopenedByUid']:cfActor().uid,
+                        ['daily_collections/' + dateStr + '/reopenedByName']:cfActor().name,
+                        ['transactions/' + txId + '/status']:'inactive_reopened',
+                        ['transactions/' + txId + '/lastModifiedAtMs']:Date.now()
+                    };
+                    cfAddAuditToUpdates(updates, 'daily_collection_reopened', dateStr, 'Submitted daily collection reopened for correction.', reason.trim(), { date:dateStr });
+                    if (hadVerification) cfAddAuditToUpdates(updates, 'verification_invalidated', dateStr, 'Active President/VP daily verification invalidated because the financial/participation record was reopened.', reason.trim(), { date:dateStr });
+                    try {
+                        await update(ref(db, CF_ROOT), updates);
+                        cfWorkingDate = dateStr;
+                        cfDailySourceRecord = Object.assign({}, rec, { status:'draft', reverificationRequired:true, correctionReason:reason.trim(), correctionBase:updates['daily_collections/' + dateStr + '/correctionBase'], verification:{ president:{verified:false}, vicePresident:{verified:false} } });
+                        cfWorkingStudents = cfPrepareWorkingStudents(dateStr, cfDailySourceRecord);
+                        toggleCfTab('daily');
+                        showAppAlert('Collection Reopened', 'The record is editable again. Resubmission will update the same linked ledger transaction and require fresh President/VP verification.');
+                    } catch(err) { console.error(err); showAppAlert('Database Error', 'Unable to reopen the daily collection.\n' + err.message); }
+                });
+            });
+        };
+
+        window.voidCfDailyCollection = function(dateStr) {
+            if (!cfRequireFinance('Voiding a daily collection')) return;
+            const rec = cfDailyData[dateStr];
+            if (!rec || rec.status !== 'submitted') return showAppAlert('Cannot Void', 'Only an active submitted daily collection can be voided.');
+            showAppPrompt('Void Daily Collection', 'Enter the required reason for voiding this entire submitted collection.', '', reason => {
+                if (!reason || !reason.trim()) return;
+                showAppConfirm('Void Daily Collection', `VOID the entire Class Fund collection for ${cfDateLabel(dateStr)}?\n\nThis will remove its linked transaction from the available balance but preserve the full student record and verification history.\n\nReason: ${reason.trim()}`, true, async confirmed => {
+                    if (!confirmed) return;
+                    const actor = cfActor();
+                    const txId = rec.linkedTransactionId || ('daily_' + dateStr);
+                    const updates = {
+                        ['daily_collections/' + dateStr + '/status']:'voided',
+                        ['daily_collections/' + dateStr + '/voidedAtMs']:Date.now(),
+                        ['daily_collections/' + dateStr + '/voidedByUid']:actor.uid,
+                        ['daily_collections/' + dateStr + '/voidedByName']:actor.name,
+                        ['daily_collections/' + dateStr + '/voidReason']:reason.trim(),
+                        ['transactions/' + txId + '/status']:'voided',
+                        ['transactions/' + txId + '/voidedAtMs']:Date.now(),
+                        ['transactions/' + txId + '/voidedByUid']:actor.uid,
+                        ['transactions/' + txId + '/voidedByName']:actor.name,
+                        ['transactions/' + txId + '/voidReason']:reason.trim()
+                    };
+                    cfAddAuditToUpdates(updates, 'daily_collection_voided', dateStr, `Daily collection voided; linked ${cfMoney(rec.totalCentavos)} ledger entry no longer affects balance.`, reason.trim(), { date:dateStr });
+                    try { await update(ref(db, CF_ROOT), updates); showAppAlert('Daily Collection Voided', 'The historical record remains visible and the available balance has been recalculated from active transactions.'); }
+                    catch(err) { console.error(err); showAppAlert('Database Error', 'Unable to void daily collection.\n' + err.message); }
+                });
+            });
+        };
+
+        function cfVerificationSlotKey(slot) { return slot === 'president' ? 'president' : 'vicePresident'; }
+        function cfVerificationRoleLabel(slot) { return slot === 'president' ? 'President' : 'Vice President'; }
+
+        window.verifyCfDailyCollection = function(dateStr, slot, adminOverride) {
+            const rec = cfDailyData[dateStr];
+            if (!rec || rec.status !== 'submitted') return showAppAlert('Verification Unavailable', 'Only active submitted daily collections can be verified.');
+            const slotKey = cfVerificationSlotKey(slot);
+            const roleLabel = cfVerificationRoleLabel(slot);
+            if (rec.verification && rec.verification[slotKey] && rec.verification[slotKey].verified) return showAppAlert('Already Verified', roleLabel + ' verification is already active for this version.');
+            if (adminOverride) {
+                if (!cfRequireAdmin('Administrative verification override')) return;
+                showAppPrompt('Administrative Override for ' + roleLabel, 'Enter the mandatory reason for overriding the missing ' + roleLabel + ' verification.', '', reason => {
+                    if (!reason || !reason.trim()) return;
+                    cfConfirmDailyVerification(dateStr, slot, true, reason.trim());
+                });
+                return;
+            }
+            if (slot === 'president' && !cfCanPresidentVerify()) return showAppAlert('Permission Denied', 'Only the authenticated President can verify the President slot.');
+            if (slot === 'vicePresident' && !cfCanVpVerify()) return showAppAlert('Permission Denied', 'Only the authenticated Vice President can verify the Vice President slot.');
+            cfConfirmDailyVerification(dateStr, slot, false, '');
+        };
+
+        function cfConfirmDailyVerification(dateStr, slot, isOverride, overrideReason) {
+            const rec = cfDailyData[dateStr];
+            const roleLabel = cfVerificationRoleLabel(slot);
+            const title = isOverride ? 'Administrative Override — ' + roleLabel : 'Verify Daily Collection?';
+            const msg = isOverride
+                ? `You are recording an Administrative Override for the ${roleLabel} slot on ${cfDateLabel(dateStr)}.\n\nReason: ${overrideReason}\n\nThis will show the Main Admin's actual identity and will NOT pretend the ${roleLabel} performed the verification.`
+                : `I confirm that I have reviewed the Class Fund collection recorded for ${cfDateLabel(dateStr)} and acknowledge that the recorded student contributions and total collection of ${cfMoney(rec.totalCentavos)} are complete and accurate to the best of my knowledge.`;
+            showAppConfirm(title, msg, false, async confirmed => {
+                if (!confirmed) return;
+                const actor = cfActor();
+                const slotKey = cfVerificationSlotKey(slot);
+                const verificationPayload = {
+                    verified:true, verifiedByUid:actor.uid, verifiedByName:actor.name,
+                    designation:isOverride ? 'Main Admin' : roleLabel,
+                    verifiedAtMs:Date.now(), verifiedAt:new Date().toLocaleString('en-PH'),
+                    override:!!isOverride, overrideFor:isOverride ? roleLabel : '', overrideReason:isOverride ? overrideReason : ''
+                };
+                const otherKey = slotKey === 'president' ? 'vicePresident' : 'president';
+                const otherVerified = !!(rec.verification && rec.verification[otherKey] && rec.verification[otherKey].verified);
+                const updates = { ['daily_collections/' + dateStr + '/verification/' + slotKey]:verificationPayload };
+                if (otherVerified) updates['daily_collections/' + dateStr + '/reverificationRequired'] = false;
+                cfAddAuditToUpdates(updates, isOverride ? 'admin_verification_override' : (slot === 'president' ? 'daily_verification_president' : 'daily_verification_vp'), dateStr, isOverride ? `Administrative Override for ${roleLabel}.` : `${roleLabel} verified daily collection ${cfMoney(rec.totalCentavos)}.`, isOverride ? overrideReason : '', { date:dateStr, verificationSlot:roleLabel });
+                try { await update(ref(db, CF_ROOT), updates); closeCfDetailModal(); showAppAlert(isOverride ? 'Administrative Override Recorded' : roleLabel + ' Verification Recorded', `Verification saved for ${cfDateLabel(dateStr)}.`); }
+                catch(err) { console.error(err); showAppAlert('Database Error', 'Verification was not saved.\n' + err.message); }
+            });
+        }
+
+        function cfVerifierBlock(label, value) {
+            if (value && value.verified) {
+                const who = value.override ? `Administrative Override for ${label} by ${cfEsc(value.verifiedByName || 'Main Admin')}` : `${cfEsc(value.verifiedByName || label)} (${label})`;
+                return `<div class="detail-info-row"><span class="detail-info-label">${label}</span><span class="detail-info-value">✅ ${who}<br><span class="cf-muted">${cfEsc(value.verifiedAt || '')}${value.overrideReason ? '<br>Reason: ' + cfEsc(value.overrideReason) : ''}</span></span></div>`;
+            }
+            return `<div class="detail-info-row"><span class="detail-info-label">${label}</span><span class="detail-info-value">⏳ Pending</span></div>`;
+        }
+
+        function cfDailyAuditForDate(dateStr) {
+            return Object.values(cfAuditData).filter(a => a && (a.affectedRecordId === dateStr || a.date === dateStr || String(a.affectedRecordId || '').startsWith(dateStr + '/'))).sort((a,b)=>Number(b.timestampMs||0)-Number(a.timestampMs||0));
+        }
+
+        window.openCfDailyDetail = function(dateStr) {
+            const rec = cfDailyData[dateStr];
+            if (!rec) return showAppAlert('Record Not Found', 'No Class Funds daily record exists for this date.');
+            document.getElementById('cfDetailTitle').textContent = '💵 Daily Collection — ' + cfDateLabel(dateStr,true);
+            const state = cfDailyDisplayState(rec);
+            let body = `<div style="margin-bottom:12px;">${cfStatusBadge(state)}</div>`;
+            if (rec.status === 'no_collection') {
+                body += `<div class="detail-info-row"><span class="detail-info-label">Reason</span><span class="detail-info-value">${cfEsc(rec.noCollectionReason || '—')}</span></div>`;
+            } else {
+                body += `<div class="detail-info-row"><span class="detail-info-label">Contributors</span><span class="detail-info-value">${Number(rec.contributorCount||0)}</span></div>
+                    <div class="detail-info-row"><span class="detail-info-label">No Contribution</span><span class="detail-info-value">${Number(rec.noContributionCount||0)}</span></div>
+                    <div class="detail-info-row"><span class="detail-info-label">Excused / Absent</span><span class="detail-info-value">${Number(rec.excusedCount||0)}</span></div>
+                    <div class="detail-info-row"><span class="detail-info-label">Computed Student Total</span><span class="detail-info-value">${cfMoney(rec.totalCentavos)}</span></div>
+                    <div class="detail-info-row"><span class="detail-info-label">Cash Counted</span><span class="detail-info-value">${rec.cashCountedCentavos == null ? '—' : cfMoney(rec.cashCountedCentavos)}</span></div>
+                    <div class="detail-info-row"><span class="detail-info-label">Difference</span><span class="detail-info-value">${rec.differenceCentavos == null ? '—' : cfMoney(rec.differenceCentavos)}</span></div>`;
+                if (rec.reconciliationDiscrepancy) body += `<div class="cf-danger-box" style="margin-top:10px;">⚠️ Reconciliation Discrepancy: ${cfMoney(rec.differenceCentavos)}<br>${cfEsc(rec.discrepancyReason || '')}</div>`;
+                body += `<div class="detail-info-row"><span class="detail-info-label">Submitted By</span><span class="detail-info-value">${cfEsc(rec.submittedByName || '—')}<br><span class="cf-muted">${cfEsc(rec.submittedAt || '')}</span></span></div>`;
+                body += cfVerifierBlock('President', rec.verification && rec.verification.president);
+                body += cfVerifierBlock('Vice President', rec.verification && rec.verification.vicePresident);
+                const students = Object.values(rec.students || {}).sort((a,b)=>(a.studentNameSnapshot||'').localeCompare(b.studentNameSnapshot||''));
+                body += `<div class="cf-detail-section"><div class="cf-detail-title">Individual Student Amounts</div><div class="table-scroller"><table><thead><tr><th>Student</th><th>Status</th><th style="text-align:right;">Amount</th></tr></thead><tbody>${students.map(s => `<tr><td>${cfEsc(s.studentNameSnapshot)}<div class="cf-muted">${cfEsc(s.studentId)}</div></td><td>${s.status==='contributed'?'✅ Contributed':s.status==='excused'?'⚪ Excused / Absent':'❌ No Contribution'}</td><td style="text-align:right;">${cfMoney(s.amountCentavos)}</td></tr>`).join('')}</tbody></table></div></div>`;
+            }
+            const editHistory = rec.editHistory ? Object.values(rec.editHistory).sort((a,b)=>Number(b.timestampMs||0)-Number(a.timestampMs||0)) : [];
+            if (editHistory.length) {
+                body += `<div class="cf-detail-section"><div class="cf-detail-title">Correction History</div>${editHistory.map(h => `<div class="cf-audit-row"><strong>${cfMoney(h.previousTotalCentavos)} → ${cfMoney(h.newTotalCentavos)}</strong><div class="cf-audit-meta">${cfEsc(h.editedByName||'')} · ${new Date(Number(h.timestampMs||0)).toLocaleString('en-PH')}<br>Reason: ${cfEsc(h.correctionReason||'')}</div>${(h.changes||[]).length?'<div class="cf-muted" style="margin-top:4px;">'+h.changes.map(c=>cfEsc(c.studentName||c.studentId)+': '+cfEsc(c.previousStatus)+' '+cfMoney(c.previousAmountCentavos)+' → '+cfEsc(c.newStatus)+' '+cfMoney(c.newAmountCentavos)).join('<br>')+'</div>':''}</div>`).join('')}</div>`;
+            }
+            const audit = cfDailyAuditForDate(dateStr);
+            body += `<div class="cf-detail-section"><div class="cf-detail-title">Audit History</div>${audit.length ? audit.map(a => `<div class="cf-audit-row"><strong>${cfEsc(a.summary || a.actionType)}</strong><div class="cf-audit-meta">${cfEsc(a.displayNameSnapshot || '')} · ${cfEsc(a.designationSnapshot || '')} · ${cfEsc(a.timestamp || '')}${a.reason ? '<br>Reason: ' + cfEsc(a.reason) : ''}</div></div>`).join('') : '<div class="cf-muted">No Class Funds audit entries for this date.</div>'}</div>`;
+            if (rec.status === 'voided') body += `<div class="cf-danger-box" style="margin-top:12px;">VOIDED by ${cfEsc(rec.voidedByName || '—')} · ${cfEsc(rec.voidReason || '')}</div>`;
+            document.getElementById('cfDetailBody').innerHTML = body;
+            let actions = '';
+            if (rec.status === 'submitted') {
+                const pDone = rec.verification && rec.verification.president && rec.verification.president.verified;
+                const vDone = rec.verification && rec.verification.vicePresident && rec.verification.vicePresident.verified;
+                if (cfCanPresidentVerify() && !pDone) actions += `<button class="btn-ui btn-green" onclick="verifyCfDailyCollection('${dateStr}','president',false)">✅ Verify as President</button>`;
+                if (cfCanVpVerify() && !vDone) actions += `<button class="btn-ui btn-green" onclick="verifyCfDailyCollection('${dateStr}','vicePresident',false)">✅ Verify as Vice President</button>`;
+                if (cfCanAdmin() && !pDone) actions += `<button class="btn-ui btn-gold" onclick="verifyCfDailyCollection('${dateStr}','president',true)">Admin Override President</button>`;
+                if (cfCanAdmin() && !vDone) actions += `<button class="btn-ui btn-gold" onclick="verifyCfDailyCollection('${dateStr}','vicePresident',true)">Admin Override VP</button>`;
+            }
+            document.getElementById('cfDetailActions').innerHTML = actions;
+            document.getElementById('cfDetailModal').classList.remove('hidden');
+        };
+
+        window.closeCfDetailModal = function() { document.getElementById('cfDetailModal').classList.add('hidden'); };
+
+        function cfGetLedgerRows() {
+            const rows = Object.entries(cfTransactions).map(([id, tx]) => Object.assign({ id }, tx || {}));
+            rows.sort((a,b) => {
+                const da = a.effectiveDate || '', dbb = b.effectiveDate || '';
+                if (da !== dbb) return da.localeCompare(dbb);
+                const ea = Number(a.effectiveTs || 0), eb = Number(b.effectiveTs || 0);
+                if (ea !== eb) return ea - eb;
+                const ca = Number(a.createdAtMs || 0), cb = Number(b.createdAtMs || 0);
+                if (ca !== cb) return ca - cb;
+                return String(a.id).localeCompare(String(b.id));
+            });
+            let running = 0;
+            rows.forEach(tx => {
+                if (tx.status === 'active') {
+                    const amt = Number(tx.amountCentavos || 0);
+                    running += tx.direction === 'out' ? -amt : amt;
+                }
+                tx.runningBalanceCentavos = running;
+            });
+            return rows;
+        }
+
+        function cfLedgerTotals() {
+            const rows = cfGetLedgerRows();
+            let opening = 0, contributions = 0, expenses = 0, positiveAdjustments = 0, negativeAdjustments = 0, available = 0;
+            rows.forEach(tx => {
+                if (tx.status !== 'active') return;
+                const amt = Number(tx.amountCentavos || 0);
+                if (tx.type === 'opening_balance') opening += amt;
+                if (tx.type === 'daily_contribution') contributions += amt;
+                if (tx.type === 'expense') expenses += amt;
+                if (tx.type === 'adjustment' && tx.direction === 'in') positiveAdjustments += amt;
+                if (tx.type === 'adjustment' && tx.direction === 'out') negativeAdjustments += amt;
+                available += tx.direction === 'out' ? -amt : amt;
+            });
+            return { opening, contributions, expenses, positiveAdjustments, negativeAdjustments, netAdjustments:positiveAdjustments-negativeAdjustments, available, netMovement:contributions+positiveAdjustments-expenses-negativeAdjustments };
+        }
+
+        function cfTransactionVerificationState(tx) {
+            if (!tx) return { key:'pending', count:0, label:'Pending' };
+            if (tx.type === 'daily_contribution') {
+                const daily = cfDailyData[tx.sourceDailyCollection || tx.effectiveDate];
+                return daily ? cfDailyDisplayState(daily) : { key:'pending', count:0, label:'Daily sheet unavailable' };
+            }
+            if (tx.type === 'opening_balance') return tx.status === 'voided' ? {key:'voided',label:'VOIDED'} : {key:'verified',count:2,label:'Active'};
+            if (tx.status === 'voided') return {key:'voided',count:0,label:'VOIDED'};
+            return cfGetVerificationState(tx);
+        }
+
+        function cfTxTypeLabel(tx) {
+            if (!tx) return 'Transaction';
+            if (tx.type === 'opening_balance') return 'Opening Balance';
+            if (tx.type === 'daily_contribution') return 'Daily Collection';
+            if (tx.type === 'expense') return 'Expense' + (tx.category ? ' — ' + tx.category : '');
+            if (tx.type === 'adjustment') return 'Adjustment' + (tx.direction === 'out' ? ' — Decrease' : ' — Increase');
+            return tx.type || 'Transaction';
+        }
+
+        function cfTxSignedAmount(tx) {
+            const amt = Number(tx.amountCentavos || 0);
+            return tx.direction === 'out' ? -amt : amt;
+        }
+
+        window.renderCfLedger = function() {
+            const totals = cfLedgerTotals();
+            document.getElementById('cfLedgerOpening').textContent = cfMoney(totals.opening);
+            document.getElementById('cfLedgerNet').textContent = cfMoney(totals.netMovement);
+            document.getElementById('cfLedgerAvailable').textContent = cfMoney(totals.available);
+            const tbody = document.getElementById('cfLedgerTableBody');
+            const rows = cfGetLedgerRows().slice().reverse();
+            tbody.innerHTML = rows.length ? rows.map(tx => {
+                const signed = cfTxSignedAmount(tx);
+                const state = cfTransactionVerificationState(tx);
+                const amountClass = signed >= 0 ? 'cf-money-positive' : 'cf-money-negative';
+                return `<tr>
+                    <td data-label="Date">${cfEsc(cfDateLabel(tx.effectiveDate))}</td>
+                    <td data-label="Type">${cfEsc(cfTxTypeLabel(tx))}</td>
+                    <td data-label="Description">${cfEsc(tx.description || tx.reason || '')}<div class="cf-muted">${cfEsc(tx.id)}</div></td>
+                    <td data-label="Amount" class="${amountClass}">${signed >= 0 ? '+' : '−'} ${cfMoney(Math.abs(signed))}</td>
+                    <td data-label="Running Balance"><strong>${cfMoney(tx.runningBalanceCentavos)}</strong></td>
+                    <td data-label="Status">${cfStatusBadge(state)}</td>
+                    <td data-label="Action" class="action-pill-cell"><button class="action-pill-btn action-pill-view" onclick="openCfTransactionDetail('${cfEsc(tx.id)}')">🔍 View</button></td>
+                </tr>`;
+            }).join('') : '<tr><td colspan="7" style="text-align:center; padding:28px; color:var(--text-muted);">No Class Fund ledger transactions yet.</td></tr>';
+            cfApplyPermissions();
+        };
+
+        window.openCfOpeningBalanceModal = function() {
+            if (!cfRequireAdmin('Setting the Opening Balance')) return;
+            const active = Object.entries(cfTransactions).find(([id,tx]) => tx && tx.type === 'opening_balance' && tx.status === 'active');
+            if (active) return showAppAlert('Opening Balance Already Exists', `An active Opening Balance of ${cfMoney(active[1].amountCentavos)} already exists. Use an audited Adjustment for later corrections.`);
+            showAppPrompt('Set Opening Balance', 'Enter the Class Fund amount already on hand before this feature began (PHP).', '', value => {
+                if (value == null) return;
+                const cents = cfInputToCentavos(value);
+                if (cents < 0) return showAppAlert('Invalid Amount', 'Opening Balance cannot be negative.');
+                showAppConfirm('Confirm Opening Balance', `Create audited Opening Balance transaction for ${cfMoney(cents)}?\n\nThis does not directly edit a balance variable; it becomes part of the authoritative ledger.`, false, async confirmed => {
+                    if (!confirmed) return;
+                    const actor = cfActor();
+                    const now = Date.now();
+                    const tx = {
+                        transactionId:'opening_balance', type:'opening_balance', direction:'in', amountCentavos:cents,
+                        effectiveDate:formatDateKey(new Date()), effectiveTs:cfDateSortTs(formatDateKey(new Date()))-1000,
+                        description:'Opening Balance', status:'active', createdAtMs:now, createdAt:new Date().toLocaleString('en-PH'),
+                        createdByUid:actor.uid, createdByName:actor.name, createdByDesignation:'Main Admin'
+                    };
+                    const updates = { 'transactions/opening_balance':tx };
+                    cfAddAuditToUpdates(updates, 'opening_balance_created', 'opening_balance', `Opening Balance created: ${cfMoney(cents)}.`, '', {});
+                    try { await update(ref(db, CF_ROOT), updates); showAppAlert('Opening Balance Set', `${cfMoney(cents)} was added as an audited Opening Balance ledger transaction.`); }
+                    catch(err) { console.error(err); showAppAlert('Database Error', 'Opening Balance was not saved.\n' + err.message); }
+                });
+            });
+        };
+
+        window.openCfExpenseModal = function(txId) {
+            if (!cfRequireFinance('Recording or editing an expense')) return;
+            cfExpenseEditId = txId || null;
+            const tx = txId ? cfTransactions[txId] : null;
+            if (txId && (!tx || tx.type !== 'expense' || tx.status !== 'active')) return showAppAlert('Expense Unavailable', 'Only an active expense can be edited.');
+            document.getElementById('cfExpenseModalTitle').textContent = tx ? '✏️ Edit Expense' : '🧾 Record Expense';
+            document.getElementById('cfExpenseDate').value = tx ? tx.effectiveDate : formatDateKey(new Date());
+            const category = tx ? (tx.category || '') : '';
+            const standard = CF_EXPENSE_CATEGORIES.includes(category) ? category : (category ? 'Other' : '');
+            document.getElementById('cfExpenseCategory').value = standard;
+            document.getElementById('cfExpenseOtherGroup').classList.toggle('hidden', standard !== 'Other');
+            document.getElementById('cfExpenseOtherCategory').value = standard === 'Other' ? (tx.customCategory || (CF_EXPENSE_CATEGORIES.includes(category) ? '' : category)) : '';
+            document.getElementById('cfExpenseAmount').value = tx ? (Number(tx.amountCentavos||0)/100).toFixed(2) : '';
+            document.getElementById('cfExpenseDescription').value = tx ? (tx.description || '') : '';
+            document.getElementById('cfExpensePaidTo').value = tx ? (tx.paidTo || '') : '';
+            document.getElementById('cfExpenseReference').value = tx ? (tx.referenceNumber || '') : '';
+            document.getElementById('cfExpenseNotes').value = tx ? (tx.notes || '') : '';
+            document.getElementById('cfExpenseCorrectionReason').value = '';
+            document.getElementById('cfExpenseCorrectionGroup').classList.toggle('hidden', !tx);
+            document.getElementById('cfExpenseOverdraftBox').innerHTML = `<div class="cf-muted">Current available Class Fund: <strong>${cfMoney(cfLedgerTotals().available)}</strong></div>`;
+            document.getElementById('cfExpenseModal').classList.remove('hidden');
+        };
+
+        window.closeCfExpenseModal = function() { document.getElementById('cfExpenseModal').classList.add('hidden'); cfExpenseEditId = null; };
+
+        async function cfCommitExpense(payload, oldTx, overdraftReason) {
+            const actor = cfActor();
+            const now = Date.now();
+            const txId = cfExpenseEditId || push(ref(db, CF_ROOT + '/transactions')).key;
+            const priorVer = oldTx && oldTx.verification ? oldTx.verification : {};
+            const hadVerification = !!((priorVer.president && priorVer.president.verified) || (priorVer.vicePresident && priorVer.vicePresident.verified));
+            const tx = Object.assign({}, oldTx || {}, payload, {
+                transactionId:txId, type:'expense', direction:'out', status:'active',
+                createdAtMs:oldTx ? oldTx.createdAtMs : now,
+                createdAt:oldTx ? oldTx.createdAt : new Date().toLocaleString('en-PH'),
+                createdByUid:oldTx ? oldTx.createdByUid : actor.uid,
+                createdByName:oldTx ? oldTx.createdByName : actor.name,
+                lastModifiedAtMs:now, lastModifiedAt:new Date().toLocaleString('en-PH'),
+                lastModifiedByUid:actor.uid, lastModifiedByName:actor.name,
+                verification:{ president:{verified:false}, vicePresident:{verified:false} },
+                reverificationRequired:!!(oldTx && (hadVerification || oldTx.reverificationRequired)),
+                overdraftOverride:!!overdraftReason,
+                overdraftOverrideReason:overdraftReason || '',
+                overdraftOverrideByUid:overdraftReason ? actor.uid : '',
+                overdraftOverrideByName:overdraftReason ? actor.name : ''
+            });
+            const updates = { ['transactions/' + txId]:tx };
+            if (oldTx) {
+                const histKey = push(ref(db, CF_ROOT + '/transactions/' + txId + '/editHistory')).key;
+                tx.editHistory = Object.assign({}, oldTx.editHistory || {});
+                tx.editHistory[histKey] = {
+                    previousAmountCentavos:Number(oldTx.amountCentavos||0), newAmountCentavos:Number(tx.amountCentavos||0),
+                    previousDate:oldTx.effectiveDate || '', newDate:tx.effectiveDate,
+                    previousCategory:oldTx.category || '', newCategory:tx.category,
+                    correctionReason:payload.correctionReason || '', editedByUid:actor.uid, editedByName:actor.name, timestampMs:now
+                };
+                cfAddAuditToUpdates(updates, 'expense_edited', txId, `Expense edited: ${cfMoney(oldTx.amountCentavos)} → ${cfMoney(tx.amountCentavos)}.`, payload.correctionReason || '', { transactionId:txId });
+                if (hadVerification) cfAddAuditToUpdates(updates, 'verification_invalidated', txId, 'Expense verification invalidated after edit.', payload.correctionReason || '', { transactionId:txId });
+            } else {
+                cfAddAuditToUpdates(updates, 'expense_created', txId, `Expense recorded: ${cfMoney(tx.amountCentavos)} — ${tx.description}.`, '', { transactionId:txId });
+            }
+            if (overdraftReason) cfAddAuditToUpdates(updates, 'administrative_overdraft_override', txId, `Administrative Overdraft Override used for ${cfMoney(tx.amountCentavos)} expense.`, overdraftReason, { transactionId:txId });
+            await update(ref(db, CF_ROOT), updates);
+            return txId;
+        }
+
+        window.saveCfExpense = function() {
+            if (!cfRequireFinance('Saving an expense')) return;
+            const date = document.getElementById('cfExpenseDate').value;
+            let category = document.getElementById('cfExpenseCategory').value;
+            const customCategory = document.getElementById('cfExpenseOtherCategory').value.trim();
+            const amount = cfInputToCentavos(document.getElementById('cfExpenseAmount').value);
+            const description = document.getElementById('cfExpenseDescription').value.trim();
+            const paidTo = document.getElementById('cfExpensePaidTo').value.trim();
+            const referenceNumber = document.getElementById('cfExpenseReference').value.trim();
+            const notes = document.getElementById('cfExpenseNotes').value.trim();
+            const correctionReason = document.getElementById('cfExpenseCorrectionReason').value.trim();
+            if (!date || !category || amount <= 0 || !description) return showAppAlert('Check Expense', 'Expense Date, Category, Description, and an Amount greater than ₱0.00 are required.');
+            if (category === 'Other' && !customCategory) return showAppAlert('Custom Category Required', 'Enter a custom category when Other is selected.');
+            if (cfExpenseEditId && !correctionReason) return showAppAlert('Correction Reason Required', 'Editing an expense requires a correction reason.');
+            if (date > formatDateKey(new Date())) return showAppAlert('Invalid Date', 'Future expenses cannot be recorded.');
+            const oldTx = cfExpenseEditId ? cfTransactions[cfExpenseEditId] : null;
+            const totals = cfLedgerTotals();
+            const oldRelief = oldTx && oldTx.status === 'active' ? Number(oldTx.amountCentavos||0) : 0;
+            const prospective = totals.available + oldRelief - amount;
+            const payload = {
+                effectiveDate:date, effectiveTs:cfDateSortTs(date), category:category === 'Other' ? customCategory : category,
+                categoryPreset:category, customCategory:category === 'Other' ? customCategory : '',
+                amountCentavos:amount, description, paidTo, referenceNumber, notes, correctionReason
+            };
+            const proceed = async overdraftReason => {
+                const btn = document.getElementById('cfExpenseSaveBtn'); const oldBtn = cfShowSaving(btn,'Saving...');
+                try { const txId = await cfCommitExpense(payload, oldTx, overdraftReason); closeCfExpenseModal(); showAppAlert('Expense Saved', `${cfMoney(amount)} expense saved successfully.\nAvailable Class Fund: ${cfMoney(prospective)}\n\n⏳ Pending Expense Verification`); openCfTransactionDetail(txId); }
+                catch(err) { console.error('[Class Funds] Expense save failed:', err); showAppAlert('Database Error', 'Expense was not saved. Your form remains available.\n' + err.message); }
+                finally { cfRestoreButton(btn, oldBtn); }
+            };
+            if (prospective < 0) {
+                if (!cfCanAdmin()) return showAppAlert('Insufficient Class Fund Balance', `Available: ${cfMoney(totals.available + oldRelief)}\nExpense: ${cfMoney(amount)}\n\nThe Treasurer cannot record an expense larger than the available Class Fund.`);
+                showAppPrompt('Administrative Overdraft Override', `This expense would make the available Class Fund ${cfMoney(prospective)}. Enter the mandatory Admin override reason.`, '', reason => {
+                    if (!reason || !reason.trim()) return;
+                    showAppConfirm('Confirm Overdraft Override', `Record ${cfMoney(amount)} expense despite insufficient available balance?\n\nReason: ${reason.trim()}`, true, confirmed => { if (confirmed) proceed(reason.trim()); });
+                });
+            } else {
+                showAppConfirm(cfExpenseEditId ? 'Save Expense Correction' : 'Record Expense', `${cfExpenseEditId ? 'Save corrected expense' : 'Record expense'} of ${cfMoney(amount)} for ${description}?\n\nThe active expense reduces Available Class Fund immediately; verification is an accountability layer and does not deduct it again.`, false, confirmed => { if (confirmed) proceed(''); });
+            }
+        };
+
+        window.openCfAdjustmentModal = function(txId) {
+            if (!cfRequireFinance('Recording or editing an adjustment')) return;
+            cfAdjustmentEditId = txId || null;
+            const tx = txId ? cfTransactions[txId] : null;
+            if (txId && (!tx || tx.type !== 'adjustment' || tx.status !== 'active')) return showAppAlert('Adjustment Unavailable', 'Only an active adjustment can be edited.');
+            document.getElementById('cfAdjustmentModalTitle').textContent = tx ? '✏️ Edit Adjustment' : '± Class Fund Adjustment';
+            document.getElementById('cfAdjustmentDate').value = tx ? tx.effectiveDate : formatDateKey(new Date());
+            document.getElementById('cfAdjustmentDirection').value = tx ? tx.direction : 'in';
+            document.getElementById('cfAdjustmentAmount').value = tx ? (Number(tx.amountCentavos||0)/100).toFixed(2) : '';
+            document.getElementById('cfAdjustmentReason').value = tx ? (tx.reason || '') : '';
+            document.getElementById('cfAdjustmentNotes').value = tx ? (tx.notes || '') : '';
+            document.getElementById('cfAdjustmentCorrectionReason').value = '';
+            document.getElementById('cfAdjustmentCorrectionGroup').classList.toggle('hidden', !tx);
+            document.getElementById('cfAdjustmentModal').classList.remove('hidden');
+        };
+
+        window.closeCfAdjustmentModal = function() { document.getElementById('cfAdjustmentModal').classList.add('hidden'); cfAdjustmentEditId = null; };
+
+        window.saveCfAdjustment = function() {
+            if (!cfRequireFinance('Saving an adjustment')) return;
+            const date = document.getElementById('cfAdjustmentDate').value;
+            const direction = document.getElementById('cfAdjustmentDirection').value;
+            const amount = cfInputToCentavos(document.getElementById('cfAdjustmentAmount').value);
+            const reason = document.getElementById('cfAdjustmentReason').value.trim();
+            const notes = document.getElementById('cfAdjustmentNotes').value.trim();
+            const correctionReason = document.getElementById('cfAdjustmentCorrectionReason').value.trim();
+            if (!date || !['in','out'].includes(direction) || amount <= 0 || !reason) return showAppAlert('Check Adjustment', 'Date, Direction, Amount greater than ₱0.00, and Reason are required.');
+            if (date > formatDateKey(new Date())) return showAppAlert('Invalid Date', 'Future adjustments cannot be recorded.');
+            if (cfAdjustmentEditId && !correctionReason) return showAppAlert('Correction Reason Required', 'Editing an adjustment requires a correction reason.');
+            const oldTx = cfAdjustmentEditId ? cfTransactions[cfAdjustmentEditId] : null;
+            showAppConfirm(cfAdjustmentEditId ? 'Save Adjustment Correction' : 'Record Adjustment', `${direction === 'in' ? 'Increase' : 'Decrease'} Class Fund by ${cfMoney(amount)}?\n\nReason: ${reason}\n\nAdjustments directly affect the ledger and require President/VP verification.`, false, async confirmed => {
+                if (!confirmed) return;
+                const actor = cfActor(), now=Date.now();
+                const txId = cfAdjustmentEditId || push(ref(db, CF_ROOT + '/transactions')).key;
+                const priorVer = oldTx && oldTx.verification ? oldTx.verification : {};
+                const hadVerification = !!((priorVer.president&&priorVer.president.verified)||(priorVer.vicePresident&&priorVer.vicePresident.verified));
+                const tx = Object.assign({}, oldTx || {}, {
+                    transactionId:txId, type:'adjustment', direction, amountCentavos:amount, effectiveDate:date, effectiveTs:cfDateSortTs(date),
+                    description:'Class Fund Adjustment', reason, notes, status:'active',
+                    createdAtMs:oldTx?oldTx.createdAtMs:now, createdAt:oldTx?oldTx.createdAt:new Date().toLocaleString('en-PH'),
+                    createdByUid:oldTx?oldTx.createdByUid:actor.uid, createdByName:oldTx?oldTx.createdByName:actor.name,
+                    lastModifiedAtMs:now, lastModifiedByUid:actor.uid, lastModifiedByName:actor.name,
+                    verification:{president:{verified:false},vicePresident:{verified:false}}, reverificationRequired:!!(oldTx && (hadVerification || oldTx.reverificationRequired)), correctionReason
+                });
+                const updates = { ['transactions/' + txId]:tx };
+                if (oldTx) {
+                    const histKey=push(ref(db, CF_ROOT+'/transactions/'+txId+'/editHistory')).key;
+                    tx.editHistory=Object.assign({},oldTx.editHistory||{});
+                    tx.editHistory[histKey]={previousAmountCentavos:Number(oldTx.amountCentavos||0),newAmountCentavos:amount,previousDirection:oldTx.direction,newDirection:direction,correctionReason,editedByUid:actor.uid,editedByName:actor.name,timestampMs:now};
+                    cfAddAuditToUpdates(updates,'adjustment_edited',txId,`Adjustment edited: ${cfMoney(oldTx.amountCentavos)} → ${cfMoney(amount)}.`,correctionReason,{transactionId:txId});
+                    if(hadVerification) cfAddAuditToUpdates(updates,'verification_invalidated',txId,'Adjustment verification invalidated after edit.',correctionReason,{transactionId:txId});
+                } else cfAddAuditToUpdates(updates,'adjustment_created',txId,`${direction==='in'?'+':'−'}${cfMoney(amount)} adjustment created.`,reason,{transactionId:txId});
+                try { await update(ref(db,CF_ROOT),updates); closeCfAdjustmentModal(); showAppAlert('Adjustment Saved', `${direction==='in'?'+':'−'}${cfMoney(amount)} adjustment saved. President/VP verification is pending.`); }
+                catch(err){ console.error(err); showAppAlert('Database Error','Adjustment was not saved.\n'+err.message); }
+            });
+        };
+
+        window.verifyCfTransaction = function(txId, slot, adminOverride) {
+            const tx = cfTransactions[txId];
+            if (!tx || tx.status !== 'active' || !['expense','adjustment'].includes(tx.type)) return showAppAlert('Verification Unavailable', 'This transaction is not eligible for officer verification.');
+            const slotKey = cfVerificationSlotKey(slot);
+            const roleLabel = cfVerificationRoleLabel(slot);
+            if (tx.verification && tx.verification[slotKey] && tx.verification[slotKey].verified) return showAppAlert('Already Verified', roleLabel + ' verification is already active.');
+            if (adminOverride) {
+                if (!cfRequireAdmin('Administrative verification override')) return;
+                showAppPrompt('Administrative Override for ' + roleLabel, 'Enter the mandatory reason for overriding this verification slot.', '', reason => {
+                    if (!reason || !reason.trim()) return;
+                    cfConfirmTransactionVerification(txId, slot, true, reason.trim());
+                });
+                return;
+            }
+            if (slot === 'president' && !cfCanPresidentVerify()) return showAppAlert('Permission Denied','Only the authenticated President can verify the President slot.');
+            if (slot === 'vicePresident' && !cfCanVpVerify()) return showAppAlert('Permission Denied','Only the authenticated Vice President can verify the Vice President slot.');
+            cfConfirmTransactionVerification(txId, slot, false, '');
+        };
+
+        function cfConfirmTransactionVerification(txId, slot, isOverride, overrideReason) {
+            const tx = cfTransactions[txId];
+            const roleLabel = cfVerificationRoleLabel(slot);
+            const verb = tx.type === 'expense' ? 'expense' : 'adjustment';
+            const msg = isOverride
+                ? `Record an Administrative Override for the ${roleLabel} verification slot on this ${verb}?\n\nAmount: ${cfMoney(tx.amountCentavos)}\nReason: ${overrideReason}\n\nThe Admin's actual identity will remain visible.`
+                : `Confirm that you reviewed this ${verb}?\n\n${cfTxTypeLabel(tx)}\n${tx.description || tx.reason || ''}\nAmount: ${cfMoney(tx.amountCentavos)}\nDate: ${cfDateLabel(tx.effectiveDate)}`;
+            showAppConfirm(isOverride ? 'Administrative Verification Override' : 'Verify ' + cfTxTypeLabel(tx), msg, false, async confirmed => {
+                if (!confirmed) return;
+                const actor = cfActor();
+                const slotKey = cfVerificationSlotKey(slot);
+                const otherKey = slotKey === 'president' ? 'vicePresident' : 'president';
+                const otherVerified = !!(tx.verification && tx.verification[otherKey] && tx.verification[otherKey].verified);
+                const payload = {
+                    verified:true, verifiedByUid:actor.uid, verifiedByName:actor.name,
+                    designation:isOverride?'Main Admin':roleLabel, verifiedAtMs:Date.now(), verifiedAt:new Date().toLocaleString('en-PH'),
+                    override:!!isOverride, overrideFor:isOverride?roleLabel:'', overrideReason:isOverride?overrideReason:''
+                };
+                const updates = { ['transactions/'+txId+'/verification/'+slotKey]:payload };
+                if (otherVerified) updates['transactions/'+txId+'/reverificationRequired'] = false;
+                cfAddAuditToUpdates(updates, isOverride?'admin_verification_override':(tx.type+'_verified_'+(slot==='president'?'president':'vp')), txId, isOverride?`Administrative Override for ${roleLabel} on ${verb}.`:`${roleLabel} verified ${verb} ${cfMoney(tx.amountCentavos)}.`, isOverride?overrideReason:'', {transactionId:txId,verificationSlot:roleLabel});
+                try { await update(ref(db,CF_ROOT),updates); closeCfDetailModal(); showAppAlert(isOverride?'Administrative Override Recorded':roleLabel+' Verification Recorded','Verification saved successfully.'); }
+                catch(err){ console.error(err); showAppAlert('Database Error','Verification was not saved.\n'+err.message); }
+            });
+        }
+
+        window.voidCfTransaction = function(txId) {
+            if (!cfRequireFinance('Voiding a transaction')) return;
+            const tx = cfTransactions[txId];
+            if (!tx || tx.status !== 'active' || !['expense','adjustment'].includes(tx.type)) return showAppAlert('Cannot Void','Only active expenses or adjustments can be voided here.');
+            showAppPrompt('Void Transaction','Enter the mandatory reason for voiding this financial transaction.','',reason=>{
+                if(!reason||!reason.trim()) return;
+                showAppConfirm('Void Transaction',`VOID ${cfTxTypeLabel(tx)} for ${cfMoney(tx.amountCentavos)}?\n\nThe record remains visible but will no longer affect Available Class Fund.\n\nReason: ${reason.trim()}`,true,async confirmed=>{
+                    if(!confirmed) return;
+                    const actor=cfActor();
+                    const updates={
+                        ['transactions/'+txId+'/status']:'voided',
+                        ['transactions/'+txId+'/voidedAtMs']:Date.now(),
+                        ['transactions/'+txId+'/voidedAt']:new Date().toLocaleString('en-PH'),
+                        ['transactions/'+txId+'/voidedByUid']:actor.uid,
+                        ['transactions/'+txId+'/voidedByName']:actor.name,
+                        ['transactions/'+txId+'/voidReason']:reason.trim()
+                    };
+                    cfAddAuditToUpdates(updates,tx.type==='expense'?'expense_voided':'adjustment_voided',txId,`${cfTxTypeLabel(tx)} voided; ${cfMoney(tx.amountCentavos)} no longer affects balance.`,reason.trim(),{transactionId:txId});
+                    try{await update(ref(db,CF_ROOT),updates);closeCfDetailModal();showAppAlert('Transaction Voided','The transaction remains in financial history as VOIDED and the available balance has been recalculated.');}
+                    catch(err){console.error(err);showAppAlert('Database Error','Transaction was not voided.\n'+err.message);}
+                });
+            });
+        };
+
+        window.openCfTransactionDetail = function(txId) {
+            const tx = cfTransactions[txId];
+            if (!tx) return showAppAlert('Transaction Not Found','The requested Class Fund transaction is unavailable.');
+            const state = cfTransactionVerificationState(tx);
+            document.getElementById('cfDetailTitle').textContent = '📖 ' + cfTxTypeLabel(tx);
+            const signed = cfTxSignedAmount(tx);
+            let body = `<div style="margin-bottom:12px;">${cfStatusBadge(state)}</div>
+                <div class="detail-info-row"><span class="detail-info-label">Transaction ID</span><span class="detail-info-value">${cfEsc(txId)}</span></div>
+                <div class="detail-info-row"><span class="detail-info-label">Type</span><span class="detail-info-value">${cfEsc(cfTxTypeLabel(tx))}</span></div>
+                <div class="detail-info-row"><span class="detail-info-label">Date</span><span class="detail-info-value">${cfEsc(cfDateLabel(tx.effectiveDate,true))}</span></div>
+                <div class="detail-info-row"><span class="detail-info-label">Amount</span><span class="detail-info-value ${signed>=0?'cf-money-positive':'cf-money-negative'}">${signed>=0?'+':'−'} ${cfMoney(Math.abs(signed))}</span></div>
+                <div class="detail-info-row"><span class="detail-info-label">Balance Impact</span><span class="detail-info-value">${tx.status==='active'?(signed>=0?'+':'−')+' '+cfMoney(Math.abs(signed)):'No current balance impact ('+cfEsc(tx.status)+')'}</span></div>
+                <div class="detail-info-row"><span class="detail-info-label">Running Balance After Transaction</span><span class="detail-info-value">${cfMoney((cfGetLedgerRows().find(r=>r.id===txId)||{}).runningBalanceCentavos||0)}</span></div>
+                <div class="detail-info-row"><span class="detail-info-label">Description</span><span class="detail-info-value">${cfEsc(tx.description || tx.reason || '—')}</span></div>`;
+            if(tx.type==='expense') body += `<div class="detail-info-row"><span class="detail-info-label">Category</span><span class="detail-info-value">${cfEsc(tx.category||'—')}</span></div><div class="detail-info-row"><span class="detail-info-label">Paid To</span><span class="detail-info-value">${cfEsc(tx.paidTo||'—')}</span></div><div class="detail-info-row"><span class="detail-info-label">Receipt / Reference</span><span class="detail-info-value">${cfEsc(tx.referenceNumber||'—')}</span></div>`;
+            if(tx.type==='adjustment') body += `<div class="detail-info-row"><span class="detail-info-label">Reason</span><span class="detail-info-value">${cfEsc(tx.reason||'—')}</span></div>`;
+            if(tx.notes) body += `<div class="detail-info-row"><span class="detail-info-label">Notes</span><span class="detail-info-value">${cfEsc(tx.notes)}</span></div>`;
+            body += `<div class="detail-info-row"><span class="detail-info-label">Created By</span><span class="detail-info-value">${cfEsc(tx.createdByName||'—')}<br><span class="cf-muted">${cfEsc(tx.createdAt||'')}</span></span></div>`;
+            if(['expense','adjustment'].includes(tx.type)){
+                body += cfVerifierBlock('President',tx.verification&&tx.verification.president)+cfVerifierBlock('Vice President',tx.verification&&tx.verification.vicePresident);
+            }
+            if(tx.overdraftOverride) body += `<div class="cf-danger-box" style="margin-top:10px;"><strong>Administrative Overdraft Override</strong><br>${cfEsc(tx.overdraftOverrideReason||'')}<br><span class="cf-muted">Admin: ${cfEsc(tx.overdraftOverrideByName||'—')}</span></div>`;
+            if(tx.status==='voided') body += `<div class="cf-danger-box" style="margin-top:10px;"><strong>VOIDED</strong><br>${cfEsc(tx.voidReason||'')}<br><span class="cf-muted">${cfEsc(tx.voidedByName||'—')} · ${cfEsc(tx.voidedAt||'')}</span></div>`;
+            const hist=tx.editHistory?Object.values(tx.editHistory).sort((a,b)=>Number(b.timestampMs||0)-Number(a.timestampMs||0)):[];
+            if(hist.length) body += `<div class="cf-detail-section"><div class="cf-detail-title">Edit History</div>${hist.map(h=>`<div class="cf-audit-row"><strong>${cfMoney(h.previousAmountCentavos)} → ${cfMoney(h.newAmountCentavos)}</strong><div class="cf-audit-meta">${cfEsc(h.editedByName||'')} · ${new Date(Number(h.timestampMs||0)).toLocaleString('en-PH')}<br>Reason: ${cfEsc(h.correctionReason||'')}</div></div>`).join('')}</div>`;
+            const audits=Object.values(cfAuditData).filter(a=>a&&a.affectedRecordId===txId).sort((a,b)=>Number(b.timestampMs||0)-Number(a.timestampMs||0));
+            body += `<div class="cf-detail-section"><div class="cf-detail-title">Audit History</div>${audits.length?audits.map(a=>`<div class="cf-audit-row"><strong>${cfEsc(a.summary||a.actionType)}</strong><div class="cf-audit-meta">${cfEsc(a.displayNameSnapshot||'')} · ${cfEsc(a.designationSnapshot||'')} · ${cfEsc(a.timestamp||'')}${a.reason?'<br>Reason: '+cfEsc(a.reason):''}</div></div>`).join(''):'<div class="cf-muted">No audit entries.</div>'}</div>`;
+            document.getElementById('cfDetailBody').innerHTML=body;
+            let actions='';
+            if(tx.type==='daily_contribution'&&tx.sourceDailyCollection) actions += `<button class="btn-ui btn-gray" onclick="openCfDailyDetail('${cfEsc(tx.sourceDailyCollection)}')">View Daily Student Sheet</button>`;
+            if(tx.status==='active'&&['expense','adjustment'].includes(tx.type)){
+                const pDone=tx.verification&&tx.verification.president&&tx.verification.president.verified;
+                const vDone=tx.verification&&tx.verification.vicePresident&&tx.verification.vicePresident.verified;
+                if(cfCanPresidentVerify()&&!pDone) actions += `<button class="btn-ui btn-green" onclick="verifyCfTransaction('${cfEsc(txId)}','president',false)">✅ Verify as President</button>`;
+                if(cfCanVpVerify()&&!vDone) actions += `<button class="btn-ui btn-green" onclick="verifyCfTransaction('${cfEsc(txId)}','vicePresident',false)">✅ Verify as Vice President</button>`;
+                if(cfCanAdmin()&&!pDone) actions += `<button class="btn-ui btn-gold" onclick="verifyCfTransaction('${cfEsc(txId)}','president',true)">Admin Override President</button>`;
+                if(cfCanAdmin()&&!vDone) actions += `<button class="btn-ui btn-gold" onclick="verifyCfTransaction('${cfEsc(txId)}','vicePresident',true)">Admin Override VP</button>`;
+                if(cfCanFinanceEdit()) actions += `<button class="btn-ui btn-gold" onclick="${tx.type==='expense'?`openCfExpenseModal('${cfEsc(txId)}')`:`openCfAdjustmentModal('${cfEsc(txId)}')`}">✏️ Edit</button><button class="btn-ui btn-red" onclick="voidCfTransaction('${cfEsc(txId)}')">Void Transaction</button>`;
+            }
+            document.getElementById('cfDetailActions').innerHTML=actions;
+            document.getElementById('cfDetailModal').classList.remove('hidden');
+        };
+
+        window.renderCfExpenses = function() {
+            const tbody=document.getElementById('cfExpensesTableBody');
+            const rows=Object.entries(cfTransactions).filter(([id,tx])=>tx&&tx.type==='expense').map(([id,tx])=>Object.assign({id},tx)).sort((a,b)=>(b.effectiveDate||'').localeCompare(a.effectiveDate||''));
+            tbody.innerHTML=rows.length?rows.map(tx=>{
+                const state=cfTransactionVerificationState(tx);
+                let acts=`<button class="action-pill-btn action-pill-view" onclick="openCfTransactionDetail('${cfEsc(tx.id)}')">🔍 View</button>`;
+                if(cfCanFinanceEdit()&&tx.status==='active') acts+=`<button class="action-pill-btn action-pill-edit" onclick="openCfExpenseModal('${cfEsc(tx.id)}')">✏️ Edit</button><button class="action-pill-btn action-pill-delete" onclick="voidCfTransaction('${cfEsc(tx.id)}')">Void</button>`;
+                return `<tr><td data-label="Date">${cfEsc(cfDateLabel(tx.effectiveDate))}</td><td data-label="Category">${cfEsc(tx.category||'')}</td><td data-label="Description">${cfEsc(tx.description||'')}</td><td data-label="Paid To">${cfEsc(tx.paidTo||'—')}</td><td data-label="Amount" class="cf-money-negative">− ${cfMoney(tx.amountCentavos)}</td><td data-label="Verification">${cfStatusBadge(state)}</td><td data-label="Actions" class="action-pill-cell">${acts}</td></tr>`;
+            }).join(''):'<tr><td colspan="7" style="text-align:center; padding:28px; color:var(--text-muted);">No Class Fund expenses recorded.</td></tr>';
+            cfApplyPermissions();
+        };
+
+        function cfSubmittedDailyRecords() {
+            return Object.entries(cfDailyData).filter(([date,r])=>r&&r.status==='submitted').map(([date,r])=>Object.assign({dateKey:date},r)).sort((a,b)=>a.dateKey.localeCompare(b.dateKey));
+        }
+
+        function cfComputeStudentStats(studentId) {
+            const days=[];
+            cfSubmittedDailyRecords().forEach(day=>{
+                const r=day.students&&day.students[studentId];
+                if(!r) return;
+                days.push({date:day.dateKey,status:r.status,amountCentavos:Number(r.amountCentavos||0),dailyTotalCentavos:Number(day.totalCentavos||0),dailyVerification:cfDailyDisplayState(day)});
+            });
+            let total=0, contributed=0, noContribution=0, excused=0, longest=0, current=0, highest=0, last=null;
+            days.forEach(d=>{
+                if(d.status==='contributed'){
+                    total+=d.amountCentavos; contributed++; current++; longest=Math.max(longest,current); highest=Math.max(highest,d.amountCentavos); last=d;
+                } else if(d.status==='no_contribution') { noContribution++; current=0; }
+                else if(d.status==='excused') excused++;
+            });
+            const eligible=contributed+noContribution;
+            return {
+                studentId,totalCentavos:total,daysContributed:contributed,noContributionDays:noContribution,excusedDays:excused,
+                eligibleDays:eligible,participationRate:eligible?contributed/eligible*100:0,currentStreak:current,longestStreak:longest,
+                averageContributionCentavos:contributed?Math.round(total/contributed):0,highestContributionCentavos:highest,lastContribution:last,days
+            };
+        }
+
+        window.renderCfStudents = function() {
+            const tbody=document.getElementById('cfStudentsTableBody');
+            const q=(document.getElementById('cfStudentSearch').value||'').trim().toLowerCase();
+            const list=currentStudentList.filter(s=>!q||s.name.toLowerCase().includes(q)||s.id.toLowerCase().includes(q));
+            tbody.innerHTML=list.length?list.map(s=>{
+                const st=cfComputeStudentStats(s.id);
+                return `<tr><td data-label="Student"><strong>${cfEsc(s.name)}</strong><div class="cf-muted">${cfEsc(s.id)}</div></td><td data-label="Total Contributed">${cfMoney(st.totalCentavos)}</td><td data-label="Contribution Days">${st.daysContributed}</td><td data-label="No Contribution">${st.noContributionDays}</td><td data-label="Current Streak">${st.currentStreak}</td><td data-label="Participation">${st.eligibleDays?st.participationRate.toFixed(1)+'%':'—'}</td><td data-label="Action" class="action-pill-cell"><button class="action-pill-btn action-pill-view" onclick="openCfStudentProfile('${cfEsc(s.id)}')">View Profile</button></td></tr>`;
+            }).join(''):'<tr><td colspan="7" style="text-align:center; padding:28px; color:var(--text-muted);">No students match the search.</td></tr>';
+        };
+
+        function cfStudentCalendarDays(studentId) {
+            const today=parseDateKey(formatDateKey(new Date()));
+            let start=addDays(today,-41);
+            const result=[];
+            for(let i=0;i<42;i++){
+                const d=addDays(start,i), key=formatDateKey(d);
+                const day=cfDailyData[key];
+                const cycle=getCycleInfoForDate(d);
+                let status='none',amount=0,label='—';
+                if(isWeekend(d)){ status='nocollection'; label='Weekend'; }
+                else if(cycle.type==='noclass'){ status='nocollection'; label='No Classes'; }
+                else if(day&&day.status==='no_collection'){ status='nocollection'; label='No Collection'; }
+                else if(day&&day.status==='submitted'&&day.students&&day.students[studentId]){
+                    const sr=day.students[studentId]; status=sr.status; amount=Number(sr.amountCentavos||0);
+                    label=sr.status==='contributed'?'Contributed':sr.status==='excused'?'Excused / Absent':'No Contribution';
+                } else if(cycle.type==='school'){ status='unrecorded'; label='Collection Not Recorded'; }
+                result.push({date:key,status,amount,label,day});
+            }
+            return result;
+        }
+
+        window.openCfStudentProfile = function(studentId) {
+            const student=currentStudentList.find(s=>s.id===studentId) || Object.values(cfDailyData).flatMap(d=>Object.values((d&&d.students)||{})).map(r=>({id:r.studentId,name:r.studentNameSnapshot})).find(s=>s.id===studentId);
+            if(!student) return showAppAlert('Student Not Found','The requested student could not be resolved.');
+            cfSelectedStudentId=studentId;
+            const st=cfComputeStudentStats(studentId);
+            document.getElementById('cfStudentProfileTitle').textContent='👥 Student Class Fund Profile — '+student.name;
+            const cards=[
+                ['Total Contributed',cfMoney(st.totalCentavos)],['Days Contributed',st.daysContributed],['No Contribution Days',st.noContributionDays],['Excused Days',st.excusedDays],
+                ['Eligible Collection Days',st.eligibleDays],['Participation Rate',st.eligibleDays?st.participationRate.toFixed(1)+'%':'—'],['Current Streak',st.currentStreak],['Longest Streak',st.longestStreak],
+                ['Average Contribution',cfMoney(st.averageContributionCentavos)],['Highest Single Contribution',cfMoney(st.highestContributionCentavos)],['Last Contribution',st.lastContribution?cfDateLabel(st.lastContribution.date)+' · '+cfMoney(st.lastContribution.amountCentavos):'—']
+            ];
+            let body=`<div class="cf-muted" style="margin-bottom:12px;">Student ID: ${cfEsc(studentId)} · Contributions are voluntary; this statement never calculates an amount owed.</div><div class="cf-grid">${cards.map(c=>`<div class="cf-stat-card"><label>${cfEsc(c[0])}</label><div class="cf-stat-value" style="font-size:16px;">${cfEsc(c[1])}</div></div>`).join('')}</div>`;
+            const cal=cfStudentCalendarDays(studentId);
+            body+=`<div class="cf-detail-section"><div class="cf-detail-title">Recent Contribution Calendar</div><div class="cf-calendar">${cal.map(c=>{
+                let cls=c.status==='contributed'?'cf-calendar-contributed':c.status==='no_contribution'?'cf-calendar-none':c.status==='excused'?'cf-calendar-excused':'cf-calendar-nocollection';
+                const icon=c.status==='contributed'?'✅':c.status==='no_contribution'?'❌':c.status==='excused'?'⚪':'—';
+                return `<button type="button" class="cf-calendar-cell ${cls}" onclick="openCfStudentCalendarDay('${studentId}','${c.date}')"><strong>${parseDateKey(c.date).getDate()}</strong>${icon}<br>${c.status==='contributed'?cfMoney(c.amount):cfEsc(c.label)}</button>`;
+            }).join('')}</div></div>`;
+            body+=`<div class="cf-detail-section"><div class="cf-detail-title">Date-by-Date Contribution History</div><div class="table-scroller"><table><thead><tr><th>Date</th><th>Status</th><th>Amount</th><th>Daily Collection Total</th><th>Verification</th></tr></thead><tbody>${st.days.length?st.days.slice().reverse().map(d=>`<tr><td>${cfEsc(cfDateLabel(d.date))}</td><td>${d.status==='contributed'?'✅ Contributed':d.status==='excused'?'⚪ Excused / Absent':'❌ No Contribution'}</td><td>${cfMoney(d.amountCentavos)}</td><td>${cfMoney(d.dailyTotalCentavos)}</td><td>${cfStatusBadge(d.dailyVerification)}</td></tr>`).join(''):'<tr><td colspan="5">No submitted contribution history yet.</td></tr>'}</tbody></table></div></div>`;
+            document.getElementById('cfStudentProfileBody').innerHTML=body;
+            document.getElementById('cfStudentProfileModal').classList.remove('hidden');
+        };
+
+        window.openCfStudentCalendarDay = function(studentId,dateStr) {
+            const day=cfDailyData[dateStr];
+            const sr=day&&day.students?day.students[studentId]:null;
+            const cycle=getCycleInfoForDate(parseDateKey(dateStr));
+            if(day&&day.status==='no_collection') return showAppAlert(cfDateLabel(dateStr,true),'— No Class Fund Collection\nReason: '+(day.noCollectionReason||'—'));
+            if(cycle.type==='noclass') return showAppAlert(cfDateLabel(dateStr,true),'— No Classes\nThis date does not affect Class Fund participation or streaks.');
+            if(!day||day.status!=='submitted') return showAppAlert(cfDateLabel(dateStr,true),'⚠️ Collection Not Recorded\nNo student non-contribution was automatically created for this date.');
+            if(!sr) return showAppAlert(cfDateLabel(dateStr,true),'No historical Class Funds student record is stored for this student on this date.');
+            const state=cfDailyDisplayState(day);
+            showAppAlert(cfDateLabel(dateStr,true),`Status: ${sr.status==='contributed'?'✅ Contributed':sr.status==='excused'?'⚪ Excused / Absent':'❌ No Contribution'}\nAmount: ${cfMoney(sr.amountCentavos)}\nDaily Collection Total: ${cfMoney(day.totalCentavos)}\nDaily Verification: ${state.label}`);
+        };
+
+        window.closeCfStudentProfileModal = function(){ document.getElementById('cfStudentProfileModal').classList.add('hidden'); };
+
+        function cfDownloadCSV(filename,headers,rows){
+            const esc=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+            const csv=[headers.map(esc).join(','),...rows.map(r=>r.map(esc).join(','))].join('\n');
+            const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+        }
+
+        window.exportCfIndividualStudentCSV = function(){
+            if(!cfSelectedStudentId) return;
+            const student=currentStudentList.find(s=>s.id===cfSelectedStudentId) || {id:cfSelectedStudentId,name:cfSelectedStudentId};
+            const st=cfComputeStudentStats(cfSelectedStudentId);
+            const headers=['Student','Student ID','Date','Status','Amount','Daily Collection Total','Daily Verification'];
+            const rows=st.days.map(d=>[student.name,student.id,d.date,d.status,(d.amountCentavos/100).toFixed(2),(d.dailyTotalCentavos/100).toFixed(2),d.dailyVerification.label]);
+            cfDownloadCSV('Class_Fund_Student_Statement_'+student.id+'.csv',headers,rows);
+        };
+
+        window.exportCfIndividualStudentPDF = function(){
+            if(!cfSelectedStudentId) return;
+            const student=currentStudentList.find(s=>s.id===cfSelectedStudentId) || {id:cfSelectedStudentId,name:cfSelectedStudentId};
+            const st=cfComputeStudentStats(cfSelectedStudentId);
+            const html=`<div class="cf-pdf-container"><h2 style="color:#004725;">AnimoLED — Student Class Fund Contribution Statement</h2><p>${CF_AY_LABEL}</p><hr><p><strong>Student:</strong> ${cfEsc(student.name)} (${cfEsc(student.id)})</p><p><strong>Total Contributed:</strong> ${cfMoney(st.totalCentavos)} &nbsp; <strong>Contribution Days:</strong> ${st.daysContributed} &nbsp; <strong>No Contribution Days:</strong> ${st.noContributionDays} &nbsp; <strong>Excused:</strong> ${st.excusedDays} &nbsp; <strong>Participation:</strong> ${st.eligibleDays?st.participationRate.toFixed(1)+'%':'—'}</p><p style="font-size:11px;">Informational statement only. Class Fund amounts are voluntary; no amount owed is calculated.</p><table style="width:100%;border-collapse:collapse;font-size:11px;"><thead><tr><th style="border:1px solid #ccc;padding:5px;">Date</th><th style="border:1px solid #ccc;padding:5px;">Status</th><th style="border:1px solid #ccc;padding:5px;">Amount</th></tr></thead><tbody>${st.days.map(d=>`<tr><td style="border:1px solid #ccc;padding:5px;">${cfEsc(cfDateLabel(d.date))}</td><td style="border:1px solid #ccc;padding:5px;">${cfEsc(d.status)}</td><td style="border:1px solid #ccc;padding:5px;">${cfMoney(d.amountCentavos)}</td></tr>`).join('')}</tbody></table></div>`;
+            const holder=document.createElement('div'); holder.innerHTML=html; document.body.appendChild(holder);
+            html2pdf().set({margin:.4,filename:'Class_Fund_Student_Statement_'+student.id+'.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2},jsPDF:{unit:'in',format:'letter',orientation:'portrait'}}).from(holder).save().then(()=>holder.remove()).catch(err=>{holder.remove();console.error(err);showAppAlert('PDF Export Error',err.message);});
+        };
+
+        function cfPendingVerificationItems(){
+            const items=[];
+            Object.entries(cfDailyData).forEach(([date,r])=>{
+                if(!r||r.status!=='submitted') return;
+                const st=cfGetVerificationState(r); if(st.count<2) items.push({kind:'daily',id:date,date,label:'Daily Collection',amount:Number(r.totalCentavos||0),state:st,record:r});
+            });
+            Object.entries(cfTransactions).forEach(([id,tx])=>{
+                if(!tx||tx.status!=='active'||!['expense','adjustment'].includes(tx.type)) return;
+                const st=cfGetVerificationState(tx); if(st.count<2) items.push({kind:'transaction',id,date:tx.effectiveDate,label:cfTxTypeLabel(tx),amount:Number(tx.amountCentavos||0),state:st,record:tx});
+            });
+            items.sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+            return items;
+        }
+
+        function cfUserNeedsItem(item){
+            if(cfCanPresidentVerify()) return !(item.record.verification&&item.record.verification.president&&item.record.verification.president.verified);
+            if(cfCanVpVerify()) return !(item.record.verification&&item.record.verification.vicePresident&&item.record.verification.vicePresident.verified);
+            return true;
+        }
+
+        function cfRenderTodayPanel(){
+            const key=formatDateKey(new Date()), el=document.getElementById('cfTodayStatusPanel');
+            const eligibility=cfGetDateEligibility(key), rec=cfDailyData[key];
+            if(!eligibility.eligible&&!rec){ el.innerHTML=`<strong>${cfEsc(cfDateLabel(key,true))}</strong><br>— ${cfEsc(eligibility.reason)}`; return; }
+            if(!rec){ el.innerHTML=`<strong>${cfEsc(cfDateLabel(key,true))}</strong><div class="cf-warning" style="margin-top:8px;">⚠️ Today's Collection Not Recorded</div>`; return; }
+            if(rec.status==='no_collection'){ el.innerHTML=`<strong>${cfEsc(cfDateLabel(key,true))}</strong><div style="margin-top:8px;">${cfStatusBadge(cfDailyDisplayState(rec))}</div><div class="cf-muted" style="margin-top:5px;">${cfEsc(rec.noCollectionReason||'')}</div>`;return;}
+            const state=cfDailyDisplayState(rec);
+            el.innerHTML=`<strong>${cfEsc(cfDateLabel(key,true))}</strong><div style="margin:8px 0;">${cfStatusBadge(state)}</div><div class="detail-info-row"><span class="detail-info-label">Contributors</span><span class="detail-info-value">${Number(rec.contributorCount||0)}</span></div><div class="detail-info-row"><span class="detail-info-label">No Contribution</span><span class="detail-info-value">${Number(rec.noContributionCount||0)}</span></div><div class="detail-info-row"><span class="detail-info-label">Excused</span><span class="detail-info-value">${Number(rec.excusedCount||0)}</span></div><div class="detail-info-row"><span class="detail-info-label">Collected</span><span class="detail-info-value">${cfMoney(rec.totalCentavos)}</span></div><div style="margin-top:10px;"><button class="action-pill-btn action-pill-view" onclick="openCfDailyDetail('${key}')">View Details</button></div>`;
+        }
+
+        function cfRenderOverdue(){
+            const el=document.getElementById('cfOverduePanel');
+            const today=formatDateKey(new Date());
+            const dates=Object.keys(cycleCalendarData).filter(k=>k<today&&k>='2026-07-01'&&k<='2027-04-30'&&cycleCalendarData[k]&&cycleCalendarData[k].type==='school'&&!cfDailyData[k]).sort();
+            if(!dates.length){el.classList.add('hidden');el.innerHTML='';return;}
+            el.classList.remove('hidden');
+            el.innerHTML=`<strong>${dates.length} Collection Day${dates.length===1?'':'s'} Need Attention</strong><br>These eligible school dates have neither a Class Fund sheet nor a No Collection record. Students were not automatically marked No Contribution.<div class="cf-muted" style="margin-top:5px;">${dates.slice(0,8).map(cfDateLabel).join(' · ')}${dates.length>8?' · …':''}</div>`;
+        }
+
+        function cfRenderVerificationQueue(){
+            const el=document.getElementById('cfVerificationQueue');
+            const items=cfPendingVerificationItems().filter(cfUserNeedsItem);
+            el.innerHTML=items.length?items.slice(0,12).map(it=>`<div class="cf-queue-item"><div class="cf-queue-main"><div class="cf-queue-title">${cfEsc(it.label)} · ${cfMoney(it.amount)}</div><div class="cf-queue-sub">${cfEsc(cfDateLabel(it.date))} · ${cfEsc(it.state.label)}</div></div><button class="action-pill-btn action-pill-view" onclick="${it.kind==='daily'?`openCfDailyDetail('${cfEsc(it.id)}')`:`openCfTransactionDetail('${cfEsc(it.id)}')`}">Review</button></div>`).join(''):'<div class="cf-muted">No verification records currently require your attention.</div>';
+        }
+
+        function cfRenderRecentActivity(){
+            const el=document.getElementById('cfRecentActivity');
+            const rows=cfGetLedgerRows().slice().reverse().slice(0,8);
+            el.innerHTML=rows.length?rows.map(tx=>{const signed=cfTxSignedAmount(tx),state=cfTransactionVerificationState(tx);return `<div class="cf-activity-item"><div><div class="${signed>=0?'cf-money-positive':'cf-money-negative'}">${signed>=0?'+':'−'} ${cfMoney(Math.abs(signed))}</div><div class="cf-queue-title">${cfEsc(cfTxTypeLabel(tx))}</div><div class="cf-queue-sub">${cfEsc(cfDateLabel(tx.effectiveDate))} · ${cfEsc(state.label)}</div></div><button class="action-pill-btn action-pill-view" onclick="openCfTransactionDetail('${cfEsc(tx.id)}')">View</button></div>`}).join(''):'<div class="cf-muted">No Class Fund financial activity yet.</div>';
+        }
+
+        function cfRenderBalanceChart(){
+            const canvas=document.getElementById('cfBalanceChart'); if(!canvas||typeof Chart==='undefined') return;
+            if(cfBalanceChart){cfBalanceChart.destroy();cfBalanceChart=null;}
+            const rows=cfGetLedgerRows().filter(tx=>tx.status==='active');
+            cfBalanceChart=new Chart(canvas.getContext('2d'),{type:'line',data:{labels:rows.map(tx=>tx.effectiveDate),datasets:[{label:'Available Fund',data:rows.map(tx=>tx.runningBalanceCentavos/100),tension:.2,fill:false}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{ticks:{callback:v=>'₱'+Number(v).toLocaleString('en-PH')}}},plugins:{legend:{display:false}}}});
+        }
+
+        window.renderCfDashboard=function(){
+            const totals=cfLedgerTotals(), pending=cfPendingVerificationItems();
+            document.getElementById('cfDashAvailable').textContent=cfMoney(totals.available);
+            document.getElementById('cfDashContributions').textContent=cfMoney(totals.contributions);
+            document.getElementById('cfDashExpenses').textContent=cfMoney(totals.expenses);
+            document.getElementById('cfDashPending').textContent=pending.length;
+            const today=cfDailyData[formatDateKey(new Date())];
+            if(today&&today.status==='submitted'){
+                const elig=Number(today.contributorCount||0)+Number(today.noContributionCount||0);
+                document.getElementById('cfDashTodayContributors').textContent=Number(today.contributorCount||0)+' / '+elig;
+                document.getElementById('cfDashTodayRate').textContent=elig?(Number(today.contributorCount||0)/elig*100).toFixed(1)+'%':'—';
+            }else{document.getElementById('cfDashTodayContributors').textContent='—';document.getElementById('cfDashTodayRate').textContent='—';}
+            const days=cfSubmittedDailyRecords();
+            const rates=days.map(d=>{const elig=Number(d.contributorCount||0)+Number(d.noContributionCount||0);return elig?Number(d.contributorCount||0)/elig:null}).filter(v=>v!==null);
+            document.getElementById('cfDashAvgParticipation').textContent=rates.length?(rates.reduce((a,b)=>a+b,0)/rates.length*100).toFixed(1)+'%':'—';
+            const perfect=currentStudentList.filter(s=>{const st=cfComputeStudentStats(s.id);return st.eligibleDays>0&&st.noContributionDays===0;}).length;
+            document.getElementById('cfDashPerfect').textContent=perfect;
+            cfRenderTodayPanel();cfRenderOverdue();cfRenderVerificationQueue();cfRenderRecentActivity();cfRenderBalanceChart();cfApplyPermissions();
+        };
+
+        function cfReportFilters(){
+            return {
+                search:(document.getElementById('cfReportSearch').value||'').trim().toLowerCase(),
+                from:document.getElementById('cfReportFrom').value,
+                to:document.getElementById('cfReportTo').value,
+                month:document.getElementById('cfReportMonth').value,
+                student:document.getElementById('cfReportStudent').value,
+                type:document.getElementById('cfReportType').value,
+                category:document.getElementById('cfReportCategory').value,
+                verification:document.getElementById('cfReportVerification').value,
+                active:document.getElementById('cfReportActive').value,
+                sort:document.getElementById('cfReportSort').value
+            };
+        }
+
+        function cfDateMatchesFilters(date,f){ if(f.from&&date<f.from)return false;if(f.to&&date>f.to)return false;if(f.month&&!date.startsWith(f.month))return false;return true; }
+        function cfVerificationMatches(stateKey,filter){ if(!filter)return true;if(filter==='reverification')return stateKey==='reverification';return stateKey===filter; }
+
+        function cfReportTextMatches(search, values){
+            if(!search)return true;
+            return (values||[]).some(value=>String(value==null?'':value).toLowerCase().includes(search));
+        }
+
+        function cfReportVerificationSearchValues(record){
+            const verification=(record&&record.verification)||{};
+            const p=verification.president||{},v=verification.vicePresident||{};
+            return [p.verifiedByName,p.designation,p.verifiedAt,p.overrideFor,p.overrideReason,v.verifiedByName,v.designation,v.verifiedAt,v.overrideFor,v.overrideReason];
+        }
+
+        function cfTransactionMatchesReportSearch(tx,search){
+            if(!search)return true;
+            return cfReportTextMatches(search,[
+                tx.id,tx.transactionId,tx.effectiveDate,tx.type,cfTxTypeLabel(tx),tx.description,tx.reason,
+                tx.category,tx.customCategory,tx.paidTo,tx.referenceNumber,tx.notes,tx.createdByName,
+                tx.lastModifiedByName,...cfReportVerificationSearchValues(tx)
+            ]);
+        }
+
+        function cfDailyMatchesReportSearch(date,record,search){
+            if(!search)return true;
+            const studentValues=[];
+            Object.values((record&&record.students)||{}).forEach(student=>studentValues.push(student.studentNameSnapshot,student.studentId));
+            return cfReportTextMatches(search,[
+                date,record&&record.submittedByName,record&&record.submittedByDesignation,
+                record&&record.discrepancyReason,record&&record.noCollectionReason,
+                ...cfReportVerificationSearchValues(record),...studentValues
+            ]);
+        }
+
+        function cfStudentMatchesReportSearch(student,search){
+            return cfReportTextMatches(search,[student&&student.name,student&&student.id]);
+        }
+
+        function cfAuditDateKey(a){
+            return (a&&a.date)||(a&&a.effectiveDate)||((a&&a.timestampMs)?formatDateKey(new Date(Number(a.timestampMs))):'');
+        }
+
+        function cfAuditMatchesReportSearch(a,search){
+            return cfReportTextMatches(search,[a&&a.actionType,a&&a.affectedRecordId,a&&a.displayNameSnapshot,a&&a.designationSnapshot,a&&a.summary,a&&a.reason]);
+        }
+
+        function cfCompareTransactionsChronological(a,b){
+            const da=a.effectiveDate||'',dbb=b.effectiveDate||'';
+            if(da!==dbb)return da.localeCompare(dbb);
+            const ea=Number(a.effectiveTs||0),eb=Number(b.effectiveTs||0);if(ea!==eb)return ea-eb;
+            const ca=Number(a.createdAtMs||0),cb=Number(b.createdAtMs||0);if(ca!==cb)return ca-cb;
+            return String(a.id||a.transactionId||'').localeCompare(String(b.id||b.transactionId||''));
+        }
+
+        function cfSortReportTransactions(rows,f){
+            rows=rows.slice();
+            if(f.sort==='newest')rows.sort((a,b)=>-cfCompareTransactionsChronological(a,b));
+            else if(f.sort==='oldest')rows.sort(cfCompareTransactionsChronological);
+            else if(f.sort==='high')rows.sort((a,b)=>Number(b.amountCentavos||0)-Number(a.amountCentavos||0)||cfCompareTransactionsChronological(a,b));
+            else if(f.sort==='low')rows.sort((a,b)=>Number(a.amountCentavos||0)-Number(b.amountCentavos||0)||cfCompareTransactionsChronological(a,b));
+            return rows;
+        }
+
+        function cfFilterTransactionsForReport(f,options){
+            options=options||{};
+            let rows=cfGetLedgerRows().filter(tx=>cfDateMatchesFilters(tx.effectiveDate||'',f));
+            if(options.forceType)rows=rows.filter(tx=>tx.type===options.forceType);
+            else if(!options.ignoreType&&f.type)rows=rows.filter(tx=>tx.type===f.type);
+            if(!options.ignoreCategory&&f.category)rows=rows.filter(tx=>tx.category===f.category);
+            if(!options.ignoreActive&&f.active)rows=rows.filter(tx=>f.active==='active'?tx.status==='active':tx.status==='voided');
+            if(!options.ignoreVerification&&f.verification)rows=rows.filter(tx=>cfVerificationMatches(cfTransactionVerificationState(tx).key,f.verification));
+            if(f.search)rows=rows.filter(tx=>cfTransactionMatchesReportSearch(tx,f.search));
+            return cfSortReportTransactions(rows,f);
+        }
+
+        function cfFilteredLedgerForReports(){
+            return cfFilterTransactionsForReport(cfReportFilters());
+        }
+
+        function cfBuildMonthlySummary(rows){
+            const map={}; rows.forEach(tx=>{if(tx.status!=='active')return;const month=(tx.effectiveDate||'').slice(0,7);if(!month)return;map[month]=map[month]||{contributions:0,expenses:0,net:0};const signed=cfTxSignedAmount(tx);if(tx.type==='daily_contribution')map[month].contributions+=Number(tx.amountCentavos||0);if(tx.type==='expense')map[month].expenses+=Number(tx.amountCentavos||0);map[month].net+=signed;}); return map;
+        }
+
+        function cfFinancialSummaryFromRows(rows){
+            const summary={opening:0,contributions:0,expenses:0,positiveAdjustments:0,negativeAdjustments:0,netAdjustments:0,netMovement:0,available:0};
+            rows.forEach(tx=>{
+                if(tx.status!=='active')return;
+                const amt=Number(tx.amountCentavos||0),signed=cfTxSignedAmount(tx);
+                if(tx.type==='opening_balance')summary.opening+=amt;
+                if(tx.type==='daily_contribution')summary.contributions+=amt;
+                if(tx.type==='expense')summary.expenses+=amt;
+                if(tx.type==='adjustment'&&tx.direction==='in')summary.positiveAdjustments+=amt;
+                if(tx.type==='adjustment'&&tx.direction==='out')summary.negativeAdjustments+=amt;
+                summary.available+=signed;
+            });
+            summary.netAdjustments=summary.positiveAdjustments-summary.negativeAdjustments;
+            summary.netMovement=summary.contributions+summary.positiveAdjustments-summary.expenses-summary.negativeAdjustments;
+            return summary;
+        }
+
+        function cfFinancialStatementRows(rows){
+            let running=0;
+            return rows.slice().sort(cfCompareTransactionsChronological).map(tx=>{
+                if(tx.status==='active')running+=cfTxSignedAmount(tx);
+                return Object.assign({},tx,{reportRunningBalanceCentavos:running});
+            });
+        }
+
+        function cfSortDailyReportRows(rows,f){
+            rows=rows.slice();
+            if(f.sort==='oldest')rows.sort((a,b)=>a.dateKey.localeCompare(b.dateKey));
+            else if(f.sort==='high')rows.sort((a,b)=>Number(b.totalCentavos||0)-Number(a.totalCentavos||0)||a.dateKey.localeCompare(b.dateKey));
+            else if(f.sort==='low')rows.sort((a,b)=>Number(a.totalCentavos||0)-Number(b.totalCentavos||0)||a.dateKey.localeCompare(b.dateKey));
+            else rows.sort((a,b)=>b.dateKey.localeCompare(a.dateKey));
+            return rows;
+        }
+
+        function cfBuildVerificationItems(f){
+            let items=[];
+            Object.entries(cfDailyData).forEach(([date,record])=>{
+                if(!record||record.status!=='submitted'||!cfDateMatchesFilters(date,f))return;
+                if(f.type&&f.type!=='daily_contribution')return;
+                const state=cfGetVerificationState(record);
+                if(f.verification&&!cfVerificationMatches(state.key,f.verification))return;
+                if(f.search&&!cfDailyMatchesReportSearch(date,record,f.search))return;
+                items.push({id:date,date,type:'Daily Collection',typeKey:'daily_contribution',amountCentavos:Number(record.totalCentavos||0),record,state});
+            });
+            Object.entries(cfTransactions).forEach(([id,tx])=>{
+                if(!tx||tx.status!=='active'||!['expense','adjustment'].includes(tx.type)||!cfDateMatchesFilters(tx.effectiveDate||'',f))return;
+                if(f.type&&tx.type!==f.type)return;
+                const state=cfGetVerificationState(tx);
+                if(f.verification&&!cfVerificationMatches(state.key,f.verification))return;
+                if(f.search&&!cfTransactionMatchesReportSearch(Object.assign({id},tx),f.search))return;
+                items.push({id,date:tx.effectiveDate||'',type:cfTxTypeLabel(tx),typeKey:tx.type,amountCentavos:Number(tx.amountCentavos||0),record:tx,state});
+            });
+            if(f.sort==='oldest')items.sort((a,b)=>(a.date||'').localeCompare(b.date||'')||String(a.id).localeCompare(String(b.id)));
+            else if(f.sort==='high')items.sort((a,b)=>b.amountCentavos-a.amountCentavos||(a.date||'').localeCompare(b.date||''));
+            else if(f.sort==='low')items.sort((a,b)=>a.amountCentavos-b.amountCentavos||(a.date||'').localeCompare(b.date||''));
+            else items.sort((a,b)=>(b.date||'').localeCompare(a.date||'')||String(b.id).localeCompare(String(a.id)));
+            return items;
+        }
+
+        function cfBuildAuditReportRows(f){
+            let rows=Object.values(cfAuditData).filter(a=>a&&cfDateMatchesFilters(cfAuditDateKey(a),f));
+            if(f.search)rows=rows.filter(a=>cfAuditMatchesReportSearch(a,f.search));
+            if(f.sort==='oldest')rows.sort((a,b)=>Number(a.timestampMs||0)-Number(b.timestampMs||0));
+            else rows.sort((a,b)=>Number(b.timestampMs||0)-Number(a.timestampMs||0));
+            return rows;
+        }
+
+        function cfGetFilteredReportData(filters){
+            const f=filters||cfReportFilters();
+            const ledger=cfFilterTransactionsForReport(f);
+            const expenses=cfFilterTransactionsForReport(f,{forceType:'expense',ignoreType:true});
+            let daily=cfSubmittedDailyRecords().filter(d=>cfDateMatchesFilters(d.dateKey,f));
+            if(f.student)daily=daily.filter(d=>d.students&&d.students[f.student]);
+            if(f.verification)daily=daily.filter(d=>cfVerificationMatches(cfGetVerificationState(d).key,f.verification));
+            if(f.search)daily=daily.filter(d=>cfDailyMatchesReportSearch(d.dateKey,d,f.search));
+            daily=cfSortDailyReportRows(daily,f);
+            let students=f.student?currentStudentList.filter(s=>s.id===f.student):currentStudentList.slice();
+            if(f.search)students=students.filter(s=>cfStudentMatchesReportSearch(s,f.search));
+            const studentSummary=students.map(student=>({student,stats:cfComputeStudentStats(student.id)}));
+            const verification=cfBuildVerificationItems(f);
+            const audits=cfBuildAuditReportRows(f);
+            const financialSummary=cfFinancialSummaryFromRows(ledger);
+            const financialRows=cfFinancialStatementRows(ledger);
+            const expenseByCategory={};
+            expenses.filter(tx=>tx.status==='active').forEach(tx=>expenseByCategory[tx.category||'Other']=(expenseByCategory[tx.category||'Other']||0)+Number(tx.amountCentavos||0));
+            return {filters:f,ledger,expenses,daily,studentSummary,verification,audits,financialSummary,financialRows,expenseByCategory,monthly:cfBuildMonthlySummary(ledger)};
+        }
+
+        function cfVerificationSlotReport(record,slot){
+            const value=record&&record.verification&&record.verification[slot];
+            if(!value||!value.verified)return {name:'Pending',date:'',override:false};
+            return {name:value.verifiedByName||value.designation||'Verified',date:value.verifiedAt||'',override:!!value.override};
+        }
+
+        function cfReportTxDescription(tx){
+            return tx.description||tx.reason||(tx.type==='opening_balance'?'Opening Balance':'');
+        }
+
+        function cfBuildFinancialReportSection(data){
+            const s=data.financialSummary;
+            const summary=`<div class="cf-grid"><div class="cf-stat-card"><label>Opening Balance</label><div class="cf-stat-value">${cfMoney(s.opening)}</div></div><div class="cf-stat-card"><label>Total Contributions</label><div class="cf-stat-value">${cfMoney(s.contributions)}</div></div><div class="cf-stat-card"><label>Total Expenses</label><div class="cf-stat-value">${cfMoney(s.expenses)}</div></div><div class="cf-stat-card"><label>Positive Adjustments</label><div class="cf-stat-value">${cfMoney(s.positiveAdjustments)}</div></div><div class="cf-stat-card"><label>Negative Adjustments</label><div class="cf-stat-value">${cfMoney(s.negativeAdjustments)}</div></div><div class="cf-stat-card"><label>Net Adjustments</label><div class="cf-stat-value">${cfMoney(s.netAdjustments)}</div></div><div class="cf-stat-card"><label>Net Movement</label><div class="cf-stat-value">${cfMoney(s.netMovement)}</div></div><div class="cf-stat-card"><label>Available Class Fund</label><div class="cf-stat-value">${cfMoney(s.available)}</div></div></div>`;
+            const body=data.financialRows.length?data.financialRows.map(tx=>{const signed=cfTxSignedAmount(tx);return `<tr><td>${cfEsc(tx.effectiveDate||'')}</td><td>${cfEsc(cfTxTypeLabel(tx))}</td><td>${cfEsc(cfReportTxDescription(tx))}</td><td>${signed>0?cfMoney(signed):'—'}</td><td>${signed<0?cfMoney(Math.abs(signed)):'—'}</td><td>${cfMoney(tx.reportRunningBalanceCentavos)}</td><td>${cfEsc(tx.status==='voided'?'VOIDED':'Active')}</td></tr>`;}).join(''):'<tr><td colspan="7">No matching ledger transactions.</td></tr>';
+            return `<div class="cf-panel"><h3 class="cf-panel-title">Overall Financial Summary</h3>${summary}<div class="table-scroller" style="margin-top:14px;"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Money In</th><th>Money Out</th><th>Running Balance</th><th>Status</th></tr></thead><tbody>${body}</tbody></table></div></div>`;
+        }
+
+        function cfBuildLedgerReportSection(data){
+            const body=data.ledger.length?data.ledger.map(tx=>`<tr><td>${cfEsc(tx.id||tx.transactionId||'')}</td><td>${cfEsc(tx.effectiveDate||'')}</td><td>${cfEsc(cfTxTypeLabel(tx))}</td><td>${cfEsc(cfReportTxDescription(tx))}</td><td>${cfEsc(tx.direction||'')}</td><td>${cfMoney(tx.amountCentavos)}</td><td>${cfMoney(tx.runningBalanceCentavos)}</td><td>${cfEsc(tx.status||'')}</td><td>${cfEsc(cfTransactionVerificationState(tx).label)}</td></tr>`).join(''):'<tr><td colspan="9">No matching ledger transactions.</td></tr>';
+            return `<div class="cf-panel"><h3 class="cf-panel-title">Complete Ledger</h3><div class="table-scroller"><table><thead><tr><th>Transaction ID</th><th>Date</th><th>Type</th><th>Description</th><th>Direction</th><th>Amount</th><th>Running Balance</th><th>Status</th><th>Verification</th></tr></thead><tbody>${body}</tbody></table></div></div>`;
+        }
+
+        function cfBuildDailyReportSection(data){
+            const body=data.daily.length?data.daily.map(d=>`<tr><td>${cfEsc(d.dateKey)}</td><td>${Number(d.contributorCount||0)}</td><td>${Number(d.noContributionCount||0)}</td><td>${Number(d.excusedCount||0)}</td><td>${cfMoney(d.totalCentavos)}</td><td>${cfMoney(d.cashCountedCentavos)}</td><td>${cfMoney(d.differenceCentavos)}</td><td>${cfEsc(d.status||'')}</td><td>${cfEsc(cfDailyDisplayState(d).label)}</td></tr>`).join(''):'<tr><td colspan="9">No matching daily collections.</td></tr>';
+            return `<div class="cf-panel"><h3 class="cf-panel-title">Daily Collection Summary</h3><div class="table-scroller"><table><thead><tr><th>Date</th><th>Contributors</th><th>No Contribution</th><th>Excused</th><th>Total</th><th>Cash Counted</th><th>Difference</th><th>Record Status</th><th>Verification</th></tr></thead><tbody>${body}</tbody></table></div></div>`;
+        }
+
+        function cfBuildStudentReportSection(data){
+            const body=data.studentSummary.length?data.studentSummary.map(item=>{const s=item.student,st=item.stats;return `<tr><td>${cfEsc(s.name)}</td><td>${cfEsc(s.id)}</td><td>${cfMoney(st.totalCentavos)}</td><td>${st.daysContributed}</td><td>${st.noContributionDays}</td><td>${st.excusedDays}</td><td>${st.eligibleDays}</td><td>${st.eligibleDays?st.participationRate.toFixed(1)+'%':'—'}</td><td>${st.currentStreak}</td><td>${st.longestStreak}</td><td>${cfMoney(st.averageContributionCentavos)}</td><td>${cfMoney(st.highestContributionCentavos)}</td><td>${st.lastContribution?cfEsc(st.lastContribution.date)+' · '+cfMoney(st.lastContribution.amountCentavos):'—'}</td></tr>`;}).join(''):'<tr><td colspan="13">No matching students.</td></tr>';
+            return `<div class="cf-panel"><h3 class="cf-panel-title">Student Contribution Summary</h3><div class="table-scroller"><table><thead><tr><th>Student Name</th><th>Student ID</th><th>Total Contributed</th><th>Contribution Days</th><th>No Contribution Days</th><th>Excused Days</th><th>Eligible Days</th><th>Participation Rate</th><th>Current Streak</th><th>Longest Streak</th><th>Average Contribution</th><th>Highest Single Contribution</th><th>Last Contribution</th></tr></thead><tbody>${body}</tbody></table></div></div>`;
+        }
+
+        function cfBuildExpenseReportSection(data){
+            const body=data.expenses.length?data.expenses.map(tx=>`<tr><td>${cfEsc(tx.id||tx.transactionId||'')}</td><td>${cfEsc(tx.effectiveDate||'')}</td><td>${cfEsc(tx.category||'')}</td><td>${cfEsc(tx.description||'')}</td><td>${cfEsc(tx.paidTo||'')}</td><td>${cfEsc(tx.referenceNumber||'')}</td><td>${cfEsc(tx.notes||'')}</td><td>${cfMoney(tx.amountCentavos)}</td><td>${cfEsc(tx.status||'')}</td><td>${cfEsc(cfTransactionVerificationState(tx).label)}</td></tr>`).join(''):'<tr><td colspan="10">No matching expenses.</td></tr>';
+            return `<div class="cf-panel"><h3 class="cf-panel-title">Expense Report</h3><div class="table-scroller"><table><thead><tr><th>Transaction ID</th><th>Date</th><th>Category</th><th>Description</th><th>Paid To</th><th>Receipt / Reference</th><th>Notes</th><th>Amount</th><th>Status</th><th>Verification</th></tr></thead><tbody>${body}</tbody></table></div></div>`;
+        }
+
+        function cfBuildVerificationReportSection(data){
+            const body=data.verification.length?data.verification.map(item=>{const p=cfVerificationSlotReport(item.record,'president'),v=cfVerificationSlotReport(item.record,'vicePresident');const override=[p.override?'President':'',v.override?'Vice President':''].filter(Boolean).join(', ');return `<tr><td>${cfEsc(item.id)}</td><td>${cfEsc(item.date)}</td><td>${cfEsc(item.type)}</td><td>${cfMoney(item.amountCentavos)}</td><td>${cfEsc(item.state.label)}</td><td>${cfEsc(p.name)}</td><td>${cfEsc(p.date)}</td><td>${cfEsc(v.name)}</td><td>${cfEsc(v.date)}</td><td>${override?'Administrative Override — '+cfEsc(override):'—'}</td></tr>`;}).join(''):'<tr><td colspan="10">No matching verification records.</td></tr>';
+            return `<div class="cf-panel"><h3 class="cf-panel-title">Verification Report</h3><div class="table-scroller"><table><thead><tr><th>Record ID</th><th>Date</th><th>Record Type</th><th>Amount</th><th>Verification Status</th><th>President</th><th>President Date</th><th>Vice President</th><th>Vice President Date</th><th>Admin Override</th></tr></thead><tbody>${body}</tbody></table></div></div>`;
+        }
+
+        function cfBuildAuditReportSection(data){
+            const body=data.audits.length?data.audits.slice(0,200).map(a=>`<tr><td>${cfEsc(a.timestamp||'')}</td><td>${cfEsc(a.actionType||'')}</td><td>${cfEsc(a.affectedRecordId||'')}</td><td>${cfEsc(a.displayNameSnapshot||'')}</td><td>${cfEsc(a.designationSnapshot||'')}</td><td>${cfEsc(a.summary||'')}</td><td>${cfEsc(a.reason||'')}</td></tr>`).join(''):'<tr><td colspan="7">No matching audit entries.</td></tr>';
+            return `<div class="cf-panel"><h3 class="cf-panel-title">Audit History</h3><div class="table-scroller"><table><thead><tr><th>Timestamp</th><th>Action Type</th><th>Affected Record</th><th>User</th><th>Designation</th><th>Summary</th><th>Reason</th></tr></thead><tbody>${body}</tbody></table></div></div>`;
+        }
+
+        function cfBuildExpenseCategorySection(data){
+            const entries=Object.entries(data.expenseByCategory).sort((a,b)=>b[1]-a[1]);
+            return `<div class="cf-panel"><h3 class="cf-panel-title">Expense by Category</h3>${entries.length?entries.map(([cat,amt])=>`<div class="detail-info-row"><span>${cfEsc(cat)}</span><strong>${cfMoney(amt)}</strong></div>`).join(''):'<div class="cf-muted">No matching active expenses.</div>'}</div>`;
+        }
+
+        function cfBuildMonthlyReportSection(data){
+            const body=Object.entries(data.monthly).sort().map(([m,v])=>`<tr><td>${cfEsc(m)}</td><td>${cfMoney(v.contributions)}</td><td>${cfMoney(v.expenses)}</td><td>${v.net>=0?'+':'−'}${cfMoney(Math.abs(v.net))}</td></tr>`).join('')||'<tr><td colspan="4">No monthly data.</td></tr>';
+            return `<div class="cf-panel"><h3 class="cf-panel-title">Monthly Financial Summary</h3><div class="table-scroller"><table><thead><tr><th>Month</th><th>Contributions</th><th>Expenses</th><th>Net Movement</th></tr></thead><tbody>${body}</tbody></table></div></div>`;
+        }
+
+        function cfBuildReportSection(type,data){
+            if(type==='financial')return cfBuildFinancialReportSection(data);
+            if(type==='ledger')return cfBuildLedgerReportSection(data);
+            if(type==='daily')return cfBuildDailyReportSection(data);
+            if(type==='students')return cfBuildStudentReportSection(data);
+            if(type==='expenses')return cfBuildExpenseReportSection(data);
+            if(type==='verification')return cfBuildVerificationReportSection(data);
+            if(type==='audit')return cfBuildAuditReportSection(data);
+            return '<div class="cf-panel"><div class="cf-muted">Unknown report type.</div></div>';
+        }
+
+        window.renderCfReports=function(){
+            const data=cfGetFilteredReportData();
+            document.getElementById('cfReportContent').innerHTML=
+                cfBuildFinancialReportSection(data)+
+                cfBuildDailyReportSection(data)+
+                cfBuildStudentReportSection(data)+
+                cfBuildExpenseReportSection(data)+
+                cfBuildExpenseCategorySection(data)+
+                cfBuildMonthlyReportSection(data)+
+                cfBuildVerificationReportSection(data)+
+                cfBuildAuditReportSection(data);
+        };
+
+        function cfReportTypeTitle(type){
+            const titles={financial:'Financial Statement',ledger:'Complete Ledger',daily:'Daily Collections',students:'Student Contribution Summary',expenses:'Expense Report',verification:'Verification Report',audit:'Audit History'};
+            return titles[type]||'Class Funds Report';
+        }
+
+        function cfReportPeriodLabel(f){
+            const nice=date=>date?parseDateKey(date).toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'';
+            if(f.from&&f.to)return nice(f.from)+' to '+nice(f.to);
+            if(f.from)return 'From '+nice(f.from);
+            if(f.to)return 'Through '+nice(f.to);
+            if(f.month){const parts=f.month.split('-').map(Number);return new Date(parts[0],parts[1]-1,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});}
+            return 'All Available Records';
+        }
+
+        function cfBuildCsvReport(type,data){
+            const moneyValue=c=>Number(c||0)/100;
+            if(type==='financial'){
+                const s=data.financialSummary;
+                const headers=['Section','Metric / Date','Value / Type','Description','Money In PHP','Money Out PHP','Running Balance PHP','Status','Verification'];
+                const rows=[
+                    ['Summary','Academic Year',CF_AY_LABEL,'','','','','',''],
+                    ['Summary','Selected Date Range',cfReportPeriodLabel(data.filters),'','','','','',''],
+                    ['Summary','Opening Balance',moneyValue(s.opening).toFixed(2),'','','','','',''],
+                    ['Summary','Total Contributions',moneyValue(s.contributions).toFixed(2),'','','','','',''],
+                    ['Summary','Total Expenses',moneyValue(s.expenses).toFixed(2),'','','','','',''],
+                    ['Summary','Positive Adjustments',moneyValue(s.positiveAdjustments).toFixed(2),'','','','','',''],
+                    ['Summary','Negative Adjustments',moneyValue(s.negativeAdjustments).toFixed(2),'','','','','',''],
+                    ['Summary','Net Adjustments',moneyValue(s.netAdjustments).toFixed(2),'','','','','',''],
+                    ['Summary','Net Movement',moneyValue(s.netMovement).toFixed(2),'','','','','',''],
+                    ['Summary','Available Class Fund',moneyValue(s.available).toFixed(2),'','','','','','']
+                ];
+                data.financialRows.forEach(tx=>{const signed=cfTxSignedAmount(tx);rows.push(['Transaction',tx.effectiveDate||'',cfTxTypeLabel(tx),cfReportTxDescription(tx),signed>0?moneyValue(signed).toFixed(2):'',signed<0?moneyValue(Math.abs(signed)).toFixed(2):'',moneyValue(tx.reportRunningBalanceCentavos).toFixed(2),tx.status||'',cfTransactionVerificationState(tx).label]);});
+                return {headers,rows};
+            }
+            if(type==='ledger')return {headers:['Transaction ID','Date','Type','Description','Direction','Amount PHP','Running Balance PHP','Transaction Status','Verification Status'],rows:data.ledger.map(tx=>[tx.id||tx.transactionId||'',tx.effectiveDate||'',cfTxTypeLabel(tx),cfReportTxDescription(tx),tx.direction||'',moneyValue(tx.amountCentavos).toFixed(2),moneyValue(tx.runningBalanceCentavos).toFixed(2),tx.status||'',cfTransactionVerificationState(tx).label])};
+            if(type==='daily')return {headers:['Date','Contributors','No Contribution','Excused','Total PHP','Cash Counted PHP','Difference PHP','Record Status','Verification Status'],rows:data.daily.map(d=>[d.dateKey,d.contributorCount||0,d.noContributionCount||0,d.excusedCount||0,moneyValue(d.totalCentavos).toFixed(2),moneyValue(d.cashCountedCentavos).toFixed(2),moneyValue(d.differenceCentavos).toFixed(2),d.status||'',cfDailyDisplayState(d).label])};
+            if(type==='students')return {headers:['Student Name','Student ID','Total Contributed PHP','Contribution Days','No Contribution Days','Excused Days','Eligible Days','Participation Rate','Current Streak','Longest Streak','Average Contribution PHP','Highest Single Contribution PHP','Last Contribution'],rows:data.studentSummary.map(item=>{const s=item.student,st=item.stats;return[s.name,s.id,moneyValue(st.totalCentavos).toFixed(2),st.daysContributed,st.noContributionDays,st.excusedDays,st.eligibleDays,st.eligibleDays?st.participationRate.toFixed(2)+'%':'',st.currentStreak,st.longestStreak,moneyValue(st.averageContributionCentavos).toFixed(2),moneyValue(st.highestContributionCentavos).toFixed(2),st.lastContribution?st.lastContribution.date+' '+moneyValue(st.lastContribution.amountCentavos).toFixed(2):''];})};
+            if(type==='expenses')return {headers:['Transaction ID','Date','Category','Description','Paid To','Receipt / Reference','Notes','Amount PHP','Transaction Status','Verification Status'],rows:data.expenses.map(tx=>[tx.id||tx.transactionId||'',tx.effectiveDate||'',tx.category||'',tx.description||'',tx.paidTo||'',tx.referenceNumber||'',tx.notes||'',moneyValue(tx.amountCentavos).toFixed(2),tx.status||'',cfTransactionVerificationState(tx).label])};
+            if(type==='verification')return {headers:['Record ID','Date','Record Type','Amount PHP','Verification Status','President','President Verification Date','Vice President','Vice President Verification Date','Admin Override'],rows:data.verification.map(item=>{const p=cfVerificationSlotReport(item.record,'president'),v=cfVerificationSlotReport(item.record,'vicePresident');return[item.id,item.date,item.type,moneyValue(item.amountCentavos).toFixed(2),item.state.label,p.name,p.date,v.name,v.date,[p.override?'President':'',v.override?'Vice President':''].filter(Boolean).join(', ')];})};
+            return {headers:['Timestamp','Action Type','Affected Record','User','Designation','Summary','Reason'],rows:data.audits.map(a=>[a.timestamp||'',a.actionType||'',a.affectedRecordId||'',a.displayNameSnapshot||'',a.designationSnapshot||'',a.summary||'',a.reason||''])};
+        }
+
+        window.exportCfCSV=function(){
+            const type=document.getElementById('cfExportType').value;
+            const data=cfGetFilteredReportData();
+            const csv=cfBuildCsvReport(type,data);
+            cfDownloadCSV('Class_Funds_'+type+'_'+formatDateKey(new Date())+'.csv',csv.headers,csv.rows);
+        };
+
+        window.exportCfPDF=function(){
+            const type=document.getElementById('cfExportType').value;
+            const data=cfGetFilteredReportData();
+            const el=document.getElementById('cfPdfExportContainer');
+            const title=cfReportTypeTitle(type);
+            const period=cfReportPeriodLabel(data.filters);
+            el.innerHTML=`<div style="text-align:center;border-bottom:2px solid #004725;padding-bottom:12px;margin-bottom:18px;"><h2 style="margin:0;color:#004725;">ANIMOLED</h2><h3 style="margin:6px 0;">CLASS FUNDS — ${cfEsc(title.toUpperCase())}</h3><div>${cfEsc(CF_AY_LABEL)}</div><div style="font-size:11px;margin-top:4px;">${cfEsc(period)} · Generated ${cfEsc(new Date().toLocaleString('en-PH'))}</div></div>${cfBuildReportSection(type,data)}`;
+            el.classList.remove('hidden');
+            html2pdf().set({margin:.35,filename:'Class_Funds_'+title.replace(/[^A-Za-z0-9]+/g,'_')+'_'+formatDateKey(new Date())+'.pdf',image:{type:'jpeg',quality:.98},html2canvas:{scale:2},jsPDF:{unit:'in',format:'letter',orientation:'portrait'}}).from(el).save().then(()=>{el.classList.add('hidden');el.innerHTML='';}).catch(err=>{el.classList.add('hidden');el.innerHTML='';console.error(err);showAppAlert('PDF Export Error','Unable to export Class Funds PDF.\n'+err.message);});
+        };
+
+        function cfPopulateReportStudentOptions(){
+            const sel=document.getElementById('cfReportStudent');if(!sel)return;const current=sel.value;sel.innerHTML='<option value="">All Students</option>'+currentStudentList.map(s=>`<option value="${cfEsc(s.id)}">${cfEsc(s.name)} (${cfEsc(s.id)})</option>`).join('');if([...sel.options].some(o=>o.value===current))sel.value=current;
+        }
+
+        window.toggleCfTab=function(tab){
+            const tabs=['dashboard','daily','students','ledger','expenses','reports'];
+            cfActiveTab=tabs.includes(tab)?tab:'dashboard';
+            tabs.forEach(t=>{
+                const panel=document.getElementById('cf'+t.charAt(0).toUpperCase()+t.slice(1)+'Tab');
+                const btn=document.getElementById('cf'+t.charAt(0).toUpperCase()+t.slice(1)+'TabBtn');
+                if(panel)panel.classList.toggle('hidden',t!==cfActiveTab);if(btn)btn.classList.toggle('cf-tab-active',t===cfActiveTab);
+            });
+            if(cfActiveTab==='daily'){
+                const input=document.getElementById('cfDailyDate');if(input&&!input.value)input.value=formatDateKey(new Date());openCfDailyCollection(input.value);
+            } else if(cfActiveTab==='students') renderCfStudents();
+            else if(cfActiveTab==='ledger') renderCfLedger();
+            else if(cfActiveTab==='expenses') renderCfExpenses();
+            else if(cfActiveTab==='reports'){cfPopulateReportStudentOptions();renderCfReports();}
+            else renderCfDashboard();
+            cfApplyPermissions();
+        };
+
+        function renderCfCurrentTab(){
+            cfApplyPermissions();
+            if(cfActiveTab==='daily'){
+                if(!cfWorkingDate)cfWorkingDate=formatDateKey(new Date());
+                cfDailySourceRecord=cfDailyData[cfWorkingDate]||null;
+                if(!cfDailySourceRecord||cfDailySourceRecord.status!=='draft'||!Object.keys(cfWorkingStudents).length)cfWorkingStudents=cfPrepareWorkingStudents(cfWorkingDate,cfDailySourceRecord);
+                renderCfDailySheet();
+            } else if(cfActiveTab==='students')renderCfStudents();
+            else if(cfActiveTab==='ledger')renderCfLedger();
+            else if(cfActiveTab==='expenses')renderCfExpenses();
+            else if(cfActiveTab==='reports'){cfPopulateReportStudentOptions();renderCfReports();}
+            else renderCfDashboard();
+        }
+
+
         // Auth Listeners & Other App Init logic
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -3875,6 +5992,7 @@
 
                     configureProfileFormByRole(currentUserRole);
                     applyAttendancePermissions();
+                    cfApplyPermissions();
                     
                     if (currentUserRole === 'admin' || userDesignation === 'Treasurer') {
                         document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.remove('hidden'));
@@ -3899,6 +6017,7 @@
                 bindDatabaseSync();
                 bindMissionCollectionSync();
                 bindCycleDaySync();
+                bindClassFundsSync();
 
                 showView('schedule');
                 setActiveNav('schedule');
@@ -3915,6 +6034,7 @@
                 document.getElementById('authContainer').classList.remove('hidden');
                 document.getElementById('appContainer').classList.add('hidden');
                 if (homeHighlightIntervalId) { clearInterval(homeHighlightIntervalId); homeHighlightIntervalId = null; }
+                if (cfSyncUnsubscribe) { try { cfSyncUnsubscribe(); } catch(e) {} cfSyncUnsubscribe = null; cfSyncBoundUid = null; }
             }
         });
 
@@ -3928,6 +6048,7 @@
                     set(ref(db, 'student_masterlist'), currentStudentList);
                 }
                 renderDashboardMatrix();
+                if (!document.getElementById('classFundsView').classList.contains('hidden')) { cfPopulateReportStudentOptions(); renderCfCurrentTab(); }
             });
         }
 
@@ -4031,8 +6152,8 @@
             });
         };
 
-        const ALL_TOP_LEVEL_VIEWS = ['classScheduleView', 'dashboardMatrixView', 'dailyAttendanceSheetView', 'officerProfileView', 'adminOfficersView', 'missionCollectionView', 'settingsView', 'cycleDayManagerView'];
-        const NAV_TITLES = { schedule: 'Class Schedule', dashboard: 'Attendance Tracker', missionCollection: 'Mission Collection', officers: 'My Officers', profile: 'My Profile', settings: 'Settings' };
+        const ALL_TOP_LEVEL_VIEWS = ['classScheduleView', 'dashboardMatrixView', 'dailyAttendanceSheetView', 'officerProfileView', 'adminOfficersView', 'missionCollectionView', 'classFundsView', 'settingsView', 'cycleDayManagerView'];
+        const NAV_TITLES = { schedule: 'Class Schedule', dashboard: 'Attendance Tracker', missionCollection: 'Mission Collection', classFunds: 'Class Funds', officers: 'My Officers', profile: 'My Profile', settings: 'Settings' };
 
         window.showView = function(viewName) {
             ALL_TOP_LEVEL_VIEWS.forEach(id => document.getElementById(id).classList.add('hidden'));
@@ -4049,6 +6170,10 @@
             } else if (viewName === 'missionCollection') {
                 document.getElementById('missionCollectionView').classList.remove('hidden');
                 renderMcDashboard();
+            } else if (viewName === 'classFunds') {
+                document.getElementById('classFundsView').classList.remove('hidden');
+                cfApplyPermissions();
+                renderCfCurrentTab();
             } else if (viewName === 'settings') {
                 document.getElementById('settingsView').classList.remove('hidden');
                 document.getElementById('adminSettingsSection').classList.toggle('hidden', currentUserRole !== 'admin');
