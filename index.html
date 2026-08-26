@@ -644,6 +644,13 @@
             z-index: 10000 !important;
         }
 
+        /* Shared Alert / Confirm / Prompt dialogs must always sit above feature modals. */
+        #appAlertModal,
+        #appConfirmModal,
+        #appPromptModal {
+            z-index: 30000 !important;
+        }
+
         .modal-window {
             background: #ffffff;
             padding: 24px;
@@ -2560,23 +2567,32 @@
         window.showAppConfirm = function(title, message, isDanger, callback) {
             document.getElementById('appConfirmTitle').textContent = title || "Confirmation Required";
             document.getElementById('appConfirmMessage').textContent = message || "";
-            confirmModalCallback = callback;
-            
+            confirmModalCallback = typeof callback === 'function' ? callback : null;
+
             const okBtn = document.getElementById('appConfirmOkBtn');
-            if(isDanger) {
-                okBtn.className = "btn-ui btn-red";
-            } else {
-                okBtn.className = "btn-ui btn-green";
-            }
+            okBtn.disabled = false;
+            okBtn.textContent = 'Confirm';
+            okBtn.className = isDanger ? "btn-ui btn-red" : "btn-ui btn-green";
 
             document.getElementById('appConfirmModal').classList.remove('hidden');
         };
 
         window.closeAppConfirmModal = function(result) {
-            document.getElementById('appConfirmModal').classList.add('hidden');
-            if (confirmModalCallback) {
-                confirmModalCallback(result);
-                confirmModalCallback = null;
+            const modal = document.getElementById('appConfirmModal');
+            modal.classList.add('hidden');
+
+            const callback = confirmModalCallback;
+            confirmModalCallback = null;
+
+            if (callback) {
+                try {
+                    const maybePromise = callback(result);
+                    if (maybePromise && typeof maybePromise.catch === 'function') {
+                        maybePromise.catch(err => console.error('[Modal] Confirmation callback failed:', err));
+                    }
+                } catch (err) {
+                    console.error('[Modal] Confirmation callback failed:', err);
+                }
             }
         };
 
@@ -2585,17 +2601,29 @@
             document.getElementById('appPromptMessage').textContent = message || "";
             const input = document.getElementById('appPromptInput');
             input.value = defaultValue || "";
-            promptModalCallback = callback;
+            promptModalCallback = typeof callback === 'function' ? callback : null;
             document.getElementById('appPromptModal').classList.remove('hidden');
             input.focus();
         };
 
         window.closeAppPromptModal = function(result) {
-            document.getElementById('appPromptModal').classList.add('hidden');
-            if (promptModalCallback) {
-                const val = document.getElementById('appPromptInput').value;
-                promptModalCallback(result ? val : null);
-                promptModalCallback = null;
+            const modal = document.getElementById('appPromptModal');
+            modal.classList.add('hidden');
+
+            const input = document.getElementById('appPromptInput');
+            const value = input ? input.value : '';
+            const callback = promptModalCallback;
+            promptModalCallback = null;
+
+            if (callback) {
+                try {
+                    const maybePromise = callback(result ? value : null);
+                    if (maybePromise && typeof maybePromise.catch === 'function') {
+                        maybePromise.catch(err => console.error('[Modal] Prompt callback failed:', err));
+                    }
+                } catch (err) {
+                    console.error('[Modal] Prompt callback failed:', err);
+                }
             }
         };
 
@@ -4291,6 +4319,26 @@
             button.textContent = old.text;
         }
 
+        function cfShowActionGroupSaving(containerId, savingText) {
+            const container = document.getElementById(containerId);
+            if (!container) return null;
+            const buttonStates = Array.from(container.querySelectorAll('button')).map(button => ({ button, disabled:button.disabled }));
+            buttonStates.forEach(state => { state.button.disabled = true; });
+            const marker = document.createElement('span');
+            marker.className = 'cf-muted';
+            marker.style.alignSelf = 'center';
+            marker.style.fontWeight = '700';
+            marker.textContent = savingText || 'Saving...';
+            container.appendChild(marker);
+            return { buttonStates, marker };
+        }
+
+        function cfRestoreActionGroup(state) {
+            if (!state) return;
+            state.buttonStates.forEach(item => { if (item.button) item.button.disabled = item.disabled; });
+            if (state.marker && state.marker.parentNode) state.marker.parentNode.removeChild(state.marker);
+        }
+
         function cfGetVerificationState(record) {
             const verification = (record && record.verification) || {};
             const p = !!(verification.president && verification.president.verified);
@@ -4570,13 +4618,13 @@
             if (!eligibility.eligible) { el.innerHTML = ''; return; }
             if (record && record.status === 'no_collection') {
                 html += `<button class="btn-ui btn-gray" onclick="openCfDailyDetail('${cfWorkingDate}')">🔍 View Details</button>`;
-                if (cfCanFinanceEdit()) html += `<button class="btn-ui btn-gold" onclick="revertCfNoCollectionDay('${cfWorkingDate}')">↺ Revert No Collection</button>`;
+                if (cfCanFinanceEdit()) html += `<button id="cfRestoreCollectionBtn" class="btn-ui btn-gold" onclick="revertCfNoCollectionDay('${cfWorkingDate}')">↺ Revert No Collection</button>`;
                 el.innerHTML = html; return;
             }
             if (!record || record.status === 'draft') {
                 if (cfCanFinanceEdit()) {
-                    html += `<button class="btn-ui btn-gray" onclick="markCfNoCollectionDay('${cfWorkingDate}')">— No Class Fund Collection</button>`;
-                    html += `<button class="btn-ui btn-gold" onclick="saveCfDraft()">💾 Save Draft</button>`;
+                    html += `<button id="cfNoCollectionBtn" class="btn-ui btn-gray" onclick="markCfNoCollectionDay('${cfWorkingDate}')">— No Class Fund Collection</button>`;
+                    html += `<button id="cfSaveDraftBtn" class="btn-ui btn-gold" onclick="saveCfDraft()">💾 Save Draft</button>`;
                     html += `<button class="btn-ui btn-green" onclick="openCfReconcileModal()">✅ Submit / Close Daily Collection</button>`;
                 } else html += '<span class="cf-muted">DRAFT — NOT YET SUBMITTED. View only.</span>';
             } else if (record.status === 'voided') {
@@ -4584,8 +4632,8 @@
             } else {
                 html += `<button class="btn-ui btn-gray" onclick="openCfDailyDetail('${cfWorkingDate}')">🔍 View Details</button>`;
                 if (cfCanFinanceEdit()) {
-                    html += `<button class="btn-ui btn-gold" onclick="reopenCfDailyCollection('${cfWorkingDate}')">✏️ Reopen / Correct Collection</button>`;
-                    html += `<button class="btn-ui btn-red" onclick="voidCfDailyCollection('${cfWorkingDate}')">Void Daily Collection</button>`;
+                    html += `<button id="cfReopenDailyBtn" class="btn-ui btn-gold" onclick="reopenCfDailyCollection('${cfWorkingDate}')">✏️ Reopen / Correct Collection</button>`;
+                    html += `<button id="cfVoidDailyBtn" class="btn-ui btn-red" onclick="voidCfDailyCollection('${cfWorkingDate}')">Void Daily Collection</button>`;
                 }
             }
             el.innerHTML = html;
@@ -4640,6 +4688,8 @@
                 cfAddAuditToUpdates(updates, 'attendance_status_override', cfWorkingDate + '/' + r.studentId, `${r.studentNameSnapshot}: Attendance suggestion overridden to ${r.status}.`, r.attendanceOverrideReason, { date:cfWorkingDate, studentId:r.studentId });
             });
             if (cfWorkingDate < formatDateKey(new Date()) && isNew) cfAddAuditToUpdates(updates, 'backdated_collection_entry', cfWorkingDate, 'Backdated Collection Entry created as draft.', '', { date:cfWorkingDate });
+            const btn = document.getElementById('cfSaveDraftBtn');
+            const oldBtn = cfShowSaving(btn, 'Saving...');
             try {
                 await update(ref(db, CF_ROOT), updates);
                 cfDailySourceRecord = payload;
@@ -4647,6 +4697,8 @@
             } catch (err) {
                 console.error('[Class Funds] Draft save failed:', err);
                 showAppAlert('Database Error', 'Daily draft was not saved. Your entries remain on screen.\nFirebase returned: ' + err.message);
+            } finally {
+                cfRestoreButton(btn, oldBtn);
             }
         };
 
@@ -4668,8 +4720,11 @@
                     };
                     const updates = { ['daily_collections/' + dateStr]: payload };
                     cfAddAuditToUpdates(updates, 'no_collection_day_marked', dateStr, 'No Class Fund Collection marked.', reason.trim(), { date:dateStr });
+                    const btn = document.getElementById('cfNoCollectionBtn');
+                    const oldBtn = cfShowSaving(btn, 'Saving...');
                     try { await update(ref(db, CF_ROOT), updates); showAppAlert('No Collection Day Saved', `${cfDateLabel(dateStr)} is excluded from contribution opportunities and streak calculations.`); }
                     catch(err) { console.error(err); showAppAlert('Database Error', 'Unable to mark No Collection Day.\n' + err.message); }
+                    finally { cfRestoreButton(btn, oldBtn); }
                 });
             });
         };
@@ -4684,8 +4739,11 @@
                     if (!confirmed) return;
                     const updates = { ['daily_collections/' + dateStr]: null };
                     cfAddAuditToUpdates(updates, 'no_collection_day_reverted', dateStr, 'No Collection Day reverted; date returned to unrecorded collection state.', reason.trim(), { date:dateStr });
+                    const btn = document.getElementById('cfRestoreCollectionBtn');
+                    const oldBtn = cfShowSaving(btn, 'Saving...');
                     try { await update(ref(db, CF_ROOT), updates); cfDailySourceRecord = null; cfWorkingStudents = cfPrepareWorkingStudents(dateStr, null); showAppAlert('Collection Day Restored', 'The date is now available for normal Class Fund recording.'); }
                     catch(err) { console.error(err); showAppAlert('Database Error', 'Unable to restore collection day.\n' + err.message); }
+                    finally { cfRestoreButton(btn, oldBtn); }
                 });
             });
         };
@@ -4706,6 +4764,9 @@
             const input = document.getElementById('cfCashCountedInput');
             input.value = (sum.total / 100).toFixed(2);
             document.getElementById('cfDiscrepancyReason').value = '';
+            const submitBtn = document.getElementById('cfSubmitDailyBtn');
+            submitBtn.disabled = false;
+            submitBtn.textContent = '✅ Submit Collection';
             document.getElementById('cfReconcileModal').classList.remove('hidden');
             updateCfReconcileDifference();
         };
@@ -4843,6 +4904,8 @@
                     };
                     cfAddAuditToUpdates(updates, 'daily_collection_reopened', dateStr, 'Submitted daily collection reopened for correction.', reason.trim(), { date:dateStr });
                     if (hadVerification) cfAddAuditToUpdates(updates, 'verification_invalidated', dateStr, 'Active President/VP daily verification invalidated because the financial/participation record was reopened.', reason.trim(), { date:dateStr });
+                    const btn = document.getElementById('cfReopenDailyBtn');
+                    const oldBtn = cfShowSaving(btn, 'Saving...');
                     try {
                         await update(ref(db, CF_ROOT), updates);
                         cfWorkingDate = dateStr;
@@ -4851,6 +4914,7 @@
                         toggleCfTab('daily');
                         showAppAlert('Collection Reopened', 'The record is editable again. Resubmission will update the same linked ledger transaction and require fresh President/VP verification.');
                     } catch(err) { console.error(err); showAppAlert('Database Error', 'Unable to reopen the daily collection.\n' + err.message); }
+                    finally { cfRestoreButton(btn, oldBtn); }
                 });
             });
         };
@@ -4878,8 +4942,11 @@
                         ['transactions/' + txId + '/voidReason']:reason.trim()
                     };
                     cfAddAuditToUpdates(updates, 'daily_collection_voided', dateStr, `Daily collection voided; linked ${cfMoney(rec.totalCentavos)} ledger entry no longer affects balance.`, reason.trim(), { date:dateStr });
+                    const btn = document.getElementById('cfVoidDailyBtn');
+                    const oldBtn = cfShowSaving(btn, 'Saving...');
                     try { await update(ref(db, CF_ROOT), updates); showAppAlert('Daily Collection Voided', 'The historical record remains visible and the available balance has been recalculated from active transactions.'); }
                     catch(err) { console.error(err); showAppAlert('Database Error', 'Unable to void daily collection.\n' + err.message); }
+                    finally { cfRestoreButton(btn, oldBtn); }
                 });
             });
         };
@@ -4928,8 +4995,10 @@
                 const updates = { ['daily_collections/' + dateStr + '/verification/' + slotKey]:verificationPayload };
                 if (otherVerified) updates['daily_collections/' + dateStr + '/reverificationRequired'] = false;
                 cfAddAuditToUpdates(updates, isOverride ? 'admin_verification_override' : (slot === 'president' ? 'daily_verification_president' : 'daily_verification_vp'), dateStr, isOverride ? `Administrative Override for ${roleLabel}.` : `${roleLabel} verified daily collection ${cfMoney(rec.totalCentavos)}.`, isOverride ? overrideReason : '', { date:dateStr, verificationSlot:roleLabel });
+                const busy = cfShowActionGroupSaving('cfDetailActions', 'Saving...');
                 try { await update(ref(db, CF_ROOT), updates); closeCfDetailModal(); showAppAlert(isOverride ? 'Administrative Override Recorded' : roleLabel + ' Verification Recorded', `Verification saved for ${cfDateLabel(dateStr)}.`); }
                 catch(err) { console.error(err); showAppAlert('Database Error', 'Verification was not saved.\n' + err.message); }
+                finally { cfRestoreActionGroup(busy); }
             });
         }
 
@@ -5097,8 +5166,11 @@
                     };
                     const updates = { 'transactions/opening_balance':tx };
                     cfAddAuditToUpdates(updates, 'opening_balance_created', 'opening_balance', `Opening Balance created: ${cfMoney(cents)}.`, '', {});
+                    const btn = document.getElementById('cfOpeningBalanceBtn');
+                    const oldBtn = cfShowSaving(btn, 'Saving...');
                     try { await update(ref(db, CF_ROOT), updates); showAppAlert('Opening Balance Set', `${cfMoney(cents)} was added as an audited Opening Balance ledger transaction.`); }
                     catch(err) { console.error(err); showAppAlert('Database Error', 'Opening Balance was not saved.\n' + err.message); }
+                    finally { cfRestoreButton(btn, oldBtn); }
                 });
             });
         };
@@ -5123,6 +5195,9 @@
             document.getElementById('cfExpenseCorrectionReason').value = '';
             document.getElementById('cfExpenseCorrectionGroup').classList.toggle('hidden', !tx);
             document.getElementById('cfExpenseOverdraftBox').innerHTML = `<div class="cf-muted">Current available Class Fund: <strong>${cfMoney(cfLedgerTotals().available)}</strong></div>`;
+            const saveBtn = document.getElementById('cfExpenseSaveBtn');
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Expense';
             document.getElementById('cfExpenseModal').classList.remove('hidden');
         };
 
@@ -5194,10 +5269,19 @@
                 amountCentavos:amount, description, paidTo, referenceNumber, notes, correctionReason
             };
             const proceed = async overdraftReason => {
-                const btn = document.getElementById('cfExpenseSaveBtn'); const oldBtn = cfShowSaving(btn,'Saving...');
-                try { const txId = await cfCommitExpense(payload, oldTx, overdraftReason); closeCfExpenseModal(); showAppAlert('Expense Saved', `${cfMoney(amount)} expense saved successfully.\nAvailable Class Fund: ${cfMoney(prospective)}\n\n⏳ Pending Expense Verification`); openCfTransactionDetail(txId); }
-                catch(err) { console.error('[Class Funds] Expense save failed:', err); showAppAlert('Database Error', 'Expense was not saved. Your form remains available.\n' + err.message); }
-                finally { cfRestoreButton(btn, oldBtn); }
+                const btn = document.getElementById('cfExpenseSaveBtn');
+                if (btn && btn.disabled) return;
+                const oldBtn = cfShowSaving(btn,'Saving...');
+                try {
+                    await cfCommitExpense(payload, oldTx, overdraftReason);
+                    closeCfExpenseModal();
+                    showAppAlert('Expense Saved', `${cfMoney(amount)} expense saved successfully.\nAvailable Class Fund: ${cfMoney(prospective)}\n\n⏳ Pending Expense Verification`);
+                } catch(err) {
+                    console.error('[Class Funds] Expense save failed:', err);
+                    showAppAlert('Database Error', 'Expense was not saved. Your form remains available.\n' + err.message);
+                } finally {
+                    cfRestoreButton(btn, oldBtn);
+                }
             };
             if (prospective < 0) {
                 if (!cfCanAdmin()) return showAppAlert('Insufficient Class Fund Balance', `Available: ${cfMoney(totals.available + oldRelief)}\nExpense: ${cfMoney(amount)}\n\nThe Treasurer cannot record an expense larger than the available Class Fund.`);
@@ -5223,6 +5307,9 @@
             document.getElementById('cfAdjustmentNotes').value = tx ? (tx.notes || '') : '';
             document.getElementById('cfAdjustmentCorrectionReason').value = '';
             document.getElementById('cfAdjustmentCorrectionGroup').classList.toggle('hidden', !tx);
+            const saveBtn = document.getElementById('cfAdjustmentSaveBtn');
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save Adjustment';
             document.getElementById('cfAdjustmentModal').classList.remove('hidden');
         };
 
@@ -5262,8 +5349,12 @@
                     cfAddAuditToUpdates(updates,'adjustment_edited',txId,`Adjustment edited: ${cfMoney(oldTx.amountCentavos)} → ${cfMoney(amount)}.`,correctionReason,{transactionId:txId});
                     if(hadVerification) cfAddAuditToUpdates(updates,'verification_invalidated',txId,'Adjustment verification invalidated after edit.',correctionReason,{transactionId:txId});
                 } else cfAddAuditToUpdates(updates,'adjustment_created',txId,`${direction==='in'?'+':'−'}${cfMoney(amount)} adjustment created.`,reason,{transactionId:txId});
+                const btn = document.getElementById('cfAdjustmentSaveBtn');
+                if (btn && btn.disabled) return;
+                const oldBtn = cfShowSaving(btn, 'Saving...');
                 try { await update(ref(db,CF_ROOT),updates); closeCfAdjustmentModal(); showAppAlert('Adjustment Saved', `${direction==='in'?'+':'−'}${cfMoney(amount)} adjustment saved. President/VP verification is pending.`); }
                 catch(err){ console.error(err); showAppAlert('Database Error','Adjustment was not saved.\n'+err.message); }
+                finally { cfRestoreButton(btn, oldBtn); }
             });
         };
 
@@ -5307,8 +5398,10 @@
                 const updates = { ['transactions/'+txId+'/verification/'+slotKey]:payload };
                 if (otherVerified) updates['transactions/'+txId+'/reverificationRequired'] = false;
                 cfAddAuditToUpdates(updates, isOverride?'admin_verification_override':(tx.type+'_verified_'+(slot==='president'?'president':'vp')), txId, isOverride?`Administrative Override for ${roleLabel} on ${verb}.`:`${roleLabel} verified ${verb} ${cfMoney(tx.amountCentavos)}.`, isOverride?overrideReason:'', {transactionId:txId,verificationSlot:roleLabel});
+                const busy = cfShowActionGroupSaving('cfDetailActions', 'Saving...');
                 try { await update(ref(db,CF_ROOT),updates); closeCfDetailModal(); showAppAlert(isOverride?'Administrative Override Recorded':roleLabel+' Verification Recorded','Verification saved successfully.'); }
                 catch(err){ console.error(err); showAppAlert('Database Error','Verification was not saved.\n'+err.message); }
+                finally { cfRestoreActionGroup(busy); }
             });
         }
 
@@ -5330,10 +5423,32 @@
                         ['transactions/'+txId+'/voidReason']:reason.trim()
                     };
                     cfAddAuditToUpdates(updates,tx.type==='expense'?'expense_voided':'adjustment_voided',txId,`${cfTxTypeLabel(tx)} voided; ${cfMoney(tx.amountCentavos)} no longer affects balance.`,reason.trim(),{transactionId:txId});
+                    const busy = cfShowActionGroupSaving('cfDetailActions', 'Saving...');
                     try{await update(ref(db,CF_ROOT),updates);closeCfDetailModal();showAppAlert('Transaction Voided','The transaction remains in financial history as VOIDED and the available balance has been recalculated.');}
                     catch(err){console.error(err);showAppAlert('Database Error','Transaction was not voided.\n'+err.message);}
+                    finally{cfRestoreActionGroup(busy);}
                 });
             });
+        };
+
+        window.editCfTransactionFromDetail = function(txId) {
+            const tx = cfTransactions[txId];
+            if (!tx) {
+                showAppAlert('Transaction Not Found', 'The requested Class Fund transaction is unavailable.');
+                return;
+            }
+            if (!['expense', 'adjustment'].includes(tx.type)) {
+                showAppAlert('Edit Unavailable', 'Only Class Fund expenses and adjustments can be edited from this record.');
+                return;
+            }
+            if (!cfCanFinanceEdit()) {
+                showAppAlert('Read Only', 'Only the Class Treasurer and Main Admin can edit Class Fund financial records.');
+                return;
+            }
+
+            closeCfDetailModal();
+            if (tx.type === 'expense') openCfExpenseModal(txId);
+            else openCfAdjustmentModal(txId);
         };
 
         window.openCfTransactionDetail = function(txId) {
@@ -5373,7 +5488,7 @@
                 if(cfCanVpVerify()&&!vDone) actions += `<button class="btn-ui btn-green" onclick="verifyCfTransaction('${cfEsc(txId)}','vicePresident',false)">✅ Verify as Vice President</button>`;
                 if(cfCanAdmin()&&!pDone) actions += `<button class="btn-ui btn-gold" onclick="verifyCfTransaction('${cfEsc(txId)}','president',true)">Admin Override President</button>`;
                 if(cfCanAdmin()&&!vDone) actions += `<button class="btn-ui btn-gold" onclick="verifyCfTransaction('${cfEsc(txId)}','vicePresident',true)">Admin Override VP</button>`;
-                if(cfCanFinanceEdit()) actions += `<button class="btn-ui btn-gold" onclick="${tx.type==='expense'?`openCfExpenseModal('${cfEsc(txId)}')`:`openCfAdjustmentModal('${cfEsc(txId)}')`}">✏️ Edit</button><button class="btn-ui btn-red" onclick="voidCfTransaction('${cfEsc(txId)}')">Void Transaction</button>`;
+                if(cfCanFinanceEdit()) actions += `<button class="btn-ui btn-gold" onclick="editCfTransactionFromDetail('${cfEsc(txId)}')">✏️ Edit</button><button class="btn-ui btn-red" onclick="voidCfTransaction('${cfEsc(txId)}')">Void Transaction</button>`;
             }
             document.getElementById('cfDetailActions').innerHTML=actions;
             document.getElementById('cfDetailModal').classList.remove('hidden');
