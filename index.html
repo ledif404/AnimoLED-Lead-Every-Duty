@@ -3473,6 +3473,571 @@
             .birthday-carousel-arrow { transition: none !important; }
         }
 
+
+        /* ============================================
+           AUTH EXPERIENCE + SMART PWA INSTALL
+           Auth-scoped visual layer; authenticated app UI remains untouched.
+           ============================================ */
+        .auth-container {
+            position: relative;
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: block;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: calc(24px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left));
+            box-sizing: border-box;
+            background:
+                radial-gradient(circle at 14% 8%, rgba(130,166,117,.16) 0, rgba(130,166,117,0) 28%),
+                radial-gradient(circle at 88% 4%, rgba(212,162,26,.12) 0, rgba(212,162,26,0) 25%),
+                linear-gradient(180deg, #fffef9 0%, #fafbf7 48%, #f5f8f2 100%);
+            color: #173c29;
+        }
+
+        .auth-container::before,
+        .auth-container::after {
+            content: '';
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 50%;
+            filter: blur(.2px);
+        }
+        .auth-container::before {
+            width: 290px;
+            height: 290px;
+            left: -155px;
+            top: 18vh;
+            background: radial-gradient(circle, rgba(81,132,93,.08), rgba(81,132,93,0) 70%);
+        }
+        .auth-container::after {
+            width: 300px;
+            height: 300px;
+            right: -170px;
+            bottom: 7vh;
+            background: radial-gradient(circle, rgba(212,162,26,.07), rgba(212,162,26,0) 70%);
+        }
+
+        .auth-experience {
+            position: relative;
+            z-index: 1;
+            width: min(100%, 520px);
+            margin: 0 auto;
+        }
+
+        .auth-brand-hero {
+            position: relative;
+            padding: 4px 8px 24px;
+            text-align: center;
+        }
+
+        .auth-brand-logo {
+            display: block;
+            width: min(290px, 78vw);
+            height: auto;
+            margin: -18px auto -24px;
+            mix-blend-mode: multiply;
+        }
+
+        .auth-brand-values {
+            margin-top: 2px;
+            color: #52705f;
+            font-size: 10px;
+            line-height: 1.4;
+            font-weight: 800;
+            letter-spacing: 2.3px;
+            text-transform: uppercase;
+        }
+
+        .auth-brand-spark {
+            position: relative;
+            display: inline-block;
+            margin: 17px auto 0;
+            padding-bottom: 12px;
+            color: #174d30;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(18px, 5.2vw, 24px);
+            line-height: 1.28;
+            font-style: italic;
+            font-weight: 650;
+            letter-spacing: -.15px;
+        }
+        .auth-brand-spark strong { font-style: normal; font-weight: 800; }
+        .auth-brand-spark::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 34px;
+            height: 2px;
+            border-radius: 999px;
+            background: #d4a21a;
+            transform: translateX(-50%);
+        }
+
+        .auth-container .auth-card {
+            width: 100%;
+            max-width: none;
+            box-sizing: border-box;
+            padding: 24px 24px 22px;
+            border: 1px solid rgba(71,112,83,.12);
+            border-top: 1px solid rgba(71,112,83,.12);
+            border-radius: 24px;
+            background: rgba(255,255,255,.92);
+            box-shadow: 0 18px 48px rgba(27,71,43,.10), 0 2px 8px rgba(27,71,43,.04);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .auth-mode-head { margin-bottom: 20px; }
+        .auth-mode-title {
+            margin: 0;
+            color: #174d30;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: clamp(27px, 7vw, 35px);
+            line-height: 1.1;
+            font-weight: 750;
+            letter-spacing: -.5px;
+        }
+        .auth-mode-subtitle {
+            margin: 7px 0 0;
+            color: #67756d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .auth-container .form-group { margin-bottom: 15px; }
+        .auth-container .form-group label {
+            display: block;
+            margin: 0 0 7px 2px;
+            color: #617168;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .55px;
+            text-transform: uppercase;
+        }
+
+        .auth-field-shell {
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-height: 54px;
+            border: 1px solid #d7ded9;
+            border-radius: 15px;
+            background: #fbfcfa;
+            transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+        }
+        .auth-field-shell:focus-within {
+            border-color: #6e9a79;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(46,112,71,.09);
+        }
+        .auth-field-icon {
+            width: 48px;
+            flex: 0 0 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #708078;
+            pointer-events: none;
+        }
+        .auth-field-icon svg { width: 20px; height: 20px; }
+
+        .auth-container .auth-field-shell input,
+        .auth-container .auth-field-shell select {
+            width: 100%;
+            min-width: 0;
+            min-height: 52px;
+            padding: 0 14px 0 0;
+            border: 0;
+            border-radius: 15px;
+            outline: 0;
+            background: transparent;
+            box-shadow: none;
+            color: #233b2d;
+            font: inherit;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+        .auth-container .auth-field-shell input:focus,
+        .auth-container .auth-field-shell select:focus {
+            border: 0;
+            box-shadow: none;
+            background: transparent;
+        }
+        .auth-container .auth-field-shell input::placeholder { color: #97a19b; }
+        .auth-container .auth-password-shell input { padding-right: 48px; }
+
+        .auth-password-toggle {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border: 0;
+            border-radius: 12px;
+            background: transparent;
+            color: #6f7e76;
+            cursor: pointer;
+            transform: translateY(-50%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-password-toggle:hover { background: #f0f4ef; color: #174d30; }
+        .auth-password-toggle svg { width: 20px; height: 20px; }
+
+        .auth-container .auth-btn {
+            width: 100%;
+            min-height: 52px;
+            margin-top: 5px;
+            padding: 12px 18px;
+            border: 0;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #08713f 0%, #00552f 100%);
+            color: #fff;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 18px;
+            font-weight: 750;
+            letter-spacing: .1px;
+            box-shadow: 0 9px 22px rgba(0,71,37,.17);
+            cursor: pointer;
+            transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+        }
+        .auth-container .auth-btn::after {
+            content: ' →';
+            display: inline-block;
+            margin-left: 7px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 22px;
+            font-weight: 400;
+            vertical-align: -1px;
+        }
+        .auth-container .auth-btn:hover {
+            background: linear-gradient(180deg, #086b3d 0%, #004725 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 12px 26px rgba(0,71,37,.20);
+        }
+        .auth-container .auth-btn:active { transform: translateY(0); }
+
+        .auth-container .auth-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin: 19px 0 0;
+            color: #69776f;
+            font-size: 12px;
+            line-height: 1.45;
+            text-align: center;
+        }
+        .auth-container .auth-toggle::before,
+        .auth-container .auth-toggle::after {
+            content: '';
+            flex: 1 1 28px;
+            max-width: 56px;
+            height: 1px;
+            background: #ccd6cf;
+        }
+        .auth-container .auth-toggle-btn {
+            margin-left: 0;
+            color: #174d30;
+            font-weight: 850;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+        }
+
+        .auth-install-card {
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 18px;
+            padding: 18px;
+            border: 1px solid #dce7da;
+            border-radius: 22px;
+            background: linear-gradient(145deg, rgba(235,244,232,.95), rgba(247,250,245,.96));
+            box-shadow: 0 10px 28px rgba(30,72,46,.055);
+        }
+        .auth-install-top {
+            display: grid;
+            grid-template-columns: 58px minmax(0,1fr);
+            gap: 13px;
+            align-items: center;
+        }
+        .auth-install-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #0b6138;
+            background: rgba(255,255,255,.66);
+            box-shadow: inset 0 0 0 1px rgba(46,112,71,.08);
+        }
+        .auth-install-icon svg { width: 31px; height: 31px; }
+        .auth-install-title {
+            margin: 0;
+            color: #174d30;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 20px;
+            line-height: 1.2;
+            font-weight: 750;
+        }
+        .auth-install-description {
+            margin: 5px 0 0;
+            color: #50675a;
+            font-size: 12.5px;
+            line-height: 1.48;
+        }
+        .auth-install-btn {
+            width: 100%;
+            min-height: 48px;
+            margin-top: 14px;
+            padding: 10px 14px;
+            border: 1.5px solid #1e6942;
+            border-radius: 999px;
+            background: rgba(255,255,255,.72);
+            color: #174d30;
+            font: inherit;
+            font-size: 14px;
+            font-weight: 850;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .auth-install-btn:hover { background: #fff; }
+        .auth-install-btn:disabled { opacity: .62; cursor: wait; }
+        .auth-install-btn svg { width: 18px; height: 18px; }
+        .auth-install-hint {
+            margin-top: 9px;
+            color: #738178;
+            font-size: 10.5px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .auth-footer-mark {
+            margin: 20px 0 2px;
+            color: #668075;
+            text-align: center;
+        }
+        .auth-footer-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 8px;
+            font-weight: 850;
+            letter-spacing: 2.1px;
+            text-transform: uppercase;
+        }
+        .auth-footer-line::before,
+        .auth-footer-line::after {
+            content: '';
+            width: 52px;
+            height: 1px;
+            background: #c9d3cc;
+        }
+        .auth-footer-star {
+            margin-top: 9px;
+            color: #d4a21a;
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .auth-password-toggle:focus-visible,
+        .auth-container .auth-btn:focus-visible,
+        .auth-container .auth-toggle-btn:focus-visible,
+        .auth-install-btn:focus-visible,
+        .pwa-install-help-close:focus-visible,
+        .pwa-install-help-done:focus-visible {
+            outline: 3px solid rgba(212,162,26,.48);
+            outline-offset: 3px;
+        }
+
+        /* PWA installation instructions — isolated from application modals. */
+        .pwa-install-help-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 12000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left));
+            box-sizing: border-box;
+            background: rgba(15,35,24,.46);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+        .pwa-install-help-sheet {
+            position: relative;
+            width: min(460px, calc(100vw - 32px));
+            max-height: min(84vh, 680px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,.74);
+            border-radius: 25px;
+            background: #fffefa;
+            box-shadow: 0 28px 74px rgba(12,38,22,.30);
+        }
+        .pwa-install-help-head {
+            position: relative;
+            flex: 0 0 auto;
+            padding: 21px 62px 15px 20px;
+            border-bottom: 1px solid #e7ece5;
+        }
+        .pwa-install-help-kicker {
+            color: #9a7208;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+        }
+        .pwa-install-help-head h3 {
+            margin: 5px 0 0;
+            color: #174d30;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 23px;
+            line-height: 1.2;
+        }
+        .pwa-install-help-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border: 1px solid #dfe7e1;
+            border-radius: 50%;
+            background: #fff;
+            color: #52675a;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .pwa-install-help-body {
+            min-height: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            padding: 17px 20px 6px;
+        }
+        .pwa-install-help-intro {
+            margin: 0 0 14px;
+            color: #52665a;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+        .pwa-install-step {
+            display: grid;
+            grid-template-columns: 42px minmax(0,1fr);
+            gap: 11px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #edf1eb;
+        }
+        .pwa-install-step:last-of-type { border-bottom: 0; }
+        .pwa-install-step-icon {
+            width: 42px;
+            height: 42px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: #eef5eb;
+            color: #2e7047;
+        }
+        .pwa-install-step-icon svg { width: 21px; height: 21px; }
+        .pwa-install-step-copy {
+            color: #30483a;
+            font-size: 13px;
+            line-height: 1.45;
+        }
+        .pwa-install-step-copy strong { color: #174d30; }
+        .pwa-install-fallback-note {
+            margin: 13px 0 0;
+            padding: 11px 12px;
+            border: 1px solid #eee4c5;
+            border-radius: 13px;
+            background: #fff9e9;
+            color: #6e5b20;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+        .pwa-install-help-footer {
+            flex: 0 0 auto;
+            padding: 12px 20px calc(16px + var(--safe-bottom));
+            border-top: 1px solid #e7ece5;
+            background: #fffefa;
+        }
+        .pwa-install-help-done {
+            width: 100%;
+            min-height: 46px;
+            border: 0;
+            border-radius: 999px;
+            background: #0a6138;
+            color: #fff;
+            font: inherit;
+            font-size: 14px;
+            font-weight: 850;
+            cursor: pointer;
+        }
+
+        @media (max-width: 520px) {
+            .auth-container {
+                padding-top: calc(16px + var(--safe-top));
+                padding-left: calc(13px + var(--safe-left));
+                padding-right: calc(13px + var(--safe-right));
+                padding-bottom: calc(24px + var(--safe-bottom));
+            }
+            .auth-brand-hero { padding-bottom: 18px; }
+            .auth-brand-logo { width: min(272px, 82vw); margin-top: -22px; margin-bottom: -28px; }
+            .auth-brand-values { font-size: 9px; letter-spacing: 1.85px; }
+            .auth-brand-spark { margin-top: 14px; font-size: 18px; }
+            .auth-container .auth-card { padding: 21px 18px 19px; border-radius: 22px; }
+            .auth-mode-title { font-size: 29px; }
+            .auth-mode-subtitle { font-size: 13px; }
+            .auth-install-card { padding: 16px; border-radius: 20px; }
+            .auth-install-top { grid-template-columns: 52px minmax(0,1fr); gap: 11px; }
+            .auth-install-icon { width: 52px; height: 52px; }
+            .auth-install-title { font-size: 19px; }
+            .auth-install-description { font-size: 12px; }
+            .pwa-install-help-backdrop {
+                align-items: flex-end;
+                padding: 0;
+            }
+            .pwa-install-help-sheet {
+                width: 100%;
+                max-height: min(88dvh, 720px);
+                border-radius: 25px 25px 0 0;
+                border-bottom: 0;
+            }
+        }
+
+        @media (max-width: 340px) {
+            .auth-container { padding-left: 10px; padding-right: 10px; }
+            .auth-brand-logo { width: min(246px, 82vw); }
+            .auth-container .auth-card { padding-left: 15px; padding-right: 15px; }
+            .auth-container .auth-toggle { font-size: 11px; gap: 5px; }
+            .auth-container .auth-toggle::before,
+            .auth-container .auth-toggle::after { max-width: 30px; }
+        }
+
+        @media (min-width: 861px) {
+            .auth-container {
+                padding-top: 48px;
+                padding-bottom: 48px;
+            }
+            .auth-brand-hero { padding-bottom: 26px; }
+            .auth-brand-logo { width: 300px; }
+            .auth-container .auth-card { padding: 27px 28px 24px; }
+        }
+
 </style>
 </head>
 <body>
@@ -3484,40 +4049,105 @@
 
     <!-- AUTHENTICATION SCREEN -->
     <div id="authContainer" class="auth-container">
-        <div class="auth-card">
-            <div class="brand-header">
-                <img src="./AnimoLED%20Logo.png" alt="AnimoLED Logo" class="brand-logo-img">
+        <main id="authExperience" class="auth-experience">
+            <section class="auth-brand-hero" aria-label="AnimoLED">
+                <img src="./AnimoLED%20Logo.png" alt="AnimoLED — Lead Every Duty" class="auth-brand-logo">
+                <div class="auth-brand-values">FAITH • SERVICE • COMMUNION</div>
+                <div class="auth-brand-spark">“Be a <strong>SPARK.</strong> Take the <strong>LEAD.</strong>”</div>
+            </section>
+
+            <section class="auth-card" aria-labelledby="authModeTitle">
+                <div class="auth-mode-head">
+                    <h1 id="authModeTitle" class="auth-mode-title">Welcome Back</h1>
+                    <p id="authModeSubtitle" class="auth-mode-subtitle">Sign in to continue your AnimoLED journey.</p>
+                </div>
+
+                <form id="authForm">
+                    <div class="form-group hidden" id="registerPositionGroup">
+                        <label for="registerPosition">Officer Position</label>
+                        <div class="auth-field-shell">
+                            <span class="auth-field-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20v-1.3c0-2.6 2.3-4.7 5.1-4.7h5.8c2.8 0 5.1 2.1 5.1 4.7V20"></path><circle cx="12" cy="7" r="3.5"></circle></svg>
+                            </span>
+                            <select id="registerPosition" aria-label="Officer Position">
+                                <option value="President">President</option>
+                                <option value="Vice President">Vice President</option>
+                                <option value="Secretary">Secretary</option>
+                                <option value="Treasurer">Treasurer</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="authEmail">Email Address</label>
+                        <div class="auth-field-shell">
+                            <span class="auth-field-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m4.5 7 7.5 6 7.5-6"></path></svg>
+                            </span>
+                            <input type="email" id="authEmail" required autocomplete="email" placeholder="Email Address">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="authPassword">Password</label>
+                        <div class="auth-field-shell auth-password-shell">
+                            <span class="auth-field-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path><path d="M12 14v2.5"></path></svg>
+                            </span>
+                            <input type="password" id="authPassword" required autocomplete="current-password" placeholder="Password">
+                            <button id="authPasswordToggle" class="auth-password-toggle" type="button" onclick="toggleAuthPasswordVisibility()" aria-label="Show password" aria-pressed="false">
+                                <svg id="authPasswordShowIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.6"></circle></svg>
+                                <svg id="authPasswordHideIcon" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 6.2A10 10 0 0 1 12 6c6 0 9.5 6 9.5 6a17 17 0 0 1-2.1 2.8"></path><path d="M6.4 7.1C3.9 8.9 2.5 12 2.5 12s3.5 6 9.5 6a10.5 10.5 0 0 0 4-.8"></path><path d="M10.2 10.2a2.6 2.6 0 0 0 3.6 3.6"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="auth-btn" id="authSubmitBtn">Sign In</button>
+                </form>
+
+                <div class="auth-toggle">
+                    <span id="authToggleMessage">Need an officer account?</span>
+                    <span id="authToggleBtn" class="auth-toggle-btn" role="button" tabindex="0" onclick="toggleAuthMode()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleAuthMode();}">Register here</span>
+                </div>
+            </section>
+
+            <section id="pwaInstallCard" class="auth-install-card hidden" aria-labelledby="pwaInstallTitle">
+                <div class="auth-install-top">
+                    <span class="auth-install-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.2"></rect><path d="M9.5 5h5M10.5 18.5h3"></path><path d="M12 8v6M9.5 11.5 12 14l2.5-2.5"></path></svg>
+                    </span>
+                    <div>
+                        <h2 id="pwaInstallTitle" class="auth-install-title">Install AnimoLED</h2>
+                        <p class="auth-install-description">Add AnimoLED to your phone for faster access and an app-like experience.</p>
+                    </div>
+                </div>
+                <button id="pwaInstallBtn" class="auth-install-btn" type="button" onclick="handlePwaInstallClick()">
+                    <span>Install App</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 20h14"></path></svg>
+                </button>
+                <div id="pwaInstallHint" class="auth-install-hint">Android: opens install prompt • iPhone: shows setup steps</div>
+            </section>
+
+            <footer class="auth-footer-mark" aria-hidden="true">
+                <div class="auth-footer-line">ONE COMMUNITY. GREATER TOMORROWS.</div>
+                <div class="auth-footer-star">★</div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- SMART PWA INSTALL HELP — static reusable dialog -->
+    <div id="pwaInstallHelpBackdrop" class="pwa-install-help-backdrop hidden" aria-hidden="true" onclick="handlePwaInstallHelpBackdrop(event)">
+        <section id="pwaInstallHelpSheet" class="pwa-install-help-sheet" role="dialog" aria-modal="true" aria-labelledby="pwaInstallHelpTitle">
+            <div class="pwa-install-help-head">
+                <div class="pwa-install-help-kicker">Install AnimoLED</div>
+                <h3 id="pwaInstallHelpTitle">Add AnimoLED to your phone</h3>
+                <button id="pwaInstallHelpCloseBtn" class="pwa-install-help-close" type="button" onclick="closePwaInstallHelp()" aria-label="Close installation instructions">×</button>
             </div>
-            
-            <form id="authForm">
-                <div class="form-group hidden" id="registerPositionGroup">
-                    <label>Officer Position</label>
-                    <select id="registerPosition">
-                        <option value="President">President</option>
-                        <option value="Vice President">Vice President</option>
-                        <option value="Secretary">Secretary</option>
-                        <option value="Treasurer">Treasurer</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="authEmail" required placeholder="user@dlszobel.edu.ph">
-                </div>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="authPassword" required placeholder="••••••••">
-                </div>
-
-                <button type="submit" class="auth-btn" id="authSubmitBtn">Sign In</button>
-            </form>
-
-            <div class="auth-toggle">
-                <span id="authToggleMessage">Need an officer account?</span>
-                <span id="authToggleBtn" class="auth-toggle-btn" onclick="toggleAuthMode()">Register here</span>
+            <div id="pwaInstallHelpBody" class="pwa-install-help-body"></div>
+            <div class="pwa-install-help-footer">
+                <button class="pwa-install-help-done" type="button" onclick="closePwaInstallHelp()">Got It</button>
             </div>
-        </div>
+        </section>
     </div>
 
     <!-- MAIN APP SCREEN -->
@@ -10495,12 +11125,317 @@
         }
 
 
+        // ============================================
+        // AUTH PRESENTATION + SMART PWA INSTALL UI
+        // Local browser UI only; no Firebase state is used.
+        // ============================================
+        let deferredPwaInstallPrompt = null;
+        let pwaInstallInProgress = false;
+        let pwaInstallUiMode = 'hidden';
+        let pwaInstallHelpPreviousBodyOverflow = '';
+        let pwaInstallHelpReturnFocus = null;
+
+        function setAuthPasswordVisibility(visible) {
+            const input = document.getElementById('authPassword');
+            const button = document.getElementById('authPasswordToggle');
+            const showIcon = document.getElementById('authPasswordShowIcon');
+            const hideIcon = document.getElementById('authPasswordHideIcon');
+            if (!input || !button) return;
+            input.type = visible ? 'text' : 'password';
+            button.setAttribute('aria-label', visible ? 'Hide password' : 'Show password');
+            button.setAttribute('aria-pressed', visible ? 'true' : 'false');
+            if (showIcon) showIcon.classList.toggle('hidden', visible);
+            if (hideIcon) hideIcon.classList.toggle('hidden', !visible);
+        }
+
+        window.toggleAuthPasswordVisibility = function() {
+            const input = document.getElementById('authPassword');
+            if (!input) return;
+            setAuthPasswordVisibility(input.type === 'password');
+        };
+
+        function syncAuthModePresentation() {
+            const title = document.getElementById('authModeTitle');
+            const subtitle = document.getElementById('authModeSubtitle');
+            const password = document.getElementById('authPassword');
+            if (title) title.textContent = isSignUpMode ? 'Officer Registration' : 'Welcome Back';
+            if (subtitle) subtitle.textContent = isSignUpMode
+                ? 'Create your authorized AnimoLED officer account.'
+                : 'Sign in to continue your AnimoLED journey.';
+            if (password) password.autocomplete = isSignUpMode ? 'new-password' : 'current-password';
+            setAuthPasswordVisibility(false);
+        }
+
+        function isRunningAsInstalledPwa() {
+            const standaloneDisplay = !!(window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+            const iosStandalone = window.navigator.standalone === true;
+            return standaloneDisplay || iosStandalone;
+        }
+
+        function isIOSDevice() {
+            const ua = navigator.userAgent || '';
+            const classicIOS = /iPad|iPhone|iPod/i.test(ua);
+            const iPadOSDesktopUa = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+            return classicIOS || iPadOSDesktopUa;
+        }
+
+        function isAndroidDevice() {
+            return /Android/i.test(navigator.userAgent || '');
+        }
+
+        function isLikelyInAppBrowser() {
+            const ua = navigator.userAgent || '';
+            return /FBAN|FBAV|Instagram|Messenger|Line\/|MicroMessenger|TikTok|Snapchat|Twitter|; wv\)|\bwv\b/i.test(ua);
+        }
+
+        function isLikelyMobileForInstall() {
+            const ua = navigator.userAgent || '';
+            return isIOSDevice()
+                || isAndroidDevice()
+                || /Mobi|Mobile|Tablet/i.test(ua)
+                || (navigator.maxTouchPoints > 1 && window.innerWidth <= 1024);
+        }
+
+        function setPwaInstallButtonLabel(label) {
+            const button = document.getElementById('pwaInstallBtn');
+            if (!button) return;
+            const labelSpan = button.querySelector('span');
+            if (labelSpan) labelSpan.textContent = label;
+            else button.textContent = label;
+        }
+
+        function refreshPwaInstallUI() {
+            const card = document.getElementById('pwaInstallCard');
+            const button = document.getElementById('pwaInstallBtn');
+            const hint = document.getElementById('pwaInstallHint');
+            const authContainer = document.getElementById('authContainer');
+            if (!card || !button || !hint) return;
+
+            const authVisible = !!authContainer && !authContainer.classList.contains('hidden');
+            if (!authVisible || isRunningAsInstalledPwa() || !isLikelyMobileForInstall()) {
+                pwaInstallUiMode = 'hidden';
+                card.classList.add('hidden');
+                button.disabled = false;
+                setPwaInstallButtonLabel('Install App');
+                return;
+            }
+
+            if (deferredPwaInstallPrompt) {
+                pwaInstallUiMode = 'native';
+                hint.textContent = 'Android: ready to open the browser install prompt.';
+            } else if (isLikelyInAppBrowser()) {
+                pwaInstallUiMode = 'inapp';
+                hint.textContent = isIOSDevice()
+                    ? 'Open in Safari to add AnimoLED to your Home Screen.'
+                    : 'Open in Chrome to install AnimoLED.';
+            } else if (isIOSDevice()) {
+                pwaInstallUiMode = 'ios';
+                hint.textContent = 'iPhone/iPad: Share → Add to Home Screen.';
+            } else if (isAndroidDevice()) {
+                pwaInstallUiMode = 'android-help';
+                hint.textContent = 'Android: use Chrome’s Install app or Add to Home screen option.';
+            } else {
+                pwaInstallUiMode = 'mobile-help';
+                hint.textContent = 'Use your browser’s Add to Home Screen option.';
+            }
+
+            card.classList.remove('hidden');
+            button.disabled = pwaInstallInProgress;
+            setPwaInstallButtonLabel(pwaInstallInProgress ? 'Opening...' : 'Install App');
+        }
+
+        function pwaHelpIconSvg(kind) {
+            if (kind === 'share') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"></path><path d="m8 7 4-4 4 4"></path><path d="M5 11v8h14v-8"></path></svg>';
+            if (kind === 'plus') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M12 8v8M8 12h8"></path></svg>';
+            if (kind === 'check') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="m8 12 2.5 2.5L16 9"></path></svg>';
+            if (kind === 'browser') return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M3.5 9h17M3.5 15h17M12 3c2 2.3 3 5.3 3 9s-1 6.7-3 9M12 3c-2 2.3-3 5.3-3 9s1 6.7 3 9"></path></svg>';
+            return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"></path><path d="m8 11 4 4 4-4"></path><path d="M5 20h14"></path></svg>';
+        }
+
+        function buildPwaHelpBody(mode) {
+            const body = document.getElementById('pwaInstallHelpBody');
+            if (!body) return;
+            body.replaceChildren();
+
+            const intro = document.createElement('p');
+            intro.className = 'pwa-install-help-intro';
+            const steps = [];
+            let fallback = '';
+
+            if (mode === 'ios' || (mode === 'inapp' && isIOSDevice())) {
+                intro.textContent = 'Install AnimoLED from Safari using the standard iPhone/iPad Home Screen flow.';
+                steps.push(
+                    ['share', '1. Tap the Share button.'],
+                    ['plus', '2. Choose Add to Home Screen.'],
+                    ['check', '3. If “Open as Web App” appears, keep it enabled.'],
+                    ['check', '4. Tap Add.']
+                );
+                fallback = 'If Add to Home Screen is not available in your current browser, open this page in Safari and try again.';
+            } else if (mode === 'inapp') {
+                intro.textContent = 'This in-app browser may not expose the normal PWA installation prompt.';
+                steps.push(
+                    ['browser', '1. Open this page in Chrome.'],
+                    ['download', '2. Open Chrome’s menu and choose Install app or Add to Home screen.'],
+                    ['check', '3. Confirm the browser installation prompt.']
+                );
+                fallback = 'AnimoLED remains fully usable in the browser even if you choose not to install it.';
+            } else if (mode === 'android-help') {
+                intro.textContent = 'Chrome can install AnimoLED as an app when the site is eligible for installation.';
+                steps.push(
+                    ['browser', '1. Open this page in Chrome.'],
+                    ['download', '2. Open the Chrome menu and choose Install app or Add to Home screen.'],
+                    ['check', '3. Confirm installation when Chrome asks.']
+                );
+                fallback = 'If the install option is missing, keep using AnimoLED in the browser and try again later after Chrome finishes checking install eligibility.';
+            } else {
+                intro.textContent = 'Your browser may provide an Add to Home Screen or Install app command in its menu.';
+                steps.push(
+                    ['browser', '1. Open your browser menu.'],
+                    ['plus', '2. Look for Add to Home Screen or Install app.'],
+                    ['check', '3. Follow the browser’s confirmation steps.']
+                );
+                fallback = 'If those options are not available, this browser may not support PWA installation.';
+            }
+
+            body.appendChild(intro);
+            steps.forEach(([icon, copy]) => {
+                const row = document.createElement('div');
+                row.className = 'pwa-install-step';
+                const iconEl = document.createElement('span');
+                iconEl.className = 'pwa-install-step-icon';
+                iconEl.innerHTML = pwaHelpIconSvg(icon);
+                const copyEl = document.createElement('div');
+                copyEl.className = 'pwa-install-step-copy';
+                copyEl.textContent = copy;
+                row.appendChild(iconEl);
+                row.appendChild(copyEl);
+                body.appendChild(row);
+            });
+
+            const note = document.createElement('div');
+            note.className = 'pwa-install-fallback-note';
+            note.textContent = fallback;
+            body.appendChild(note);
+        }
+
+        function openPwaInstallHelp(mode) {
+            const backdrop = document.getElementById('pwaInstallHelpBackdrop');
+            const title = document.getElementById('pwaInstallHelpTitle');
+            const closeButton = document.getElementById('pwaInstallHelpCloseBtn');
+            if (!backdrop) return;
+            pwaInstallHelpReturnFocus = document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : document.getElementById('pwaInstallBtn');
+            pwaInstallHelpPreviousBodyOverflow = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            if (title) title.textContent = (mode === 'ios' || (mode === 'inapp' && isIOSDevice()))
+                ? 'Install on iPhone or iPad'
+                : 'Install AnimoLED';
+            buildPwaHelpBody(mode);
+            backdrop.classList.remove('hidden');
+            backdrop.setAttribute('aria-hidden', 'false');
+            requestAnimationFrame(() => closeButton?.focus());
+        }
+
+        window.closePwaInstallHelp = function(restoreFocus = true) {
+            const backdrop = document.getElementById('pwaInstallHelpBackdrop');
+            if (!backdrop || backdrop.classList.contains('hidden')) return;
+            backdrop.classList.add('hidden');
+            backdrop.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = pwaInstallHelpPreviousBodyOverflow;
+            if (restoreFocus && pwaInstallHelpReturnFocus && typeof pwaInstallHelpReturnFocus.focus === 'function') {
+                try { pwaInstallHelpReturnFocus.focus(); } catch (e) {}
+            }
+            pwaInstallHelpReturnFocus = null;
+        };
+
+        window.handlePwaInstallHelpBackdrop = function(event) {
+            const backdrop = document.getElementById('pwaInstallHelpBackdrop');
+            if (event && backdrop && event.target === backdrop) window.closePwaInstallHelp();
+        };
+
+        window.handlePwaInstallClick = async function() {
+            if (pwaInstallInProgress) return;
+            if (isRunningAsInstalledPwa()) {
+                refreshPwaInstallUI();
+                return;
+            }
+
+            if (deferredPwaInstallPrompt) {
+                const promptEvent = deferredPwaInstallPrompt;
+                pwaInstallInProgress = true;
+                refreshPwaInstallUI();
+                try {
+                    await promptEvent.prompt();
+                    const choice = await promptEvent.userChoice;
+                    deferredPwaInstallPrompt = null;
+                    pwaInstallInProgress = false;
+                    if (choice && choice.outcome === 'accepted') {
+                        const card = document.getElementById('pwaInstallCard');
+                        if (card) card.classList.add('hidden');
+                    } else {
+                        refreshPwaInstallUI();
+                    }
+                } catch (error) {
+                    console.error('[PWA Install] Native install prompt failed:', error);
+                    deferredPwaInstallPrompt = null;
+                    pwaInstallInProgress = false;
+                    refreshPwaInstallUI();
+                    openPwaInstallHelp(isAndroidDevice() ? 'android-help' : 'mobile-help');
+                }
+                return;
+            }
+
+            if (isLikelyInAppBrowser()) {
+                openPwaInstallHelp('inapp');
+            } else if (isIOSDevice()) {
+                openPwaInstallHelp('ios');
+            } else if (isAndroidDevice()) {
+                openPwaInstallHelp('android-help');
+            } else {
+                openPwaInstallHelp('mobile-help');
+            }
+        };
+
+        window.addEventListener('beforeinstallprompt', event => {
+            event.preventDefault();
+            deferredPwaInstallPrompt = event;
+            refreshPwaInstallUI();
+        });
+
+        window.addEventListener('appinstalled', () => {
+            deferredPwaInstallPrompt = null;
+            pwaInstallInProgress = false;
+            const card = document.getElementById('pwaInstallCard');
+            if (card) card.classList.add('hidden');
+            const toast = document.getElementById('toastNotification');
+            if (toast && !document.getElementById('authContainer')?.classList.contains('hidden')) {
+                toast.textContent = 'AnimoLED installed successfully.';
+                toast.classList.remove('hidden');
+                setTimeout(() => toast.classList.add('hidden'), 3200);
+            }
+        });
+
+        document.addEventListener('keydown', event => {
+            if (event.key !== 'Escape') return;
+            const backdrop = document.getElementById('pwaInstallHelpBackdrop');
+            if (backdrop && !backdrop.classList.contains('hidden')) {
+                window.closePwaInstallHelp();
+            }
+        });
+
+        syncAuthModePresentation();
+        refreshPwaInstallUI();
+
+
         // Auth Listeners & Other App Init logic
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUser = user;
+                window.closePwaInstallHelp(false);
                 document.getElementById('authContainer').classList.add('hidden');
                 document.getElementById('appContainer').classList.remove('hidden');
+                refreshPwaInstallUI();
                 document.getElementById('profEmail').value = user.email;
                 
                 currentUserRole = (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? "admin" : "officer";
@@ -10588,6 +11523,8 @@
                 currentUser = null;
                 document.getElementById('authContainer').classList.remove('hidden');
                 document.getElementById('appContainer').classList.add('hidden');
+                syncAuthModePresentation();
+                refreshPwaInstallUI();
                 if (homeHighlightIntervalId) { clearInterval(homeHighlightIntervalId); homeHighlightIntervalId = null; }
                 if (cfSyncUnsubscribe) { try { cfSyncUnsubscribe(); } catch(e) {} cfSyncUnsubscribe = null; cfSyncBoundUid = null; }
             }
@@ -10702,6 +11639,7 @@
                 document.getElementById('authToggleBtn').textContent = "Register here";
                 document.getElementById('authEmail').placeholder = "user@dlszobel.edu.ph";
             }
+            syncAuthModePresentation();
         };
 
         window.handleLogout = function() {
