@@ -2566,6 +2566,450 @@
             .gospel-today-tag { right: 2px; font-size: 6.5px; }
         }
 
+
+        /* ============================================
+           ANNOUNCEMENT — Landing, Manager, Detail
+           Dedicated UI/state layer; Gospel styles remain untouched.
+           ============================================ */
+        .announcement-landing-card {
+            position: relative;
+            overflow: hidden;
+            margin: 0 0 16px 0;
+            padding: 16px 17px;
+            background: linear-gradient(145deg, #ffffff 0%, #fbfdf9 72%, #f0f5ed 100%);
+            border: 1px solid #dfe8dd;
+            border-left: 4px solid #7fa58a;
+            border-radius: 18px;
+            box-shadow: 0 7px 20px rgba(30,72,46,.06);
+            color: #20382a;
+        }
+
+        .announcement-landing-card::after {
+            content: '';
+            position: absolute;
+            right: -24px;
+            bottom: -34px;
+            width: 104px;
+            height: 104px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(91,143,107,.10) 0%, rgba(91,143,107,0) 72%);
+            pointer-events: none;
+        }
+
+        .announcement-card-head {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 9px;
+        }
+
+        .announcement-card-icon {
+            width: 38px;
+            height: 38px;
+            flex: 0 0 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: #e7efe4;
+            color: #2e7047;
+        }
+
+        .announcement-card-icon svg { width: 21px; height: 21px; }
+
+        .announcement-card-label {
+            display: inline-flex;
+            align-items: center;
+            min-height: 23px;
+            max-width: 100%;
+            padding: 0 9px;
+            border-radius: 999px;
+            background: #f7eecb;
+            border: 1px solid rgba(212,162,26,.18);
+            color: #7e6108;
+            font-size: 9.5px;
+            line-height: 1.1;
+            font-weight: 850;
+            letter-spacing: .65px;
+            text-transform: uppercase;
+            overflow-wrap: anywhere;
+        }
+
+        .announcement-landing-title,
+        .announcement-preview-card-title {
+            position: relative;
+            z-index: 1;
+            margin: 0;
+            color: #174d30;
+            font-size: 18px;
+            line-height: 1.25;
+            font-weight: 800;
+            letter-spacing: -.2px;
+        }
+
+        .announcement-landing-preview,
+        .announcement-preview-card-text {
+            position: relative;
+            z-index: 1;
+            margin-top: 7px;
+            color: #637168;
+            font-size: 13px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .announcement-landing-preview {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
+        }
+
+        .announcement-read-more-btn {
+            position: relative;
+            z-index: 1;
+            margin-top: 11px;
+            min-height: 44px;
+            padding: 9px 14px;
+            border: 1px solid rgba(46,112,71,.18);
+            border-radius: 999px;
+            background: #eef5eb;
+            color: #245d3c;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            touch-action: manipulation;
+        }
+
+        .announcement-read-more-btn:hover { background: #e4ede1; }
+        .announcement-read-more-btn:disabled { cursor: default; opacity: .72; }
+
+        .announcement-settings-main {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+        }
+
+        .announcement-settings-icon {
+            width: 22px;
+            height: 22px;
+            flex: 0 0 auto;
+            color: var(--primary-green);
+        }
+
+        .announcement-settings-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .announcement-settings-copy small {
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .announcement-manager-shell {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .announcement-manager-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .announcement-admin-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 0 9px;
+            border-radius: 999px;
+            background: #f7eecb;
+            border: 1px solid rgba(212,162,26,.2);
+            color: #765a08;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .45px;
+        }
+
+        .announcement-manager-info {
+            margin-bottom: 16px;
+            padding: 13px 14px;
+            border-radius: 14px;
+            background: #f2f6f0;
+            border: 1px solid #e3eae1;
+            color: #53675a;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .announcement-manager-panel {
+            margin-bottom: 18px;
+            padding: 18px;
+            background: #fff;
+            border: 1px solid #e3eae1;
+            border-radius: 18px;
+            box-shadow: 0 5px 18px rgba(30,72,46,.05);
+        }
+
+        .announcement-form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        .announcement-field label {
+            display: block;
+            margin-bottom: 6px;
+            color: #718077;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .announcement-field input,
+        .announcement-field textarea,
+        .announcement-field select {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #e3eae1;
+            border-radius: 12px;
+            background: #fbfcfa;
+            color: #20382a;
+            padding: 11px 12px;
+            font: inherit;
+            font-size: 14px;
+            line-height: 1.5;
+            outline: none;
+        }
+
+        .announcement-field textarea { resize: vertical; }
+        #announcementPreviewInput { min-height: 105px; }
+        #announcementFullInput { min-height: 230px; }
+
+        .announcement-field input:focus,
+        .announcement-field textarea:focus,
+        .announcement-field select:focus {
+            border-color: #5f8f6b;
+            box-shadow: 0 0 0 3px rgba(46,112,71,.10);
+            background: #fff;
+        }
+
+        .announcement-field-help,
+        .announcement-manager-meta {
+            margin-top: 6px;
+            color: #7c8980;
+            font-size: 10px;
+            line-height: 1.45;
+        }
+
+        .announcement-status-help {
+            margin-top: 7px;
+            padding: 9px 10px;
+            border-radius: 10px;
+            background: #f6f8f5;
+            border: 1px solid #e7ece5;
+            color: #66756b;
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        .announcement-manager-actions {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .announcement-manager-actions .btn-ui { min-height: 44px; }
+
+        .announcement-preview-title {
+            margin: 0 0 12px;
+            color: #174d30;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .55px;
+        }
+
+        .announcement-student-preview-card {
+            border: 1px solid #dfe8dd;
+            border-left: 4px solid #7fa58a;
+            border-radius: 18px;
+            padding: 16px;
+            background: linear-gradient(145deg, #ffffff 0%, #fbfdf9 75%, #f0f5ed 100%);
+            box-shadow: 0 5px 16px rgba(30,72,46,.05);
+        }
+
+        .announcement-preview-empty {
+            color: #87938b;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        /* Isolated centered Announcement detail modal. */
+        .announcement-detail-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 9600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left));
+            box-sizing: border-box;
+            background: rgba(15,35,24,.45);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+
+        .announcement-detail-modal {
+            width: min(720px, calc(100vw - 32px));
+            max-height: min(86vh, 760px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #fffefa;
+            color: #20382a;
+            border: 1px solid rgba(255,255,255,.72);
+            border-radius: 24px;
+            box-shadow: 0 26px 70px rgba(11,35,21,.30);
+        }
+
+        .announcement-detail-header {
+            position: relative;
+            flex: 0 0 auto;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 20px 68px 15px 20px;
+            border-bottom: 1px solid #e9eee7;
+            background: rgba(255,254,250,.98);
+            z-index: 2;
+        }
+
+        .announcement-detail-header .announcement-card-icon {
+            margin-top: 1px;
+        }
+
+        .announcement-detail-label {
+            color: #7e6108;
+            font-size: 9.5px;
+            font-weight: 850;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+            overflow-wrap: anywhere;
+        }
+
+        .announcement-detail-title {
+            margin: 5px 0 0;
+            color: #174d30;
+            font-size: 24px;
+            line-height: 1.22;
+            font-weight: 800;
+            letter-spacing: -.3px;
+        }
+
+        .announcement-detail-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border: 1px solid #e3eae1;
+            border-radius: 50%;
+            background: #fff;
+            color: #476352;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4;
+        }
+
+        .announcement-detail-scroll {
+            min-height: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            padding: 19px 20px 24px;
+        }
+
+        .announcement-detail-body {
+            margin: 0;
+            color: #31483a;
+            font-size: 15px;
+            line-height: 1.76;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .announcement-detail-meta {
+            margin-top: 18px;
+            color: #829087;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        @media (min-width: 861px) {
+            .announcement-manager-panel { padding: 22px; }
+            .announcement-form-grid { grid-template-columns: 1fr 1fr; }
+            .announcement-field.announcement-field-wide { grid-column: 1 / -1; }
+            .announcement-landing-card { padding: 17px 20px; }
+            .announcement-landing-preview { -webkit-line-clamp: 4; }
+        }
+
+        @media (max-width: 860px) {
+            .announcement-landing-card {
+                margin-bottom: 16px;
+                padding: 14px 15px;
+                border-radius: 17px;
+                box-shadow: 0 6px 18px rgba(30,72,46,.055);
+            }
+            .announcement-card-icon { width: 36px; height: 36px; flex-basis: 36px; }
+            .announcement-landing-title,
+            .announcement-preview-card-title { font-size: 17px; }
+            .announcement-landing-preview,
+            .announcement-preview-card-text { font-size: 12.5px; line-height: 1.52; }
+
+            .announcement-manager-panel {
+                padding: 14px;
+                border-radius: 16px;
+            }
+            .announcement-manager-actions { flex-direction: column; }
+            .announcement-manager-actions .btn-ui { width: 100%; }
+
+            .announcement-detail-backdrop {
+                padding: calc(14px + var(--safe-top)) calc(14px + var(--safe-right)) calc(14px + var(--safe-bottom)) calc(14px + var(--safe-left));
+            }
+            .announcement-detail-modal {
+                width: calc(100vw - 28px - var(--safe-left) - var(--safe-right));
+                max-height: calc(100dvh - 28px - var(--safe-top) - var(--safe-bottom));
+                border-radius: 24px;
+            }
+            .announcement-detail-header { padding: 17px 60px 14px 17px; }
+            .announcement-detail-title { font-size: 21px; }
+            .announcement-detail-close { top: 9px; right: 9px; }
+            .announcement-detail-scroll { padding: 16px 17px 21px; }
+            .announcement-detail-body { font-size: 14px; line-height: 1.7; }
+        }
+
 </style>
 </head>
 <body>
@@ -2700,6 +3144,26 @@
                     <button id="gospelReadMoreBtn" class="gospel-read-more-btn" type="button" onclick="openGospelDetailModal()">
                         <span>Read More</span>
                         <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
+                    </button>
+                </section>
+
+                <!-- ANNOUNCEMENT — independent current landing-page notice -->
+                <section id="announcementLandingCard" class="announcement-landing-card hidden" aria-live="polite">
+                    <div class="announcement-card-head">
+                        <span class="announcement-card-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4 13.5v-3l11-4.5v12L4 13.5Z"></path>
+                                <path d="M15 9h2.5a2.5 2.5 0 0 1 0 5H15"></path>
+                                <path d="m6.5 14 1.3 5h3.4l-1.6-3.8"></path>
+                            </svg>
+                        </span>
+                        <span id="announcementLandingLabel" class="announcement-card-label"></span>
+                    </div>
+                    <h3 id="announcementLandingTitle" class="announcement-landing-title"></h3>
+                    <div id="announcementLandingPreview" class="announcement-landing-preview"></div>
+                    <button id="announcementReadMoreBtn" class="announcement-read-more-btn" type="button" onclick="openAnnouncementDetailModal()">
+                        <span>Read More</span>
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
                     </button>
                 </section>
 
@@ -3287,6 +3751,20 @@
                             </span>
                             <span>›</span>
                         </button>
+                        <button class="settings-list-item admin-only-field hidden" type="button" onclick="navigateTo('announcementManager')">
+                            <span class="announcement-settings-main">
+                                <svg class="announcement-settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M4 13.5v-3l11-4.5v12L4 13.5Z"></path>
+                                    <path d="M15 9h2.5a2.5 2.5 0 0 1 0 5H15"></path>
+                                    <path d="m6.5 14 1.3 5h3.4l-1.6-3.8"></path>
+                                </svg>
+                                <span class="announcement-settings-copy">
+                                    <span>Announcement Manager</span>
+                                    <small>Manage the landing page announcement</small>
+                                </span>
+                            </span>
+                            <span>›</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -3427,6 +3905,94 @@
                 </div>
             </div>
 
+            <!-- ANNOUNCEMENT MANAGER (Main Admin only) -->
+            <div id="announcementManagerView" class="hidden">
+                <div class="view-header-flex">
+                    <div>
+                        <div class="settings-section-label" style="margin:0 0 5px 0;">Settings</div>
+                        <div class="announcement-manager-heading">
+                            <h2 class="view-title">Announcement Manager</h2>
+                            <span class="announcement-admin-badge">Main Admin Only</span>
+                        </div>
+                    </div>
+                    <div class="btn-set">
+                        <button class="btn-ui btn-gray" type="button" onclick="navigateFromAnnouncementManagerToSettings()">← Back to Settings</button>
+                    </div>
+                </div>
+
+                <div class="announcement-manager-shell">
+                    <div class="announcement-manager-info">
+                        Create or update the landing page Announcement preview and Read More content. An Active, complete Announcement is visible to all authenticated roles and is independent of Cycle Day or class modality.
+                    </div>
+
+                    <div class="announcement-manager-panel">
+                        <div class="announcement-form-grid">
+                            <div class="announcement-field">
+                                <label for="announcementLabelInput">Announcement Label</label>
+                                <input id="announcementLabelInput" type="text" placeholder="e.g., LATEST ANNOUNCEMENT" oninput="handleAnnouncementManagerInput()">
+                                <div id="announcementLabelCounter" class="announcement-field-help">0 characters · under 40 recommended</div>
+                            </div>
+
+                            <div class="announcement-field">
+                                <label for="announcementTitleInput">Announcement Title</label>
+                                <input id="announcementTitleInput" type="text" placeholder="Enter the announcement title" oninput="handleAnnouncementManagerInput()">
+                                <div id="announcementTitleCounter" class="announcement-field-help">0 characters · under 100 recommended</div>
+                            </div>
+
+                            <div class="announcement-field announcement-field-wide">
+                                <label for="announcementPreviewInput">Announcement Preview</label>
+                                <textarea id="announcementPreviewInput" placeholder="Short preview shown on the Schedule landing page" oninput="handleAnnouncementManagerInput()"></textarea>
+                                <div id="announcementPreviewCounter" class="announcement-field-help">0 characters · 150–250 recommended</div>
+                            </div>
+
+                            <div class="announcement-field announcement-field-wide">
+                                <label for="announcementFullInput">Full Announcement</label>
+                                <textarea id="announcementFullInput" placeholder="Enter the full Announcement. Multiple paragraphs, line breaks, Unicode, and emojis are preserved." oninput="handleAnnouncementManagerInput()"></textarea>
+                                <div id="announcementFullCounter" class="announcement-field-help">0 characters</div>
+                            </div>
+
+                            <div class="announcement-field">
+                                <label for="announcementStatusInput">Visibility Status</label>
+                                <select id="announcementStatusInput" onchange="handleAnnouncementManagerInput()">
+                                    <option value="active">Active</option>
+                                    <option value="hidden" selected>Hidden</option>
+                                </select>
+                                <div class="announcement-status-help">Hidden keeps the Announcement saved but removes it from the landing page. Clear Announcement permanently removes it.</div>
+                            </div>
+                        </div>
+
+                        <div id="announcementManagerMeta" class="announcement-manager-meta">Not yet saved.</div>
+
+                        <div class="announcement-manager-actions">
+                            <button id="announcementSaveBtn" class="btn-ui btn-green" type="button" onclick="saveAnnouncement()">Save Announcement</button>
+                            <button id="announcementClearBtn" class="btn-ui btn-red" type="button" onclick="clearAnnouncement()">Clear Announcement</button>
+                        </div>
+                    </div>
+
+                    <div class="announcement-manager-panel">
+                        <h3 class="announcement-preview-title">Student Preview</h3>
+                        <div id="announcementStudentPreview" class="announcement-student-preview-card">
+                            <div id="announcementStudentPreviewEmpty" class="announcement-preview-empty">Enter Announcement details to preview it here.</div>
+                            <div id="announcementStudentPreviewContent" class="hidden">
+                                <div class="announcement-card-head">
+                                    <span class="announcement-card-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4 13.5v-3l11-4.5v12L4 13.5Z"></path>
+                                            <path d="M15 9h2.5a2.5 2.5 0 0 1 0 5H15"></path>
+                                            <path d="m6.5 14 1.3 5h3.4l-1.6-3.8"></path>
+                                        </svg>
+                                    </span>
+                                    <span id="announcementStudentPreviewLabel" class="announcement-card-label"></span>
+                                </div>
+                                <h3 id="announcementStudentPreviewTitle" class="announcement-preview-card-title"></h3>
+                                <div id="announcementStudentPreviewText" class="announcement-preview-card-text"></div>
+                                <button class="announcement-read-more-btn" type="button" disabled aria-disabled="true">Read More</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- MOBILE LIGHT APP SHELL: FLOATING PRIMARY NAVIGATION -->
@@ -3516,6 +4082,30 @@
                         <div class="gospel-detail-section-title">General Reflection</div>
                         <p id="gospelDetailReflection" class="gospel-detail-copy"></p>
                     </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ANNOUNCEMENT DETAIL — single reusable centered modal -->
+        <div id="announcementDetailBackdrop" class="announcement-detail-backdrop hidden" onclick="handleAnnouncementBackdropClick(event)" aria-hidden="true">
+            <section id="announcementDetailModal" class="announcement-detail-modal" role="dialog" aria-modal="true" aria-labelledby="announcementDetailTitle" tabindex="-1">
+                <div class="announcement-detail-header">
+                    <span class="announcement-card-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 13.5v-3l11-4.5v12L4 13.5Z"></path>
+                            <path d="M15 9h2.5a2.5 2.5 0 0 1 0 5H15"></path>
+                            <path d="m6.5 14 1.3 5h3.4l-1.6-3.8"></path>
+                        </svg>
+                    </span>
+                    <div>
+                        <div id="announcementDetailLabel" class="announcement-detail-label"></div>
+                        <h3 id="announcementDetailTitle" class="announcement-detail-title"></h3>
+                    </div>
+                    <button id="announcementDetailCloseBtn" class="announcement-detail-close" type="button" onclick="closeAnnouncementDetailModal()" aria-label="Close Announcement">×</button>
+                </div>
+                <div class="announcement-detail-scroll">
+                    <p id="announcementDetailBody" class="announcement-detail-body"></p>
+                    <div id="announcementDetailMeta" class="announcement-detail-meta"></div>
                 </div>
             </section>
         </div>
@@ -4707,6 +5297,7 @@
         function renderScheduleHome() {
             renderMobileScheduleWelcome();
             renderGospelOfTheDay();
+            renderLandingAnnouncement();
             renderHomeHighlight();
             renderMobileDayTabs();
             renderMobileScheduleForDay(selectedMobileScheduleDay);
@@ -5328,6 +5919,363 @@
         window.handleGospelBackdropClick = function(event) {
             const backdrop = document.getElementById('gospelDetailBackdrop');
             if (event && backdrop && event.target === backdrop) window.closeGospelDetailModal();
+        };
+
+
+        // ============================================
+        // ANNOUNCEMENT — one current landing-page notice
+        // ============================================
+        const ANNOUNCEMENT_ROOT = 'announcements/ay_2026_2027/current';
+        let announcementData = null;
+        let announcementDataLoaded = false;
+        let announcementSyncUnsubscribe = null;
+        let announcementSyncBoundUid = null;
+        let announcementManagerDirty = false;
+        let announcementSaveInProgress = false;
+        let announcementClearInProgress = false;
+        let announcementModalPreviousBodyOverflow = '';
+        let announcementModalReturnFocus = null;
+
+        function isCompleteAnnouncementEntry(entry) {
+            return !!entry &&
+                typeof entry.label === 'string' && !!entry.label.trim() &&
+                typeof entry.title === 'string' && !!entry.title.trim() &&
+                typeof entry.preview === 'string' && !!entry.preview.trim() &&
+                typeof entry.fullAnnouncement === 'string' && !!entry.fullAnnouncement.trim();
+        }
+
+        function getActiveAnnouncementEntry() {
+            if (!announcementDataLoaded) return null;
+            if (!isCompleteAnnouncementEntry(announcementData)) return null;
+            if (announcementData.active !== true) return null;
+            return announcementData;
+        }
+
+        function announcementDetailIsOpen() {
+            const backdrop = document.getElementById('announcementDetailBackdrop');
+            return !!backdrop && !backdrop.classList.contains('hidden');
+        }
+
+        function renderLandingAnnouncement() {
+            const card = document.getElementById('announcementLandingCard');
+            if (!card) return;
+
+            const entry = getActiveAnnouncementEntry();
+            if (!entry) {
+                card.classList.add('hidden');
+                document.getElementById('announcementLandingLabel').textContent = '';
+                document.getElementById('announcementLandingTitle').textContent = '';
+                document.getElementById('announcementLandingPreview').textContent = '';
+                if (announcementDetailIsOpen()) window.closeAnnouncementDetailModal();
+                return;
+            }
+
+            document.getElementById('announcementLandingLabel').textContent = entry.label.trim();
+            document.getElementById('announcementLandingTitle').textContent = entry.title.trim();
+            document.getElementById('announcementLandingPreview').textContent = entry.preview.trim();
+            card.classList.remove('hidden');
+
+            if (announcementDetailIsOpen()) populateAnnouncementDetailModal(entry);
+        }
+
+        function bindAnnouncementSync() {
+            if (!currentUser) return;
+            if (announcementSyncBoundUid === currentUser.uid && announcementSyncUnsubscribe) return;
+            if (announcementSyncUnsubscribe) {
+                try { announcementSyncUnsubscribe(); } catch (err) { console.warn('[Announcement] Failed to unbind old listener:', err); }
+            }
+
+            announcementSyncBoundUid = currentUser.uid;
+            announcementDataLoaded = false;
+            announcementData = null;
+            renderLandingAnnouncement();
+
+            announcementSyncUnsubscribe = onValue(ref(db, ANNOUNCEMENT_ROOT), (snapshot) => {
+                announcementData = snapshot.val() || null;
+                announcementDataLoaded = true;
+                renderLandingAnnouncement();
+                renderAnnouncementManagerIfOpen();
+            }, (err) => {
+                console.error('[Announcement] Live sync failed:', err);
+                announcementData = null;
+                announcementDataLoaded = false;
+                renderLandingAnnouncement();
+                renderAnnouncementManagerIfOpen();
+            });
+        }
+
+        function unbindAnnouncementSync() {
+            if (announcementSyncUnsubscribe) {
+                try { announcementSyncUnsubscribe(); } catch (err) { console.warn('[Announcement] Failed to unbind listener:', err); }
+            }
+            announcementSyncUnsubscribe = null;
+            announcementSyncBoundUid = null;
+            announcementData = null;
+            announcementDataLoaded = false;
+            announcementManagerDirty = false;
+            announcementSaveInProgress = false;
+            announcementClearInProgress = false;
+            renderLandingAnnouncement();
+            window.closeAnnouncementDetailModal();
+        }
+
+        function announcementManagerIsOpen() {
+            const view = document.getElementById('announcementManagerView');
+            return !!view && !view.classList.contains('hidden');
+        }
+
+        function updateAnnouncementManagerMeta(entry) {
+            const meta = document.getElementById('announcementManagerMeta');
+            if (!meta) return;
+            if (entry && entry.updatedAt) {
+                const who = entry.updatedByName || entry.updatedByEmail || 'Main Admin';
+                meta.textContent = `Last updated by ${who} · ${entry.updatedAt}`;
+            } else {
+                meta.textContent = 'Not yet saved.';
+            }
+        }
+
+        function populateAnnouncementManagerFields() {
+            const entry = announcementData || {};
+            document.getElementById('announcementLabelInput').value = typeof entry.label === 'string' ? entry.label : '';
+            document.getElementById('announcementTitleInput').value = typeof entry.title === 'string' ? entry.title : '';
+            document.getElementById('announcementPreviewInput').value = typeof entry.preview === 'string' ? entry.preview : '';
+            document.getElementById('announcementFullInput').value = typeof entry.fullAnnouncement === 'string' ? entry.fullAnnouncement : '';
+            document.getElementById('announcementStatusInput').value = entry.active === true ? 'active' : 'hidden';
+            updateAnnouncementManagerMeta(entry);
+            announcementManagerDirty = false;
+            updateAnnouncementManagerPreview();
+        }
+
+        function prepareAnnouncementManager() {
+            if (currentUserRole !== 'admin') return;
+            populateAnnouncementManagerFields();
+        }
+
+        function renderAnnouncementManagerIfOpen() {
+            if (!announcementManagerIsOpen()) return;
+            updateAnnouncementManagerMeta(announcementData);
+            if (!announcementManagerDirty) {
+                populateAnnouncementManagerFields();
+            } else {
+                updateAnnouncementManagerPreview();
+            }
+        }
+
+        function updateAnnouncementManagerPreview() {
+            const labelInput = document.getElementById('announcementLabelInput');
+            const titleInput = document.getElementById('announcementTitleInput');
+            const previewInput = document.getElementById('announcementPreviewInput');
+            const fullInput = document.getElementById('announcementFullInput');
+            if (!labelInput || !titleInput || !previewInput || !fullInput) return;
+
+            const label = labelInput.value;
+            const title = titleInput.value;
+            const preview = previewInput.value;
+            const full = fullInput.value;
+
+            const labelCounter = document.getElementById('announcementLabelCounter');
+            const titleCounter = document.getElementById('announcementTitleCounter');
+            const previewCounter = document.getElementById('announcementPreviewCounter');
+            const fullCounter = document.getElementById('announcementFullCounter');
+            if (labelCounter) labelCounter.textContent = `${label.length} characters · under 40 recommended`;
+            if (titleCounter) titleCounter.textContent = `${title.length} characters · under 100 recommended`;
+            if (previewCounter) previewCounter.textContent = `${preview.length} characters · 150–250 recommended`;
+            if (fullCounter) fullCounter.textContent = `${full.length} characters`;
+
+            const hasPreviewContent = !!label.trim() || !!title.trim() || !!preview.trim();
+            const empty = document.getElementById('announcementStudentPreviewEmpty');
+            const content = document.getElementById('announcementStudentPreviewContent');
+            if (empty) empty.classList.toggle('hidden', hasPreviewContent);
+            if (content) content.classList.toggle('hidden', !hasPreviewContent);
+
+            if (hasPreviewContent) {
+                document.getElementById('announcementStudentPreviewLabel').textContent = label.trim();
+                document.getElementById('announcementStudentPreviewTitle').textContent = title.trim();
+                document.getElementById('announcementStudentPreviewText').textContent = preview.trim();
+            }
+        }
+
+        window.handleAnnouncementManagerInput = function() {
+            if (!announcementManagerIsOpen()) return;
+            announcementManagerDirty = true;
+            updateAnnouncementManagerPreview();
+        };
+
+        function collectAnnouncementManagerValues() {
+            const status = document.getElementById('announcementStatusInput').value;
+            return {
+                label: document.getElementById('announcementLabelInput').value.trim(),
+                title: document.getElementById('announcementTitleInput').value.trim(),
+                preview: document.getElementById('announcementPreviewInput').value.trim(),
+                fullAnnouncement: document.getElementById('announcementFullInput').value.trim(),
+                status,
+                active: status === 'active'
+            };
+        }
+
+        window.saveAnnouncement = async function() {
+            if (currentUserRole !== 'admin') {
+                showAppAlert('Access Denied', 'Only the Main Admin can save the landing-page Announcement.');
+                return;
+            }
+            if (announcementSaveInProgress) return;
+
+            const values = collectAnnouncementManagerValues();
+            const missing = [];
+            if (!values.label) missing.push('Announcement Label');
+            if (!values.title) missing.push('Announcement Title');
+            if (!values.preview) missing.push('Announcement Preview');
+            if (!values.fullAnnouncement) missing.push('Full Announcement');
+            if (values.status !== 'active' && values.status !== 'hidden') missing.push('Visibility Status');
+
+            if (missing.length) {
+                showAppAlert('Required Announcement Fields', 'Please complete: ' + missing.join(', ') + '.');
+                return;
+            }
+
+            const btn = document.getElementById('announcementSaveBtn');
+            announcementSaveInProgress = true;
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Saving...';
+            }
+
+            try {
+                const now = new Date();
+                const payload = {
+                    label: values.label,
+                    title: values.title,
+                    preview: values.preview,
+                    fullAnnouncement: values.fullAnnouncement,
+                    active: values.active,
+                    updatedAt: now.toLocaleString(),
+                    updatedAtMs: now.getTime(),
+                    updatedByUid: currentUser ? currentUser.uid : '',
+                    updatedByEmail: currentUser && currentUser.email ? currentUser.email : '',
+                    updatedByName: userFullName || 'Main Admin'
+                };
+
+                await set(ref(db, ANNOUNCEMENT_ROOT), payload);
+                announcementManagerDirty = false;
+                updateAnnouncementManagerMeta(payload);
+                showAppAlert(
+                    'Announcement Saved',
+                    values.active
+                        ? 'The landing-page announcement was saved successfully.'
+                        : 'The announcement was saved and is currently hidden from users.'
+                );
+            } catch (err) {
+                console.error('[Announcement] Save failed:', err);
+                showAppAlert('Database Error', 'The Announcement could not be saved.\nFirebase returned: ' + err.message);
+            } finally {
+                announcementSaveInProgress = false;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Save Announcement';
+                }
+            }
+        };
+
+        window.clearAnnouncement = function() {
+            if (currentUserRole !== 'admin') {
+                showAppAlert('Access Denied', 'Only the Main Admin can clear the landing-page Announcement.');
+                return;
+            }
+            if (announcementClearInProgress) return;
+
+            showAppConfirm(
+                'Clear Announcement?',
+                'This will permanently remove the current Announcement Label, Title, Preview, Full Announcement, and visibility status.\n\nThe Announcement card will disappear from the landing page.\n\nThis action does not affect the Gospel of the Day, Cycle Day configuration, Attendance, Mission Collection, or Class Funds.\n\nContinue?',
+                true,
+                async (confirmed) => {
+                    if (!confirmed || announcementClearInProgress) return;
+
+                    const btn = document.getElementById('announcementClearBtn');
+                    announcementClearInProgress = true;
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.textContent = 'Clearing...';
+                    }
+
+                    try {
+                        await remove(ref(db, ANNOUNCEMENT_ROOT));
+                        announcementData = null;
+                        announcementDataLoaded = true;
+                        announcementManagerDirty = false;
+                        renderLandingAnnouncement();
+                        if (announcementManagerIsOpen()) populateAnnouncementManagerFields();
+                        showAppAlert('Announcement Cleared', 'The landing-page announcement has been removed.');
+                    } catch (err) {
+                        console.error('[Announcement] Clear failed:', err);
+                        showAppAlert('Database Error', 'The Announcement could not be cleared.\nFirebase returned: ' + err.message);
+                    } finally {
+                        announcementClearInProgress = false;
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.textContent = 'Clear Announcement';
+                        }
+                    }
+                }
+            );
+
+            const confirmBtn = document.getElementById('appConfirmOkBtn');
+            if (confirmBtn) confirmBtn.textContent = 'Clear Announcement';
+        };
+
+        window.navigateFromAnnouncementManagerToSettings = function() {
+            window.navigateTo('settings');
+        };
+
+        function populateAnnouncementDetailModal(entry) {
+            if (!isCompleteAnnouncementEntry(entry)) return;
+            document.getElementById('announcementDetailLabel').textContent = entry.label.trim();
+            document.getElementById('announcementDetailTitle').textContent = entry.title.trim();
+            document.getElementById('announcementDetailBody').textContent = entry.fullAnnouncement.trim();
+
+            const meta = document.getElementById('announcementDetailMeta');
+            if (meta) meta.textContent = entry.updatedAt ? `Last updated ${entry.updatedAt}` : '';
+        }
+
+        window.openAnnouncementDetailModal = function() {
+            const entry = getActiveAnnouncementEntry();
+            if (!entry) {
+                renderLandingAnnouncement();
+                return;
+            }
+
+            const backdrop = document.getElementById('announcementDetailBackdrop');
+            if (!backdrop || !backdrop.classList.contains('hidden')) return;
+
+            populateAnnouncementDetailModal(entry);
+            announcementModalReturnFocus = document.activeElement;
+            announcementModalPreviousBodyOverflow = document.body.style.overflow || '';
+            document.body.style.overflow = 'hidden';
+            backdrop.classList.remove('hidden');
+            backdrop.setAttribute('aria-hidden', 'false');
+
+            const closeBtn = document.getElementById('announcementDetailCloseBtn');
+            if (closeBtn) closeBtn.focus();
+        };
+
+        window.closeAnnouncementDetailModal = function() {
+            const backdrop = document.getElementById('announcementDetailBackdrop');
+            if (!backdrop || backdrop.classList.contains('hidden')) return;
+
+            backdrop.classList.add('hidden');
+            backdrop.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = announcementModalPreviousBodyOverflow;
+
+            const returnFocus = announcementModalReturnFocus;
+            announcementModalReturnFocus = null;
+            if (returnFocus && document.contains(returnFocus) && typeof returnFocus.focus === 'function') {
+                returnFocus.focus();
+            }
+        };
+
+        window.handleAnnouncementBackdropClick = function(event) {
+            const backdrop = document.getElementById('announcementDetailBackdrop');
+            if (event && backdrop && event.target === backdrop) window.closeAnnouncementDetailModal();
         };
 
 
@@ -7932,6 +8880,7 @@
                 bindMissionCollectionSync();
                 bindCycleDaySync();
                 bindGospelOfTheDaySync();
+                bindAnnouncementSync();
                 bindClassFundsSync();
 
                 showView('schedule');
@@ -7948,7 +8897,9 @@
             } else {
                 closeMobileMoreSheet();
                 closeGospelDetailModal();
+                closeAnnouncementDetailModal();
                 unbindGospelOfTheDaySync();
+                unbindAnnouncementSync();
                 currentUser = null;
                 document.getElementById('authContainer').classList.remove('hidden');
                 document.getElementById('appContainer').classList.add('hidden');
@@ -8083,7 +9034,7 @@
             if (viewName === 'dashboard' || viewName === 'dailySheet') return 'dashboard';
             if (viewName === 'missionCollection') return 'missionCollection';
             if (viewName === 'classFunds') return 'classFunds';
-            if (viewName === 'officers' || viewName === 'profile' || viewName === 'settings' || viewName === 'cycleDayManager' || viewName === 'gospelManager') return 'more';
+            if (viewName === 'officers' || viewName === 'profile' || viewName === 'settings' || viewName === 'cycleDayManager' || viewName === 'gospelManager' || viewName === 'announcementManager') return 'more';
             return '';
         }
 
@@ -8177,6 +9128,11 @@
 
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape') {
+                const announcementBackdrop = document.getElementById('announcementDetailBackdrop');
+                if (announcementBackdrop && !announcementBackdrop.classList.contains('hidden')) {
+                    window.closeAnnouncementDetailModal();
+                    return;
+                }
                 const gospelBackdrop = document.getElementById('gospelDetailBackdrop');
                 if (gospelBackdrop && !gospelBackdrop.classList.contains('hidden')) {
                     window.closeGospelDetailModal();
@@ -8187,8 +9143,8 @@
             }
         });
 
-        const ALL_TOP_LEVEL_VIEWS = ['classScheduleView', 'dashboardMatrixView', 'dailyAttendanceSheetView', 'officerProfileView', 'adminOfficersView', 'missionCollectionView', 'classFundsView', 'settingsView', 'cycleDayManagerView', 'gospelManagerView'];
-        const NAV_TITLES = { schedule: 'Class Schedule', dashboard: 'Attendance Tracker', dailySheet: 'Attendance Sheet', missionCollection: 'Mission Collection', classFunds: 'Class Funds', officers: 'My Officers', profile: 'My Profile', settings: 'Settings', cycleDayManager: 'Cycle Day Manager', gospelManager: 'Gospel of the Day Manager' };
+        const ALL_TOP_LEVEL_VIEWS = ['classScheduleView', 'dashboardMatrixView', 'dailyAttendanceSheetView', 'officerProfileView', 'adminOfficersView', 'missionCollectionView', 'classFundsView', 'settingsView', 'cycleDayManagerView', 'gospelManagerView', 'announcementManagerView'];
+        const NAV_TITLES = { schedule: 'Class Schedule', dashboard: 'Attendance Tracker', dailySheet: 'Attendance Sheet', missionCollection: 'Mission Collection', classFunds: 'Class Funds', officers: 'My Officers', profile: 'My Profile', settings: 'Settings', cycleDayManager: 'Cycle Day Manager', gospelManager: 'Gospel of the Day Manager', announcementManager: 'Announcement Manager' };
 
         window.showView = function(viewName) {
             ALL_TOP_LEVEL_VIEWS.forEach(id => document.getElementById(id).classList.add('hidden'));
@@ -8224,6 +9180,13 @@
                 }
                 document.getElementById('gospelManagerView').classList.remove('hidden');
                 prepareGospelManager();
+            } else if (viewName === 'announcementManager') {
+                if (currentUserRole !== 'admin') {
+                    document.getElementById('settingsView').classList.remove('hidden');
+                    return;
+                }
+                document.getElementById('announcementManagerView').classList.remove('hidden');
+                prepareAnnouncementManager();
             } else if (viewName === 'dailySheet') {
                 document.getElementById('dailyAttendanceSheetView').classList.remove('hidden');
             }
@@ -8232,6 +9195,10 @@
         window.navigateTo = function(viewName) {
             if (viewName === 'gospelManager' && currentUserRole !== 'admin') {
                 showAppAlert('Access Denied', 'Only the Main Admin can access the Gospel of the Day Manager.');
+                return;
+            }
+            if (viewName === 'announcementManager' && currentUserRole !== 'admin') {
+                showAppAlert('Access Denied', 'Only the Main Admin can access the Announcement Manager.');
                 return;
             }
 
@@ -8244,6 +9211,20 @@ Leaving this page will discard those changes.`,
                     (confirmed) => {
                         if (!confirmed) return;
                         gospelManagerDirty = false;
+                        window.navigateTo(viewName);
+                    }
+                );
+                return;
+            }
+
+            if (viewName !== 'announcementManager' && announcementManagerDirty && announcementManagerIsOpen()) {
+                showAppConfirm(
+                    'Unsaved Changes',
+                    'You have unsaved Announcement changes.\nLeaving this page will discard them.',
+                    false,
+                    (confirmed) => {
+                        if (!confirmed) return;
+                        announcementManagerDirty = false;
                         window.navigateTo(viewName);
                     }
                 );
