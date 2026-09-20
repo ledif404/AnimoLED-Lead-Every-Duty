@@ -1414,6 +1414,665 @@
             .cf-chart-wrap { min-height:220px; }
         }
 
+
+        /* ============================================
+           MOBILE LIGHT APP SHELL — Floating Navigation
+           UI-only layer; desktop and application logic remain unchanged.
+           ============================================ */
+        .mobile-account-btn,
+        .mobile-bottom-nav,
+        .mobile-more-backdrop,
+        .mobile-more-sheet,
+        .mobile-schedule-welcome {
+            display: none;
+        }
+
+        .mobile-bottom-nav,
+        .mobile-more-sheet,
+        .mobile-more-backdrop {
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 860px) {
+            :root {
+                --m-bg: #f8faf7;
+                --m-surface: #ffffff;
+                --m-surface-soft: #f2f6f0;
+                --m-green-dark: #174d30;
+                --m-green: #2e7047;
+                --m-green-medium: #5f8f6b;
+                --m-sage: #91a98c;
+                --m-sage-light: #e4ede1;
+                --m-sage-pale: #f2f6f0;
+                --m-gold: #d4a21a;
+                --m-gold-soft: #f7eecb;
+                --m-text: #20382a;
+                --m-text-muted: #718077;
+                --m-border: #e3eae1;
+                --m-shadow: rgba(30,72,46,.09);
+            }
+
+            html { background: var(--m-bg); }
+            body {
+                background: var(--m-bg);
+                background-image: none;
+                color: var(--m-text);
+                overflow-x: hidden;
+            }
+
+            /* Legacy mobile drawer remains in source, but is no longer the normal mobile navigation. */
+            .hamburger-btn,
+            .app-sidebar,
+            .sidebar-backdrop {
+                display: none !important;
+            }
+
+            .top-navbar {
+                min-height: 72px;
+                padding: calc(13px + var(--safe-top)) calc(16px + var(--safe-right)) 10px calc(16px + var(--safe-left));
+                box-sizing: border-box;
+                background: rgba(255,255,255,.96);
+                color: var(--m-text);
+                border-bottom: 1px solid rgba(23,77,48,.06);
+                box-shadow: 0 4px 18px rgba(30,72,46,.035);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: center;
+                gap: 4px 10px;
+                z-index: 840;
+            }
+
+            .nav-brand {
+                order: 1;
+                color: var(--m-green-dark);
+                font-size: 25px;
+                line-height: 1;
+                letter-spacing: -1px;
+                min-height: 44px;
+                display: inline-flex;
+                align-items: center;
+            }
+            .nav-brand span { color: var(--m-gold); }
+            .nav-actions { display: none !important; }
+
+            .mobile-account-btn {
+                order: 2;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 44px;
+                height: 44px;
+                padding: 0;
+                border-radius: 50%;
+                border: 1px solid rgba(23,77,48,.10);
+                background: var(--m-sage-pale);
+                color: var(--m-green-dark);
+                cursor: pointer;
+                box-shadow: 0 4px 12px rgba(30,72,46,.06);
+                overflow: hidden;
+                flex: 0 0 44px;
+            }
+            .mobile-account-btn svg { width: 22px; height: 22px; }
+            .mobile-account-avatar {
+                width: 100%;
+                height: 100%;
+                display: block;
+                object-fit: cover;
+            }
+
+            .mobile-page-title {
+                order: 3;
+                display: block;
+                flex-basis: 100%;
+                width: auto;
+                margin: 0;
+                color: var(--m-text-muted);
+                font-size: 11px;
+                line-height: 1.2;
+                font-weight: 650;
+                letter-spacing: .25px;
+            }
+
+            .portal-container {
+                margin: 0;
+                padding: 14px 14px calc(118px + var(--safe-bottom));
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+                background: transparent;
+                max-width: none;
+                min-height: calc(100vh - 72px - var(--safe-top));
+            }
+
+            .view-header-flex {
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+            .view-title {
+                color: var(--m-green-dark);
+                font-size: 19px;
+                letter-spacing: -.25px;
+            }
+
+            /* Common light mobile surfaces. */
+            .meta-box,
+            .profile-photo-card,
+            .officer-tile,
+            .settings-list,
+            .cf-stat-card,
+            .cf-panel,
+            .cycle-calendar-row,
+            .sync-preview-box,
+            .table-scroller.mobile-card-scroller,
+            table.mobile-card-table tr {
+                background: var(--m-surface);
+                border-color: var(--m-border);
+                border-radius: 16px;
+                box-shadow: 0 4px 16px rgba(30,72,46,.05);
+            }
+
+            .profile-photo-card { border-style: solid; }
+            .officer-tile { border-radius: 18px; }
+            .settings-list { border-radius: 16px; }
+            .settings-list-item {
+                color: var(--m-text);
+                background: var(--m-surface);
+                border-bottom-color: var(--m-border);
+                min-height: 54px;
+            }
+            .settings-section-label,
+            .form-group label,
+            .meta-box label,
+            .cdm-section-label { color: var(--m-text-muted); }
+
+            .form-group input,
+            .form-group select,
+            .meta-box input,
+            .meta-box select,
+            .remarks-field,
+            .cdm-inline-field select,
+            .cdm-inline-field textarea,
+            .cf-student-row select,
+            .cf-student-row input {
+                background: #fbfcfa;
+                border-color: var(--m-border);
+                border-radius: 11px;
+                color: var(--m-text);
+            }
+            .form-group input:focus,
+            .form-group select:focus {
+                border-color: var(--m-green-medium);
+                box-shadow: 0 0 0 3px rgba(46,112,71,.10);
+            }
+
+            .btn-ui { border-radius: 12px; }
+            .btn-green {
+                background: var(--m-green);
+                color: #fff;
+                border-color: var(--m-green);
+            }
+            .btn-green:hover { background: var(--m-green-dark); }
+            .btn-gray {
+                background: var(--m-sage-pale);
+                color: var(--m-green-dark);
+                border-color: var(--m-border);
+            }
+            .btn-gold {
+                background: var(--m-gold);
+                color: #fff;
+            }
+            .btn-red { background: var(--btn-red); color: #fff; }
+
+            .permission-notice,
+            .cf-readonly-note {
+                border-radius: 14px;
+                box-shadow: none;
+            }
+            .cf-readonly-note {
+                background: var(--m-sage-pale);
+                border-color: var(--m-border);
+                color: var(--m-green-dark);
+            }
+
+            /* Schedule — primary visual match. */
+            #classScheduleView > .view-header-flex { display: none; }
+            .mobile-schedule-welcome {
+                display: block;
+                margin: 4px 2px 18px;
+            }
+            .mobile-schedule-greeting {
+                margin: 0;
+                color: var(--m-green-dark);
+                font-size: 19px;
+                line-height: 1.3;
+                font-weight: 780;
+                letter-spacing: -.25px;
+            }
+            .mobile-schedule-subtitle {
+                margin-top: 4px;
+                color: var(--m-text-muted);
+                font-size: 13px;
+                line-height: 1.4;
+            }
+
+            .home-highlight-card {
+                background: linear-gradient(145deg, #ffffff 0%, #fbfdf9 68%, #f0f5ed 100%);
+                color: var(--m-text);
+                border: 1px solid var(--m-border);
+                border-radius: 21px;
+                padding: 20px 18px;
+                margin-bottom: 16px;
+                box-shadow: 0 9px 26px var(--m-shadow);
+            }
+            .home-highlight-daybadge {
+                background: var(--m-gold-soft);
+                color: #9a7208;
+                border-color: rgba(212,162,26,.18);
+                border-radius: 999px;
+                padding: 5px 10px;
+                margin-bottom: 12px;
+            }
+            .home-highlight-status { color: var(--m-green); }
+            .home-highlight-subject {
+                color: var(--m-green-dark);
+                font-size: 25px;
+                line-height: 1.18;
+            }
+            .home-highlight-message { color: var(--m-green-dark); }
+            .home-highlight-meta,
+            .home-highlight-time,
+            .home-highlight-sub { color: var(--m-text-muted); }
+            .home-highlight-meta strong,
+            .home-highlight-sub strong { color: var(--m-green-dark); }
+
+            .day-tab-bar {
+                grid-template-columns: repeat(5, minmax(0,1fr));
+                gap: 5px;
+                padding: 6px;
+                margin-bottom: 16px;
+                background: var(--m-surface);
+                border: 1px solid var(--m-border);
+                border-radius: 18px;
+                box-shadow: 0 5px 16px rgba(30,72,46,.05);
+            }
+            .day-tab-btn {
+                position: relative;
+                min-width: 0;
+                min-height: 48px;
+                padding: 8px 3px 10px;
+                border: 0;
+                background: transparent;
+                color: var(--m-green-medium);
+                border-radius: 13px;
+                font-size: 11px;
+                font-weight: 760;
+            }
+            .day-tab-btn.day-tab-active {
+                background: linear-gradient(180deg, #6da279 0%, #57906b 100%);
+                color: #fff;
+                border-color: transparent;
+                box-shadow: 0 6px 14px rgba(46,112,71,.16);
+            }
+            .day-tab-btn.day-tab-active::after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                bottom: 4px;
+                width: 4px;
+                height: 4px;
+                border-radius: 50%;
+                background: var(--m-gold-soft);
+                transform: translateX(-50%);
+            }
+
+            .schedule-period-card {
+                background: var(--m-surface);
+                border-color: var(--m-border);
+                border-radius: 16px;
+                padding: 15px 14px;
+                margin-bottom: 10px;
+                box-shadow: 0 3px 13px rgba(30,72,46,.045);
+            }
+            .schedule-period-card.period-current {
+                background: var(--m-sage-pale);
+                border-color: rgba(46,112,71,.35);
+                box-shadow: 0 5px 16px rgba(46,112,71,.09);
+            }
+            .schedule-period-card.period-break {
+                background: #f6f8f5;
+                border-color: var(--m-border);
+            }
+            .schedule-period-subject { color: var(--m-green-dark); }
+            .schedule-period-time,
+            .schedule-period-teacher { color: var(--m-text-muted); }
+            .schedule-period-badge {
+                background: var(--m-sage-light);
+                color: var(--m-green-dark);
+                border-radius: 999px;
+            }
+
+            /* Attendance, Mission Collection and other module surfaces. */
+            #dashboardMatrixView .table-scroller,
+            #dailyAttendanceSheetView .table-scroller,
+            #missionCollectionView .table-scroller:not(.mobile-card-scroller),
+            #cycleDayManagerView > .meta-box {
+                background: var(--m-surface);
+                border-color: var(--m-border);
+                border-radius: 16px;
+                box-shadow: 0 4px 16px rgba(30,72,46,.05);
+            }
+            #missionCollectionView .meta-form-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+            #missionCollectionView .meta-box { border-radius: 15px; }
+            #missionCollectionView .meta-box:first-child { grid-column: 1 / -1; }
+
+            table.mobile-card-table tr {
+                border-radius: 16px;
+                padding: 13px 14px;
+                margin-bottom: 10px;
+            }
+            table.mobile-card-table td[data-label]::before { color: var(--m-text-muted); }
+            table.mobile-card-table td.action-pill-cell { border-top-color: var(--m-border); }
+            .action-pill-btn {
+                border-radius: 10px;
+                background: var(--m-surface);
+            }
+            .action-pill-view { color: var(--m-green); border-color: rgba(46,112,71,.35); }
+
+            /* Class Funds — visual-only mobile treatment. */
+            .cf-subnav {
+                display: flex;
+                flex-wrap: nowrap;
+                gap: 8px;
+                overflow-x: auto;
+                overscroll-behavior-x: contain;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                margin: 0 -2px 17px;
+                padding: 2px 2px 5px;
+            }
+            .cf-subnav::-webkit-scrollbar { display: none; }
+            .cf-tab-btn {
+                flex: 0 0 auto;
+                min-height: 42px;
+                padding: 10px 13px;
+                border-radius: 999px;
+                border-color: var(--m-border);
+                background: var(--m-surface);
+                color: var(--m-green-dark);
+                box-shadow: 0 2px 8px rgba(30,72,46,.035);
+                white-space: nowrap;
+            }
+            .cf-tab-btn.cf-tab-active {
+                background: var(--m-green);
+                color: #fff;
+                border-color: var(--m-green);
+            }
+            .cf-grid { gap: 10px; }
+            .cf-stat-card,
+            .cf-panel { border-radius: 16px; }
+            .cf-stat-value { color: var(--m-green-dark); }
+            .cf-panel-title { color: var(--m-green-dark); }
+            .cf-daily-summary {
+                top: calc(76px + var(--safe-top));
+                background: #fffdf5;
+                border-radius: 15px;
+                box-shadow: 0 5px 14px rgba(30,72,46,.055);
+            }
+            .cf-student-row {
+                background: var(--m-surface);
+                border-color: var(--m-border);
+                border-radius: 15px;
+                box-shadow: 0 3px 12px rgba(30,72,46,.045);
+            }
+            .cf-toolbar { gap: 10px; }
+            .cf-report-filter-grid { gap: 10px; }
+
+            /* Keep full-screen feature modals above the dock and More sheet. */
+            .modal-backdrop { z-index: 999; }
+            .top-dialog-modal { z-index: 10000 !important; }
+            #appAlertModal,
+            #appConfirmModal,
+            #appPromptModal { z-index: 30000 !important; }
+            .modal-window { background: var(--m-surface); }
+
+            /* Floating five-item primary dock. */
+            .mobile-bottom-nav {
+                position: fixed;
+                left: calc(13px + var(--safe-left));
+                right: calc(13px + var(--safe-right));
+                bottom: calc(10px + var(--safe-bottom));
+                z-index: 850;
+                min-height: 76px;
+                padding: 6px 7px;
+                display: grid;
+                grid-template-columns: repeat(5, minmax(0,1fr));
+                align-items: stretch;
+                background: rgba(250,252,248,.96);
+                border: 1px solid rgba(23,77,48,.08);
+                border-radius: 29px;
+                box-shadow: 0 12px 32px rgba(23,77,48,.14);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+            }
+            .mobile-bottom-item {
+                position: relative;
+                min-width: 0;
+                min-height: 60px;
+                padding: 5px 1px 8px;
+                border: 0;
+                border-radius: 18px;
+                background: transparent;
+                color: #66806f;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 3px;
+                font: inherit;
+                cursor: pointer;
+                touch-action: manipulation;
+                -webkit-tap-highlight-color: transparent;
+            }
+            .mobile-bottom-icon-wrap {
+                width: 35px;
+                height: 31px;
+                border-radius: 15px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                transition: background .18s ease, transform .18s ease;
+            }
+            .mobile-bottom-icon-wrap svg {
+                width: 21px;
+                height: 21px;
+                display: block;
+            }
+            .mobile-bottom-label {
+                max-width: 100%;
+                color: inherit;
+                font-size: 10px;
+                line-height: 1.05;
+                font-weight: 650;
+                text-align: center;
+                white-space: normal;
+            }
+            .mobile-bottom-item.active {
+                color: var(--m-green-dark);
+                font-weight: 760;
+            }
+            .mobile-bottom-item.active .mobile-bottom-icon-wrap {
+                background: var(--m-sage-light);
+                transform: translateY(-1px);
+            }
+            .mobile-bottom-item.active::after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                bottom: 3px;
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background: var(--m-green);
+                transform: translateX(-50%);
+            }
+
+            /* More bottom sheet: above dock, below normal/feature modals. */
+            .mobile-more-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                z-index: 900;
+                background: rgba(20,45,29,.30);
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity .2s ease;
+            }
+            .mobile-more-backdrop.is-open {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .mobile-more-sheet {
+                display: block;
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 901;
+                max-height: min(76vh, 620px);
+                padding: 10px 16px calc(18px + var(--safe-bottom));
+                background: var(--m-surface);
+                border: 1px solid rgba(23,77,48,.08);
+                border-bottom: 0;
+                border-radius: 26px 26px 0 0;
+                box-shadow: 0 -18px 42px rgba(23,77,48,.16);
+                transform: translateY(105%);
+                visibility: hidden;
+                pointer-events: none;
+                transition: transform .24s ease, visibility 0s linear .24s;
+            }
+            .mobile-more-sheet.is-open {
+                transform: translateY(0);
+                visibility: visible;
+                pointer-events: auto;
+                transition: transform .24s ease;
+            }
+            .mobile-more-handle-btn {
+                width: 100%;
+                height: 28px;
+                padding: 0;
+                border: 0;
+                background: transparent;
+                cursor: pointer;
+                display: flex;
+                align-items: flex-start;
+                justify-content: center;
+            }
+            .mobile-more-handle-btn::before {
+                content: '';
+                width: 42px;
+                height: 4px;
+                border-radius: 999px;
+                background: #d8e2d6;
+            }
+            .mobile-more-header {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 2px 4px 14px;
+                border-bottom: 1px solid var(--m-border);
+                margin-bottom: 8px;
+            }
+            .mobile-more-avatar {
+                width: 46px;
+                height: 46px;
+                flex: 0 0 46px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                background: var(--m-sage-light);
+                color: var(--m-green-dark);
+                border: 1px solid rgba(23,77,48,.10);
+            }
+            .mobile-more-avatar img { width:100%; height:100%; object-fit:cover; }
+            .mobile-more-avatar svg { width:22px; height:22px; }
+            .mobile-more-brand {
+                color: var(--m-green-dark);
+                font-size: 17px;
+                font-weight: 800;
+                letter-spacing: -.35px;
+            }
+            .mobile-more-brand span { color: var(--m-gold); }
+            .mobile-more-user-meta {
+                margin-top: 2px;
+                color: var(--m-text-muted);
+                font-size: 11px;
+                line-height: 1.35;
+                overflow-wrap: anywhere;
+            }
+            .mobile-more-menu { display: grid; gap: 4px; padding-top: 3px; }
+            .mobile-more-item {
+                width: 100%;
+                min-height: 54px;
+                padding: 11px 12px;
+                border: 0;
+                border-radius: 13px;
+                background: transparent;
+                color: var(--m-text);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                font: inherit;
+                font-size: 14px;
+                font-weight: 680;
+                text-align: left;
+                cursor: pointer;
+            }
+            .mobile-more-item:active { background: var(--m-sage-pale); }
+            .mobile-more-item svg { width: 21px; height: 21px; color: var(--m-green); flex: 0 0 auto; }
+            .mobile-more-item .mobile-more-chevron { margin-left: auto; width: 18px; height: 18px; color: var(--m-sage); }
+            .mobile-more-signout {
+                margin-top: 7px;
+                padding-top: 9px;
+                border-top: 1px solid var(--m-border);
+            }
+            .mobile-more-signout .mobile-more-item { color: #b42318; }
+            .mobile-more-signout .mobile-more-item svg { color: #b42318; }
+
+            .toast-popup {
+                bottom: calc(104px + var(--safe-bottom));
+                max-width: calc(100vw - 32px);
+                box-sizing: border-box;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .portal-container { padding-left: 11px; padding-right: 11px; }
+            .mobile-bottom-nav {
+                left: calc(9px + var(--safe-left));
+                right: calc(9px + var(--safe-right));
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+            .mobile-bottom-label { font-size: 9.5px; }
+            .mobile-bottom-icon-wrap { width: 32px; }
+            .home-highlight-card { padding: 18px 15px; }
+            .home-highlight-subject { font-size: 23px; }
+        }
+
+        @media (min-width: 861px) {
+            .mobile-account-btn,
+            .mobile-bottom-nav,
+            .mobile-more-backdrop,
+            .mobile-more-sheet,
+            .mobile-schedule-welcome {
+                display: none !important;
+            }
+        }
+
 </style>
 </head>
 <body>
@@ -1492,6 +2151,13 @@
                 Animo<span>LED</span>
             </div>
 
+            <button id="mobileAccountButton" class="mobile-account-btn" type="button" onclick="openMobileMoreSheet()" aria-label="Open account menu" aria-expanded="false" aria-controls="mobileMoreSheet">
+                <img id="mobileAccountAvatar" class="mobile-account-avatar hidden" alt="">
+                <svg id="mobileAccountFallbackIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="8" r="3.5"></circle><path d="M4.8 20c.7-4.1 3.1-6.2 7.2-6.2s6.5 2.1 7.2 6.2"></path>
+                </svg>
+            </button>
+
             <div class="nav-actions">
                 <button class="nav-btn" onclick="navigateTo('schedule')">📅 Class Schedule</button>
                 <button class="nav-btn" onclick="navigateTo('dashboard')">📋 Tracker</button>
@@ -1515,6 +2181,12 @@
             <div id="classScheduleView">
                 <div class="view-header-flex">
                     <h2 class="view-title">📅 Class Schedule</h2>
+                </div>
+
+
+                <div id="mobileScheduleWelcome" class="mobile-schedule-welcome" aria-live="polite">
+                    <div id="mobileScheduleGreeting" class="mobile-schedule-greeting"></div>
+                    <div class="mobile-schedule-subtitle">Here’s what’s happening with your real class schedule today.</div>
                 </div>
 
                 <!-- Dynamic Home Highlight -->
@@ -2149,6 +2821,67 @@
             </div>
 
         </div>
+
+        <!-- MOBILE LIGHT APP SHELL: FLOATING PRIMARY NAVIGATION -->
+        <nav id="mobileBottomNav" class="mobile-bottom-nav" aria-label="Primary navigation">
+            <button class="mobile-bottom-item" type="button" data-mobile-nav="schedule" onclick="navigateTo('schedule')" aria-label="Schedule">
+                <span class="mobile-bottom-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"></rect><path d="M7.5 3.5v4M16.5 3.5v4M3.5 9.5h17"></path><path d="M8 13h3M13 13h3M8 17h3"></path></svg></span>
+                <span class="mobile-bottom-label">Schedule</span>
+            </button>
+            <button class="mobile-bottom-item" type="button" data-mobile-nav="dashboard" onclick="navigateTo('dashboard')" aria-label="Attendance">
+                <span class="mobile-bottom-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5.5h8M9 3.5h6a1 1 0 0 1 1 1v2H8v-2a1 1 0 0 1 1-1Z"></path><rect x="5" y="5.5" width="14" height="15" rx="2.5"></rect><path d="m8.5 13 2.2 2.2 4.8-5"></path></svg></span>
+                <span class="mobile-bottom-label">Attendance</span>
+            </button>
+            <button class="mobile-bottom-item" type="button" data-mobile-nav="missionCollection" onclick="navigateTo('missionCollection')" aria-label="Mission Collection">
+                <span class="mobile-bottom-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4.5h6l1.2 3H7.8L9 4.5Z"></path><path d="M7.8 7.5C5.3 9.4 4 11.6 4 14.2 4 18 7 20.5 12 20.5S20 18 20 14.2c0-2.6-1.3-4.8-3.8-6.7"></path><path d="M12 10.5v7M14.2 12.1c-.5-.5-1.2-.8-2-.8-1.1 0-2 .6-2 1.5 0 2.2 4.1 1 4.1 3.1 0 .9-.9 1.6-2.1 1.6-.9 0-1.7-.3-2.3-.9"></path></svg></span>
+                <span class="mobile-bottom-label">Mission</span>
+            </button>
+            <button class="mobile-bottom-item" type="button" data-mobile-nav="classFunds" onclick="navigateTo('classFunds')" aria-label="Class Funds">
+                <span class="mobile-bottom-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7.5h13.5A2.5 2.5 0 0 1 20 10v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 2 18V7.5h2Z"></path><path d="M4 7.5V6a2.5 2.5 0 0 1 2.5-2.5H17v4"></path><path d="M15 12h5v4h-5a2 2 0 0 1 0-4Z"></path></svg></span>
+                <span class="mobile-bottom-label">Class Funds</span>
+            </button>
+            <button id="mobileMoreNavButton" class="mobile-bottom-item" type="button" data-mobile-nav="more" onclick="openMobileMoreSheet()" aria-label="More" aria-expanded="false" aria-controls="mobileMoreSheet">
+                <span class="mobile-bottom-icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h.01M12 12h.01M19 12h.01"></path></svg></span>
+                <span class="mobile-bottom-label">More</span>
+            </button>
+        </nav>
+
+        <div id="mobileMoreSheetBackdrop" class="mobile-more-backdrop" onclick="closeMobileMoreSheet()" aria-hidden="true"></div>
+        <section id="mobileMoreSheet" class="mobile-more-sheet" role="dialog" aria-modal="true" aria-labelledby="mobileMoreSheetTitle" aria-hidden="true">
+            <button class="mobile-more-handle-btn" type="button" onclick="closeMobileMoreSheet()" aria-label="Close More menu"></button>
+            <div class="mobile-more-header">
+                <div class="mobile-more-avatar">
+                    <img id="mobileMoreAvatar" class="hidden" alt="">
+                    <svg id="mobileMoreFallbackIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.8 20c.7-4.1 3.1-6.2 7.2-6.2s6.5 2.1 7.2 6.2"></path></svg>
+                </div>
+                <div>
+                    <div id="mobileMoreSheetTitle" class="mobile-more-brand">Animo<span>LED</span></div>
+                    <div id="mobileMoreRole" class="mobile-more-user-meta">Officer</div>
+                    <div id="mobileMoreEmail" class="mobile-more-user-meta"></div>
+                </div>
+            </div>
+            <div class="mobile-more-menu">
+                <button class="mobile-more-item admin-only-field hidden" type="button" onclick="closeMobileMoreSheet(); navigateTo('officers');">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.3"></circle><path d="M3.5 19c.5-3.4 2.3-5.2 5.5-5.2s5 1.8 5.5 5.2M14.5 14.5c.7-.5 1.5-.7 2.5-.7 2.4 0 3.8 1.5 4.2 4.2"></path></svg>
+                    <span>My Officers</span><svg class="mobile-more-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
+                </button>
+                <button class="mobile-more-item" type="button" onclick="closeMobileMoreSheet(); navigateTo('profile');">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.8 20c.7-4.1 3.1-6.2 7.2-6.2s6.5 2.1 7.2 6.2"></path></svg>
+                    <span>My Profile</span><svg class="mobile-more-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
+                </button>
+                <button class="mobile-more-item" type="button" onclick="closeMobileMoreSheet(); navigateTo('settings');">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3V2.8h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"></path></svg>
+                    <span>Settings</span><svg class="mobile-more-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
+                </button>
+            </div>
+            <div class="mobile-more-signout">
+                <button class="mobile-more-item" type="button" onclick="closeMobileMoreSheet(); handleLogout();">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4H5.5A2.5 2.5 0 0 0 3 6.5v11A2.5 2.5 0 0 0 5.5 20H10"></path><path d="M14.5 8 19 12l-4.5 4M19 12H9"></path></svg>
+                    <span>Sign Out</span>
+                </button>
+            </div>
+        </section>
+
     </div>
 
     <!-- MISSION COLLECTION ADD/EDIT MODAL -->
@@ -3332,6 +4065,7 @@
         }
 
         function renderScheduleHome() {
+            renderMobileScheduleWelcome();
             renderHomeHighlight();
             renderMobileDayTabs();
             renderMobileScheduleForDay(selectedMobileScheduleDay);
@@ -6126,6 +6860,7 @@
 
                     const sidebarRoleEl = document.getElementById('sidebarUserRole');
                     if (sidebarRoleEl) sidebarRoleEl.textContent = userDesignation || (currentUserRole === 'admin' ? 'Main Admin' : 'Officer');
+                    updateMobileAccountUI();
                 });
 
                 bindStudentMasterlistSync();
@@ -6137,6 +6872,7 @@
                 showView('schedule');
                 setActiveNav('schedule');
                 setMobilePageTitle('Class Schedule');
+                updateMobileAccountUI();
 
                 if (homeHighlightIntervalId) clearInterval(homeHighlightIntervalId);
                 homeHighlightIntervalId = setInterval(() => {
@@ -6145,6 +6881,7 @@
                     }
                 }, 30000);
             } else {
+                closeMobileMoreSheet();
                 currentUser = null;
                 document.getElementById('authContainer').classList.remove('hidden');
                 document.getElementById('appContainer').classList.add('hidden');
@@ -6267,8 +7004,119 @@
             });
         };
 
+
+
+        // ============================================
+        // MOBILE LIGHT APP SHELL — local UI state only
+        // ============================================
+        let mobileMorePreviousBodyOverflow = '';
+
+        function getMobilePrimaryNav(viewName) {
+            if (viewName === 'schedule') return 'schedule';
+            if (viewName === 'dashboard' || viewName === 'dailySheet') return 'dashboard';
+            if (viewName === 'missionCollection') return 'missionCollection';
+            if (viewName === 'classFunds') return 'classFunds';
+            if (viewName === 'officers' || viewName === 'profile' || viewName === 'settings' || viewName === 'cycleDayManager') return 'more';
+            return '';
+        }
+
+        function setMobileBottomNavActive(viewName) {
+            const activeKey = getMobilePrimaryNav(viewName);
+            document.querySelectorAll('#mobileBottomNav .mobile-bottom-item').forEach(btn => {
+                const active = btn.getAttribute('data-mobile-nav') === activeKey;
+                btn.classList.toggle('active', active);
+                if (active) btn.setAttribute('aria-current', 'page');
+                else btn.removeAttribute('aria-current');
+            });
+        }
+
+        function mobileGreetingByTime() {
+            const hour = new Date().getHours();
+            if (hour < 12) return 'Good morning';
+            if (hour < 18) return 'Good afternoon';
+            return 'Good evening';
+        }
+
+        function renderMobileScheduleWelcome() {
+            const el = document.getElementById('mobileScheduleGreeting');
+            if (!el) return;
+            const roleLabel = currentUserRole === 'admin' ? 'Main Admin' : (userDesignation || 'Officer');
+            el.textContent = `${mobileGreetingByTime()}, ${roleLabel}!`;
+        }
+
+        function updateMobileAccountUI() {
+            const roleLabel = currentUserRole === 'admin' ? 'Main Admin' : (userDesignation || 'Officer');
+            const email = currentUser && currentUser.email ? currentUser.email : '';
+            const roleEl = document.getElementById('mobileMoreRole');
+            const emailEl = document.getElementById('mobileMoreEmail');
+            if (roleEl) roleEl.textContent = roleLabel;
+            if (emailEl) emailEl.textContent = email;
+
+            const hasPhoto = !!profilePhotoBase64;
+            [['mobileAccountAvatar','mobileAccountFallbackIcon'], ['mobileMoreAvatar','mobileMoreFallbackIcon']].forEach(pair => {
+                const img = document.getElementById(pair[0]);
+                const fallback = document.getElementById(pair[1]);
+                if (img) {
+                    if (hasPhoto) {
+                        img.src = profilePhotoBase64;
+                        img.classList.remove('hidden');
+                    } else {
+                        img.removeAttribute('src');
+                        img.classList.add('hidden');
+                    }
+                }
+                if (fallback) fallback.classList.toggle('hidden', hasPhoto);
+            });
+
+            const officersItem = document.querySelector('#mobileMoreSheet .admin-only-field');
+            if (officersItem) officersItem.classList.toggle('hidden', currentUserRole !== 'admin');
+            renderMobileScheduleWelcome();
+        }
+
+        window.openMobileMoreSheet = function() {
+            const backdrop = document.getElementById('mobileMoreSheetBackdrop');
+            const sheet = document.getElementById('mobileMoreSheet');
+            if (!backdrop || !sheet) return;
+            updateMobileAccountUI();
+            mobileMorePreviousBodyOverflow = document.body.style.overflow || '';
+            document.body.style.overflow = 'hidden';
+            backdrop.classList.add('is-open');
+            sheet.classList.add('is-open');
+            backdrop.setAttribute('aria-hidden', 'false');
+            sheet.setAttribute('aria-hidden', 'false');
+            const moreBtn = document.getElementById('mobileMoreNavButton');
+            const accountBtn = document.getElementById('mobileAccountButton');
+            if (moreBtn) moreBtn.setAttribute('aria-expanded', 'true');
+            if (accountBtn) accountBtn.setAttribute('aria-expanded', 'true');
+        };
+
+        window.closeMobileMoreSheet = function() {
+            const backdrop = document.getElementById('mobileMoreSheetBackdrop');
+            const sheet = document.getElementById('mobileMoreSheet');
+            if (backdrop) {
+                backdrop.classList.remove('is-open');
+                backdrop.setAttribute('aria-hidden', 'true');
+            }
+            if (sheet) {
+                sheet.classList.remove('is-open');
+                sheet.setAttribute('aria-hidden', 'true');
+            }
+            document.body.style.overflow = mobileMorePreviousBodyOverflow;
+            const moreBtn = document.getElementById('mobileMoreNavButton');
+            const accountBtn = document.getElementById('mobileAccountButton');
+            if (moreBtn) moreBtn.setAttribute('aria-expanded', 'false');
+            if (accountBtn) accountBtn.setAttribute('aria-expanded', 'false');
+        };
+
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') {
+                const sheet = document.getElementById('mobileMoreSheet');
+                if (sheet && sheet.classList.contains('is-open')) closeMobileMoreSheet();
+            }
+        });
+
         const ALL_TOP_LEVEL_VIEWS = ['classScheduleView', 'dashboardMatrixView', 'dailyAttendanceSheetView', 'officerProfileView', 'adminOfficersView', 'missionCollectionView', 'classFundsView', 'settingsView', 'cycleDayManagerView'];
-        const NAV_TITLES = { schedule: 'Class Schedule', dashboard: 'Attendance Tracker', missionCollection: 'Mission Collection', classFunds: 'Class Funds', officers: 'My Officers', profile: 'My Profile', settings: 'Settings' };
+        const NAV_TITLES = { schedule: 'Class Schedule', dashboard: 'Attendance Tracker', dailySheet: 'Attendance Sheet', missionCollection: 'Mission Collection', classFunds: 'Class Funds', officers: 'My Officers', profile: 'My Profile', settings: 'Settings', cycleDayManager: 'Cycle Day Manager' };
 
         window.showView = function(viewName) {
             ALL_TOP_LEVEL_VIEWS.forEach(id => document.getElementById(id).classList.add('hidden'));
@@ -6307,12 +7155,14 @@
             setActiveNav(viewName);
             setMobilePageTitle(NAV_TITLES[viewName] || '');
             closeSidebar();
+            closeMobileMoreSheet();
         };
 
         function setActiveNav(viewName) {
             document.querySelectorAll('.sidebar-link').forEach(el => {
                 el.classList.toggle('sidebar-link-active', el.getAttribute('data-nav') === viewName);
             });
+            setMobileBottomNavActive(viewName);
         }
 
         function setMobilePageTitle(title) {
@@ -6634,6 +7484,7 @@
             });
             profilePhotoBase64 = canvas.toDataURL('image/jpeg');
             document.getElementById('avatarPreview').src = profilePhotoBase64;
+            updateMobileAccountUI();
             closeCropModal();
         };
 
