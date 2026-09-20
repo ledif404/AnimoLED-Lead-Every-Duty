@@ -17,6 +17,7 @@
 
     <!-- Cropper.js CSS for Photo Cropping -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
     
     <!-- Chart.js for Mission Collection Graph -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -3010,6 +3011,468 @@
             .announcement-detail-body { font-size: 14px; line-height: 1.7; }
         }
 
+
+        /* ============================================
+           BIRTHDAY CORNER — Landing Carousel + Manager
+           Dedicated UI/state layer; existing features remain untouched.
+           ============================================ */
+        .birthday-placement-slot:empty { display: none; }
+
+        .birthday-corner {
+            position: relative;
+            overflow: hidden;
+            margin: 0 0 18px 0;
+            padding: 18px 18px 16px;
+            background: linear-gradient(145deg, #fffdf5 0%, #ffffff 56%, #f7faf4 100%);
+            border: 1px solid #e8e7d9;
+            border-radius: 22px;
+            box-shadow: 0 9px 26px rgba(30,72,46,.07), 0 0 30px rgba(226,177,57,.035);
+            color: #20382a;
+        }
+
+        .birthday-corner::before,
+        .birthday-corner::after {
+            content: '';
+            position: absolute;
+            pointer-events: none;
+            border-radius: 50%;
+            filter: blur(.2px);
+        }
+        .birthday-corner::before {
+            width: 118px; height: 118px; right: -46px; top: -48px;
+            background: radial-gradient(circle, rgba(255,190,82,.13), rgba(255,190,82,0) 70%);
+        }
+        .birthday-corner::after {
+            width: 104px; height: 104px; left: -45px; bottom: -54px;
+            background: radial-gradient(circle, rgba(94,160,188,.09), rgba(94,160,188,0) 72%);
+        }
+
+        .birthday-corner-head {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin-bottom: 12px;
+        }
+        .birthday-corner-icon {
+            width: 42px; height: 42px; flex: 0 0 42px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 14px;
+            background: linear-gradient(145deg,#fff0bb,#ffe6a1);
+            color: #9d2948;
+            box-shadow: inset 0 0 0 1px rgba(226,177,57,.18);
+        }
+        .birthday-corner-icon svg { width: 25px; height: 25px; }
+        .birthday-corner-title {
+            margin: 0;
+            color: #9f173e;
+            font-size: 21px;
+            line-height: 1.15;
+            font-weight: 850;
+            letter-spacing: -.35px;
+        }
+        .birthday-corner-subtitle {
+            margin-top: 3px;
+            color: #69766d;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        .birthday-month-label {
+            margin-left: auto;
+            align-self: flex-start;
+            padding: 5px 9px;
+            border-radius: 999px;
+            background: #eef5eb;
+            border: 1px solid #dfe8dd;
+            color: #47705a;
+            font-size: 9px;
+            font-weight: 850;
+            letter-spacing: .55px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .birthday-carousel-shell { position: relative; z-index: 2; }
+        .birthday-carousel-viewport {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            touch-action: pan-y;
+            border-radius: 18px;
+        }
+        .birthday-carousel-track {
+            display: flex;
+            align-items: stretch;
+            will-change: transform;
+            transform: translate3d(0,0,0);
+            transition: transform .36s ease;
+        }
+        .birthday-slide {
+            flex: 0 0 auto;
+            box-sizing: border-box;
+            padding: 4px 12px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 0;
+        }
+        .birthday-slide-card {
+            width: 100%;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100%;
+        }
+
+        .birthday-photo-frame {
+            --birthday-frame-size: min(230px, 70vw);
+            position: relative;
+            width: var(--birthday-frame-size);
+            max-width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 21px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 20% 16%, rgba(255,214,101,.22), transparent 22%),
+                radial-gradient(circle at 78% 20%, rgba(124,202,220,.15), transparent 24%),
+                linear-gradient(145deg,#fff8dc,#fffdf5 54%,#fff1c5);
+            border: 1px solid rgba(226,177,57,.25);
+            box-shadow: 0 7px 20px rgba(82,63,20,.09);
+        }
+        .birthday-photo-window {
+            position: absolute;
+            z-index: 1;
+            left: 14%;
+            top: 24%;
+            width: 72%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            border-radius: 16px;
+            background: linear-gradient(145deg,#e4e8e6,#cfd7d3);
+            box-shadow: inset 0 0 0 1px rgba(23,77,48,.08), 0 4px 14px rgba(37,72,49,.10);
+        }
+        .birthday-photo-window img {
+            width: 100%; height: 100%;
+            display: block;
+            object-fit: cover;
+            object-position: center;
+        }
+        .birthday-photo-fallback {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #87938b;
+            background: linear-gradient(145deg,#e8ecea,#d4dbd7);
+        }
+        .birthday-photo-fallback svg { width: 54%; height: 54%; opacity: .72; }
+        .birthday-frame-banner {
+            position: absolute;
+            z-index: 3;
+            top: 5.3%;
+            left: 50%;
+            transform: translateX(-50%) rotate(-2deg);
+            color: #168694;
+            font-size: clamp(16px, 4.7vw, 24px);
+            line-height: .95;
+            font-weight: 950;
+            letter-spacing: -.8px;
+            text-shadow: 0 2px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
+            white-space: nowrap;
+        }
+        .birthday-frame-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 4;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+        .birthday-slide-name {
+            width: 100%;
+            min-height: 38px;
+            margin-top: 10px;
+            color: #20382a;
+            font-size: 15px;
+            line-height: 1.25;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .birthday-slide-date {
+            margin-top: 2px;
+            color: #65736a;
+            font-size: 12px;
+            line-height: 1.3;
+            font-weight: 600;
+        }
+        .birthday-today-badge {
+            margin-top: 7px;
+            display: inline-flex;
+            align-items: center;
+            min-height: 22px;
+            padding: 0 8px;
+            border-radius: 999px;
+            background: #fff0bb;
+            border: 1px solid rgba(226,177,57,.28);
+            color: #9a6512;
+            font-size: 8.5px;
+            font-weight: 900;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+        .birthday-slide.is-today .birthday-photo-frame {
+            border-color: rgba(226,177,57,.58);
+            box-shadow: 0 9px 24px rgba(193,139,21,.15);
+        }
+
+        .birthday-carousel-arrow {
+            position: absolute;
+            z-index: 8;
+            top: 48%;
+            transform: translateY(-50%);
+            width: 44px; height: 44px;
+            padding: 0;
+            border: 1px solid rgba(255,255,255,.82);
+            border-radius: 50%;
+            background: rgba(43,62,50,.72);
+            color: #fff;
+            opacity: .70;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(24,48,32,.14);
+            transition: opacity .16s ease, transform .16s ease;
+            touch-action: manipulation;
+        }
+        .birthday-carousel-arrow:hover,
+        .birthday-carousel-arrow:focus-visible,
+        .birthday-carousel-arrow:active { opacity: 1; }
+        .birthday-carousel-arrow:active { transform: translateY(-50%) scale(.97); }
+        .birthday-carousel-arrow svg { width: 20px; height: 20px; }
+        .birthday-carousel-prev { left: 2px; }
+        .birthday-carousel-next { right: 2px; }
+
+        .birthday-carousel-dots {
+            position: relative;
+            z-index: 3;
+            min-height: 22px;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .birthday-carousel-dot {
+            width: 8px; height: 8px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: #cbd4cd;
+            cursor: pointer;
+        }
+        .birthday-carousel-dot.is-active { background: #174d30; }
+
+        .birthday-settings-main { display: flex; align-items: center; gap: 11px; min-width: 0; }
+        .birthday-settings-icon { width: 22px; height: 22px; flex: 0 0 auto; color: var(--primary-green); }
+        .birthday-settings-copy { display: flex; flex-direction: column; gap: 2px; }
+        .birthday-settings-copy small { color: var(--text-muted); font-size: 10px; font-weight: 500; }
+
+        .birthday-manager-shell { max-width: 1000px; margin: 0 auto; }
+        .birthday-manager-heading { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .birthday-admin-badge {
+            display: inline-flex; align-items: center; min-height: 24px; padding: 0 9px;
+            border-radius: 999px; background: #f7eecb; border: 1px solid rgba(212,162,26,.2);
+            color: #765a08; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .45px;
+        }
+        .birthday-manager-info {
+            margin-bottom: 16px; padding: 13px 14px; border-radius: 14px;
+            background: #f2f6f0; border: 1px solid #e3eae1; color: #53675a; font-size: 12px; line-height: 1.55;
+        }
+        .birthday-summary-grid {
+            display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; margin-bottom: 16px;
+        }
+        .birthday-summary-card {
+            background: #fff; border: 1px solid #e3eae1; border-radius: 15px; padding: 12px 13px;
+            box-shadow: 0 3px 12px rgba(30,72,46,.04);
+        }
+        .birthday-summary-card span { display: block; color: #78867d; font-size: 9px; font-weight: 850; text-transform: uppercase; letter-spacing: .45px; }
+        .birthday-summary-card strong { display: block; margin-top: 4px; color: #174d30; font-size: 20px; }
+        .birthday-manager-panel {
+            margin-bottom: 18px; padding: 17px; background: #fff; border: 1px solid #e3eae1;
+            border-radius: 18px; box-shadow: 0 5px 18px rgba(30,72,46,.05);
+        }
+        .birthday-manager-toolbar { display: flex; align-items: end; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+        .birthday-manager-toolbar .form-group { margin: 0; flex: 1; min-width: 190px; }
+        .birthday-manager-toolbar .form-group.birthday-filter-group { flex: 0 1 190px; }
+        .birthday-manager-table .birthday-manager-photo-cell { width: 58px; }
+        .birthday-manager-thumb {
+            width: 48px; height: 48px; border-radius: 12px; object-fit: cover; display: block;
+            border: 1px solid #e3eae1; background: #eef1ef;
+        }
+        .birthday-manager-thumb-fallback {
+            width: 48px; height: 48px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;
+            color: #89958d; background: #e8ecea; border: 1px solid #e3eae1;
+        }
+        .birthday-manager-thumb-fallback svg { width: 27px; height: 27px; }
+        .birthday-manager-student-name { color: #20382a; font-weight: 800; white-space: normal; overflow-wrap: anywhere; }
+        .birthday-manager-student-id { margin-top: 2px; color: #7b8980; font-size: 10px; }
+        .birthday-manager-warning { margin-top: 4px; color: #b45309; font-size: 9px; font-weight: 700; white-space: normal; }
+        .birthday-status-pill {
+            display: inline-flex; align-items: center; min-height: 24px; padding: 0 9px; border-radius: 999px;
+            font-size: 9px; font-weight: 850; white-space: nowrap;
+        }
+        .birthday-status-active { background: #dcfce7; color: #166534; }
+        .birthday-status-hidden { background: #eef2f0; color: #64736a; }
+        .birthday-mini-badge {
+            display: inline-flex; margin-left: 5px; min-height: 20px; align-items: center; padding: 0 6px;
+            border-radius: 999px; background: #fff0bb; color: #996414; font-size: 8px; font-weight: 850; text-transform: uppercase;
+        }
+        .birthday-manager-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+        .birthday-empty-state { padding: 24px 14px; text-align: center; color: #7d8982; font-size: 13px; }
+
+        .birthday-editor-backdrop,
+        .birthday-crop-backdrop {
+            position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+            box-sizing: border-box; padding: calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left));
+            background: rgba(15,35,24,.50); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+        }
+        .birthday-editor-backdrop { z-index: 10500; }
+        .birthday-crop-backdrop { z-index: 11000; }
+        .birthday-editor-modal,
+        .birthday-crop-modal {
+            width: min(760px, calc(100vw - 32px)); max-height: min(90vh, 820px);
+            display: flex; flex-direction: column; overflow: hidden; background: #fff;
+            border: 1px solid rgba(255,255,255,.8); border-radius: 22px;
+            box-shadow: 0 26px 70px rgba(11,35,21,.30);
+        }
+        .birthday-editor-header,
+        .birthday-crop-header {
+            position: relative; flex: 0 0 auto; padding: 18px 64px 14px 19px;
+            border-bottom: 1px solid #e8ede6; background: #fff;
+        }
+        .birthday-editor-header h3,
+        .birthday-crop-header h3 { margin: 0; color: #174d30; font-size: 19px; line-height: 1.25; }
+        .birthday-editor-close,
+        .birthday-crop-close {
+            position: absolute; top: 9px; right: 10px; width: 44px; height: 44px; padding: 0;
+            border: 1px solid #e3eae1; border-radius: 50%; background: #fff; color: #52675a;
+            font-size: 23px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .birthday-editor-scroll,
+        .birthday-crop-scroll { min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; padding: 18px 19px 20px; }
+        .birthday-editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .birthday-editor-field label {
+            display: block; margin-bottom: 6px; color: #718077; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .5px;
+        }
+        .birthday-editor-field input,
+        .birthday-editor-field select {
+            width: 100%; box-sizing: border-box; min-height: 44px; padding: 10px 11px;
+            border: 1px solid #e3eae1; border-radius: 11px; background: #fbfcfa; color: #20382a; font: inherit; font-size: 14px;
+        }
+        .birthday-editor-field-wide { grid-column: 1 / -1; }
+        .birthday-photo-editor-row {
+            grid-column: 1 / -1; display: grid; grid-template-columns: 150px minmax(0,1fr); gap: 16px; align-items: start;
+            padding: 13px; border: 1px solid #e7ece5; border-radius: 16px; background: #f9fbf8;
+        }
+        .birthday-photo-editor-simple { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+        .birthday-editor-photo {
+            width: 108px; height: 108px; object-fit: cover; border-radius: 16px;
+            border: 1px solid #e3eae1; background: #e8ecea;
+        }
+        .birthday-editor-photo-fallback {
+            width: 108px; height: 108px; border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            color: #89958d; border: 1px solid #e3eae1; background: #e8ecea;
+        }
+        .birthday-editor-photo-fallback svg { width: 55px; height: 55px; }
+        .birthday-frame-preview-wrap { display: flex; justify-content: center; min-width: 0; }
+        .birthday-frame-preview-wrap .birthday-photo-frame { --birthday-frame-size: 235px; }
+        .birthday-photo-help { color: #7b8980; font-size: 10px; line-height: 1.45; text-align: center; }
+        .birthday-editor-footer,
+        .birthday-crop-footer {
+            flex: 0 0 auto; display: flex; gap: 8px; justify-content: flex-end;
+            padding: 12px 19px calc(14px + var(--safe-bottom)); border-top: 1px solid #e8ede6; background: #fff;
+        }
+        .birthday-crop-stage {
+            width: 100%; min-height: 360px; max-height: 62vh; background: #122017; border-radius: 14px; overflow: hidden;
+        }
+        .birthday-crop-stage img { display: block; max-width: 100%; }
+
+        @media (min-width: 1024px) {
+            .birthday-corner { padding: 19px 22px 16px; }
+            .birthday-photo-frame { --birthday-frame-size: min(220px, 18vw); }
+            .birthday-slide { padding-left: 14px; padding-right: 14px; }
+        }
+
+        @media (min-width: 700px) and (max-width: 1023px) {
+            .birthday-photo-frame { --birthday-frame-size: min(220px, 31vw); }
+        }
+
+        @media (max-width: 860px) {
+            .birthday-corner { margin-bottom: 16px; padding: 15px 12px 13px; border-radius: 20px; }
+            .birthday-corner-head { margin: 0 4px 11px; }
+            .birthday-corner-title { font-size: 19px; }
+            .birthday-corner-subtitle { font-size: 11px; }
+            .birthday-month-label { display: none; }
+            .birthday-slide { padding-left: 18px; padding-right: 18px; }
+            .birthday-photo-frame { --birthday-frame-size: min(225px, 68vw); }
+            .birthday-carousel-prev { left: 0; }
+            .birthday-carousel-next { right: 0; }
+
+            .birthday-manager-panel { padding: 13px; border-radius: 16px; }
+            .birthday-summary-grid { gap: 7px; }
+            .birthday-summary-card { padding: 10px; border-radius: 13px; }
+            .birthday-summary-card strong { font-size: 17px; }
+            .birthday-manager-toolbar { flex-direction: column; align-items: stretch; }
+            .birthday-manager-toolbar .form-group,
+            .birthday-manager-toolbar .form-group.birthday-filter-group { min-width: 0; width: 100%; }
+            .birthday-manager-toolbar .btn-ui { width: 100%; }
+            .birthday-manager-table .birthday-manager-photo-cell { width: auto; }
+            .birthday-manager-actions { width: 100%; }
+            .birthday-manager-actions .action-pill-btn { flex: 1; margin: 0; }
+
+            .birthday-editor-backdrop,
+            .birthday-crop-backdrop {
+                padding: calc(14px + var(--safe-top)) calc(14px + var(--safe-right)) calc(14px + var(--safe-bottom)) calc(14px + var(--safe-left));
+            }
+            .birthday-editor-modal,
+            .birthday-crop-modal {
+                width: calc(100vw - 28px - var(--safe-left) - var(--safe-right));
+                max-height: calc(100dvh - 28px - var(--safe-top) - var(--safe-bottom));
+                border-radius: 22px;
+            }
+            .birthday-editor-grid { grid-template-columns: 1fr; }
+            .birthday-editor-field-wide { grid-column: auto; }
+            .birthday-photo-editor-row { grid-column: auto; grid-template-columns: 1fr; }
+            .birthday-frame-preview-wrap .birthday-photo-frame { --birthday-frame-size: min(225px, 68vw); }
+            .birthday-editor-footer,
+            .birthday-crop-footer { flex-direction: column-reverse; }
+            .birthday-editor-footer .btn-ui,
+            .birthday-crop-footer .btn-ui { width: 100%; }
+            .birthday-crop-stage { min-height: 300px; }
+        }
+
+        @media (max-width: 360px) {
+            .birthday-slide { padding-left: 14px; padding-right: 14px; }
+            .birthday-photo-frame { --birthday-frame-size: min(205px, 68vw); }
+            .birthday-carousel-arrow { width: 44px; height: 44px; }
+            .birthday-corner-icon { width: 38px; height: 38px; flex-basis: 38px; }
+            .birthday-corner-title { font-size: 18px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .birthday-carousel-track { transition: none !important; }
+            .birthday-carousel-arrow { transition: none !important; }
+        }
+
 </style>
 </head>
 <body>
@@ -3167,6 +3630,38 @@
                     </button>
                 </section>
 
+                <!-- BIRTHDAY CORNER EARLY SLOT — the same component moves here for weekend/no-class/unconfigured days -->
+                <div id="birthdayEarlySlot" class="birthday-placement-slot">
+                    <section id="birthdayCorner" class="birthday-corner hidden" aria-labelledby="birthdayCornerTitle">
+                        <div class="birthday-corner-head">
+                            <span class="birthday-corner-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5 10.5h14v8.5H5z"></path><path d="M4 10.5h16M7 7.5h10v3H7z"></path>
+                                    <path d="M9 7.5V5.8M12 7.5V5.2M15 7.5V5.8"></path><path d="M9 4.8c.7-.7.7-1.4 0-2M12 4.2c.7-.7.7-1.4 0-2M15 4.8c.7-.7.7-1.4 0-2"></path>
+                                    <path d="M5 14c2 1 3.5 1 5.5 0s3.5-1 5.5 0 3.5 1 4 0"></path>
+                                </svg>
+                            </span>
+                            <div>
+                                <h3 id="birthdayCornerTitle" class="birthday-corner-title">Birthday Corner</h3>
+                                <div class="birthday-corner-subtitle">Let’s celebrate our Lasallian brothers and sisters!</div>
+                            </div>
+                            <div id="birthdayMonthLabel" class="birthday-month-label"></div>
+                        </div>
+                        <div class="birthday-carousel-shell">
+                            <button id="birthdayPrevBtn" class="birthday-carousel-arrow birthday-carousel-prev hidden" type="button" onclick="birthdayCarouselPrevious()" aria-label="Previous birthday">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"></path></svg>
+                            </button>
+                            <div id="birthdayCarouselViewport" class="birthday-carousel-viewport">
+                                <div id="birthdayCarouselTrack" class="birthday-carousel-track"></div>
+                            </div>
+                            <button id="birthdayNextBtn" class="birthday-carousel-arrow birthday-carousel-next hidden" type="button" onclick="birthdayCarouselNext()" aria-label="Next birthday">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+                        <div id="birthdayCarouselDots" class="birthday-carousel-dots" aria-label="Birthday carousel position"></div>
+                    </section>
+                </div>
+
                 <!-- Dynamic Home Highlight -->
                 <div id="homeHighlightCard" class="home-highlight-card">
                     <div id="homeHighlightBody">Loading schedule…</div>
@@ -3184,6 +3679,9 @@
                         <table class="schedule-grid-table" id="desktopScheduleTable"></table>
                     </div>
                 </div>
+
+                <!-- BIRTHDAY CORNER LATE SLOT — the single component moves here on Regular/Synchronous school days -->
+                <div id="birthdayLateSlot" class="birthday-placement-slot"></div>
             </div>
 
             <!-- WEEKLY SUMMARY MATRIX VIEW -->
@@ -3765,6 +4263,19 @@
                             </span>
                             <span>›</span>
                         </button>
+                        <button class="settings-list-item admin-only-field hidden" type="button" onclick="navigateTo('birthdayManager')">
+                            <span class="birthday-settings-main">
+                                <svg class="birthday-settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M5 10.5h14v8.5H5z"></path><path d="M4 10.5h16M7 7.5h10v3H7z"></path>
+                                    <path d="M9 7.5V5.8M12 7.5V5.2M15 7.5V5.8"></path><path d="M9 4.8c.7-.7.7-1.4 0-2M12 4.2c.7-.7.7-1.4 0-2M15 4.8c.7-.7.7-1.4 0-2"></path>
+                                </svg>
+                                <span class="birthday-settings-copy">
+                                    <span>Birthday Manager</span>
+                                    <small>Manage student birthdays for the Birthday Corner</small>
+                                </span>
+                            </span>
+                            <span>›</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -3993,6 +4504,57 @@
                 </div>
             </div>
 
+            <!-- BIRTHDAY MANAGER (Main Admin only) -->
+            <div id="birthdayManagerView" class="hidden">
+                <div class="view-header-flex">
+                    <div>
+                        <div class="settings-section-label" style="margin:0 0 5px 0;">Settings</div>
+                        <div class="birthday-manager-heading">
+                            <h2 class="view-title">Birthday Manager</h2>
+                            <span class="birthday-admin-badge">Main Admin Only</span>
+                        </div>
+                    </div>
+                    <div class="btn-set">
+                        <button class="btn-ui btn-gray" type="button" onclick="navigateTo('settings')">← Back to Settings</button>
+                    </div>
+                </div>
+
+                <div class="birthday-manager-shell">
+                    <div class="birthday-manager-info">Manage student birthdays for the Birthday Corner slideshow. Student names and IDs come directly from the existing Attendance masterlist; Birthday records never modify that roster.</div>
+
+                    <div class="birthday-summary-grid">
+                        <div class="birthday-summary-card"><span>Registered Birthdays</span><strong id="birthdaySummaryRegistered">0</strong></div>
+                        <div class="birthday-summary-card"><span>Active</span><strong id="birthdaySummaryActive">0</strong></div>
+                        <div class="birthday-summary-card"><span>This Month</span><strong id="birthdaySummaryMonth">0</strong></div>
+                    </div>
+
+                    <div class="birthday-manager-panel">
+                        <div class="birthday-manager-toolbar">
+                            <div class="form-group">
+                                <label for="birthdayManagerSearch">Search Student</label>
+                                <input id="birthdayManagerSearch" type="text" placeholder="Name or student ID" oninput="renderBirthdayManager()">
+                            </div>
+                            <div class="form-group birthday-filter-group">
+                                <label for="birthdayManagerStatusFilter">Status</label>
+                                <select id="birthdayManagerStatusFilter" onchange="renderBirthdayManager()">
+                                    <option value="all">All</option>
+                                    <option value="active">Active</option>
+                                    <option value="hidden">Hidden</option>
+                                </select>
+                            </div>
+                            <button id="birthdayAddBtn" class="btn-ui btn-green" type="button" onclick="openBirthdayEditor()">+ Add Birthday</button>
+                        </div>
+
+                        <div class="table-scroller mobile-card-scroller">
+                            <table class="mobile-card-table birthday-manager-table">
+                                <thead><tr><th>Photo</th><th>Student</th><th>Birthday</th><th>Status</th><th>Actions</th></tr></thead>
+                                <tbody id="birthdayManagerList"><tr><td colspan="5">Loading birthday records…</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <!-- MOBILE LIGHT APP SHELL: FLOATING PRIMARY NAVIGATION -->
@@ -4106,6 +4668,79 @@
                 <div class="announcement-detail-scroll">
                     <p id="announcementDetailBody" class="announcement-detail-body"></p>
                     <div id="announcementDetailMeta" class="announcement-detail-meta"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- BIRTHDAY EDITOR — single reusable Admin modal -->
+        <div id="birthdayEditorBackdrop" class="birthday-editor-backdrop hidden" aria-hidden="true">
+            <section id="birthdayEditorModal" class="birthday-editor-modal" role="dialog" aria-modal="true" aria-labelledby="birthdayEditorTitle">
+                <div class="birthday-editor-header">
+                    <h3 id="birthdayEditorTitle">Add Birthday</h3>
+                    <button class="birthday-editor-close" type="button" onclick="closeBirthdayEditor()" aria-label="Close Birthday editor">×</button>
+                </div>
+                <div class="birthday-editor-scroll">
+                    <div class="birthday-editor-grid">
+                        <div class="birthday-editor-field birthday-editor-field-wide">
+                            <label for="birthdayStudentSelect">Student</label>
+                            <select id="birthdayStudentSelect" onchange="handleBirthdayEditorInput()"></select>
+                        </div>
+
+                        <div class="birthday-photo-editor-row">
+                            <div class="birthday-photo-editor-simple">
+                                <img id="birthdayPhotoPreview" class="birthday-editor-photo hidden" alt="Birthday photo preview">
+                                <div id="birthdayPhotoFallback" class="birthday-editor-photo-fallback" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.8 20c.7-4.1 3.1-6.2 7.2-6.2s6.5 2.1 7.2 6.2"></path></svg>
+                                </div>
+                                <input id="birthdayPhotoInput" type="file" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="handleBirthdayPhotoSelected(event)">
+                                <button class="btn-ui btn-gray" type="button" onclick="document.getElementById('birthdayPhotoInput').click()">Change Photo</button>
+                                <div class="birthday-photo-help">JPEG, PNG, or WEBP · maximum 5 MB · cropped to 1:1</div>
+                            </div>
+                            <div id="birthdayFramePreview" class="birthday-frame-preview-wrap" aria-label="Birthday frame preview"></div>
+                        </div>
+
+                        <div class="birthday-editor-field">
+                            <label for="birthdayMonthSelect">Birth Month</label>
+                            <select id="birthdayMonthSelect" onchange="handleBirthdayEditorMonthChange()">
+                                <option value="">Select month</option>
+                                <option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option>
+                                <option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option>
+                                <option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
+                            </select>
+                        </div>
+                        <div class="birthday-editor-field">
+                            <label for="birthdayDaySelect">Birth Day</label>
+                            <select id="birthdayDaySelect" onchange="handleBirthdayEditorInput()"><option value="">Select day</option></select>
+                        </div>
+                        <div class="birthday-editor-field birthday-editor-field-wide">
+                            <label for="birthdayStatusSelect">Status</label>
+                            <select id="birthdayStatusSelect" onchange="handleBirthdayEditorInput()">
+                                <option value="active">Active</option>
+                                <option value="hidden">Hidden</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="birthday-editor-footer">
+                    <button class="btn-ui btn-gray" type="button" onclick="closeBirthdayEditor()">Cancel</button>
+                    <button id="birthdaySaveBtn" class="btn-ui btn-green" type="button" onclick="saveBirthdayRecord()">Save Birthday</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- BIRTHDAY PHOTO CROPPER — single reusable Cropper.js modal -->
+        <div id="birthdayCropBackdrop" class="birthday-crop-backdrop hidden" aria-hidden="true">
+            <section class="birthday-crop-modal" role="dialog" aria-modal="true" aria-labelledby="birthdayCropTitle">
+                <div class="birthday-crop-header">
+                    <h3 id="birthdayCropTitle">Crop Birthday Photo</h3>
+                    <button class="birthday-crop-close" type="button" onclick="closeBirthdayCropper()" aria-label="Close Birthday photo cropper">×</button>
+                </div>
+                <div class="birthday-crop-scroll">
+                    <div class="birthday-crop-stage"><img id="birthdayCropImage" alt="Photo to crop"></div>
+                </div>
+                <div class="birthday-crop-footer">
+                    <button class="btn-ui btn-gray" type="button" onclick="closeBirthdayCropper()">Cancel</button>
+                    <button class="btn-ui btn-green" type="button" onclick="applyBirthdayPhotoCrop()">Apply Crop</button>
                 </div>
             </section>
         </div>
@@ -5302,6 +5937,7 @@
             renderMobileDayTabs();
             renderMobileScheduleForDay(selectedMobileScheduleDay);
             renderDesktopScheduleGrid();
+            renderBirthdayCorner();
         }
 
         function modeBadgeText(mode) {
@@ -6277,6 +6913,1053 @@
             const backdrop = document.getElementById('announcementDetailBackdrop');
             if (event && backdrop && event.target === backdrop) window.closeAnnouncementDetailModal();
         };
+
+
+
+        // ============================================
+        // BIRTHDAY CORNER — current-month carousel + Admin manager
+        // ============================================
+        const BIRTHDAY_ROOT = 'birthday_corner/ay_2026_2027/students';
+        const BIRTHDAY_AUTOPLAY_MS = 5500;
+        const BIRTHDAY_MAX_SOURCE_BYTES = 5 * 1024 * 1024;
+        const BIRTHDAY_OUTPUT_SIZE = 640;
+        const BIRTHDAY_OUTPUT_QUALITY = 0.82;
+        const BIRTHDAY_FRAME_OVERLAY_SVG = `
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <g opacity=".96">
+                    <ellipse cx="9" cy="28" rx="6" ry="8" fill="#f59ab8"/><path d="M9 36c2 5 0 9-1 14" fill="none" stroke="#cb6a91" stroke-width="1.2"/>
+                    <ellipse cx="18" cy="22" rx="5.5" ry="7.5" fill="#78c9e2"/><path d="M18 29c-2 6 1 10 0 16" fill="none" stroke="#4c9fbb" stroke-width="1.2"/>
+                    <ellipse cx="91" cy="27" rx="6" ry="8" fill="#ffc95b"/><path d="M91 35c-1 6 2 10 1 15" fill="none" stroke="#d39d35" stroke-width="1.2"/>
+                    <ellipse cx="82" cy="21" rx="5.5" ry="7.5" fill="#f1887b"/><path d="M82 28c2 6-1 10 0 16" fill="none" stroke="#c8685d" stroke-width="1.2"/>
+                    <g transform="translate(4,77)"><rect x="0" y="6" width="15" height="14" rx="1.5" fill="#ff9d44"/><rect x="6" y="6" width="3" height="14" fill="#8cc6e7"/><rect x="0" y="10" width="15" height="3" fill="#8cc6e7"/><path d="M7.5 6C4 4 4 1 6 1c2 0 2 3 1.5 5ZM7.5 6C11 4 11 1 9 1c-2 0-2 3-1.5 5Z" fill="#8cc6e7"/></g>
+                    <g transform="translate(81,77)"><rect x="0" y="6" width="15" height="14" rx="1.5" fill="#e45c91"/><rect x="6" y="6" width="3" height="14" fill="#3bb7a9"/><rect x="0" y="10" width="15" height="3" fill="#3bb7a9"/><path d="M7.5 6C4 4 4 1 6 1c2 0 2 3 1.5 5ZM7.5 6C11 4 11 1 9 1c-2 0-2 3-1.5 5Z" fill="#3bb7a9"/></g>
+                    <path d="M7 12l2 2-2 2-2-2 2-2ZM29 8l1.6 1.6L29 11.2l-1.6-1.6L29 8ZM69 12l2 2-2 2-2-2 2-2ZM94 11l1.6 1.6-1.6 1.6-1.6-1.6L94 11Z" fill="#e9b735"/>
+                    <circle cx="24" cy="16" r="1.3" fill="#5fb3d7"/><circle cx="76" cy="9" r="1.4" fill="#ec7aa6"/><circle cx="95" cy="58" r="1.5" fill="#5fb3d7"/><circle cx="5" cy="62" r="1.4" fill="#f29a5b"/>
+                    <path d="M3 45c5-3 5 4 1 5s-4 7 1 7" fill="none" stroke="#f3c75d" stroke-width="2"/><path d="M97 43c-5-3-5 4-1 5s4 7-1 7" fill="none" stroke="#45b9c1" stroke-width="2"/>
+                </g>
+            </svg>`;
+
+        let birthdayData = {};
+        let birthdayDataLoaded = false;
+        let birthdaySyncUnsubscribe = null;
+        let birthdaySyncBoundUid = null;
+        let birthdayCarouselEntries = [];
+        let birthdayCarouselIndex = 0;
+        let birthdayCarouselPhysicalIndex = 0;
+        let birthdayCarouselSignature = '';
+        let birthdayCarouselDateKey = '';
+        let birthdayCarouselVisibleCount = 1;
+        let birthdayAutoplayTimer = null;
+        let birthdayTransitionTimer = null;
+        let birthdayCarouselTransitioning = false;
+        let birthdayHoverPaused = false;
+        let birthdayFocusPaused = false;
+        let birthdayTouchStartX = null;
+        let birthdayTouchStartY = null;
+        let birthdayEditorMode = 'add';
+        let birthdayEditingStudentKey = null;
+        let birthdayEditorPhotoDataUrl = '';
+        let birthdayEditorSaving = false;
+        let birthdayDeleteInProgress = false;
+        let birthdayEditorDirty = false;
+        let birthdayEditorPreviousBodyOverflow = '';
+        let birthdayCropPreviousBodyOverflow = '';
+        let birthdayCropperInstance = null;
+
+        function birthdayMonthDayLimit(month) {
+            const limits = [0,31,29,31,30,31,30,31,31,30,31,30,31];
+            return limits[Number(month)] || 0;
+        }
+
+        function isValidBirthdayMonthDay(month, day) {
+            const m = Number(month);
+            const d = Number(day);
+            return Number.isInteger(m) && m >= 1 && m <= 12 && Number.isInteger(d) && d >= 1 && d <= birthdayMonthDayLimit(m);
+        }
+
+        function isSafeBirthdayPhotoDataUrl(value) {
+            return typeof value === 'string' && /^data:image\/(?:jpeg|jpg|png|webp);base64,/i.test(value);
+        }
+
+        function isValidBirthdayEntry(entry) {
+            return !!entry &&
+                typeof entry.studentId === 'string' && !!entry.studentId.trim() &&
+                typeof entry.name === 'string' && !!entry.name.trim() &&
+                isValidBirthdayMonthDay(Number(entry.birthMonth), Number(entry.birthDay)) &&
+                isSafeBirthdayPhotoDataUrl(entry.photoDataUrl) &&
+                typeof entry.active === 'boolean';
+        }
+
+        function birthdayFirebaseKeyForStudentId(studentId) {
+            const id = String(studentId || '').trim();
+            if (!/[.#$\[\]\/]/.test(id)) return id;
+            return 'sid_' + Array.from(id).map(ch => ch.codePointAt(0).toString(16)).join('_');
+        }
+
+        function birthdayRosterStudent(studentId) {
+            const id = String(studentId || '');
+            return currentStudentList.find(student => String(student.id) === id) || null;
+        }
+
+        function birthdayEntryDisplayName(entry) {
+            const roster = birthdayRosterStudent(entry && entry.studentId);
+            return roster ? roster.name : (entry && entry.name ? entry.name : 'Unknown Student');
+        }
+
+        function isBirthdayToday(entry, now) {
+            const d = now || new Date();
+            return Number(entry.birthMonth) === d.getMonth() + 1 && Number(entry.birthDay) === d.getDate();
+        }
+
+        function sortBirthdayEntries(entries, now) {
+            const current = now || new Date();
+            const today = current.getDate();
+            return entries.sort((a, b) => {
+                const aDay = Number(a.birthDay), bDay = Number(b.birthDay);
+                const aPhase = aDay === today ? 0 : (aDay > today ? 1 : 2);
+                const bPhase = bDay === today ? 0 : (bDay > today ? 1 : 2);
+                if (aPhase !== bPhase) return aPhase - bPhase;
+                if (aDay !== bDay) return aDay - bDay;
+                return birthdayEntryDisplayName(a).localeCompare(birthdayEntryDisplayName(b));
+            });
+        }
+
+        function getCurrentMonthBirthdayEntries() {
+            if (!birthdayDataLoaded || !currentStudentList.length) return [];
+            const now = new Date();
+            const month = now.getMonth() + 1;
+            const rosterIds = new Set(currentStudentList.map(student => String(student.id)));
+            const entries = Object.entries(birthdayData || {}).map(([key, raw]) => Object.assign({ _key: key }, raw || {}));
+            const filtered = entries.filter(entry =>
+                isValidBirthdayEntry(entry) &&
+                entry.active === true &&
+                Number(entry.birthMonth) === month &&
+                rosterIds.has(String(entry.studentId))
+            );
+            return sortBirthdayEntries(filtered, now);
+        }
+
+        function formatBirthdayMonthDay(month, day) {
+            const names = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            const m = Number(month);
+            return (names[m - 1] || '') + (m >= 1 && m <= 12 ? ' ' + Number(day) : '');
+        }
+
+        function createBirthdayPhotoFallback() {
+            const fallback = document.createElement('div');
+            fallback.className = 'birthday-photo-fallback';
+            fallback.setAttribute('aria-hidden', 'true');
+            fallback.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.8 20c.7-4.1 3.1-6.2 7.2-6.2s6.5 2.1 7.2 6.2"></path></svg>';
+            return fallback;
+        }
+
+        function createBirthdayFrame(entry) {
+            const frame = document.createElement('div');
+            frame.className = 'birthday-photo-frame';
+
+            const banner = document.createElement('div');
+            banner.className = 'birthday-frame-banner';
+            banner.textContent = 'Happy Birthday!';
+            frame.appendChild(banner);
+
+            const windowEl = document.createElement('div');
+            windowEl.className = 'birthday-photo-window';
+            const fallback = createBirthdayPhotoFallback();
+            windowEl.appendChild(fallback);
+
+            if (entry && isSafeBirthdayPhotoDataUrl(entry.photoDataUrl)) {
+                const img = document.createElement('img');
+                img.src = entry.photoDataUrl;
+                img.alt = `${birthdayEntryDisplayName(entry)}'s birthday photo`;
+                img.onload = () => fallback.classList.add('hidden');
+                img.onerror = () => {
+                    img.remove();
+                    fallback.classList.remove('hidden');
+                };
+                windowEl.appendChild(img);
+            }
+            frame.appendChild(windowEl);
+
+            const overlay = document.createElement('div');
+            overlay.className = 'birthday-frame-overlay';
+            overlay.innerHTML = BIRTHDAY_FRAME_OVERLAY_SVG;
+            frame.appendChild(overlay);
+            return frame;
+        }
+
+        function positionBirthdayCorner() {
+            const corner = document.getElementById('birthdayCorner');
+            const early = document.getElementById('birthdayEarlySlot');
+            const late = document.getElementById('birthdayLateSlot');
+            if (!corner || !early || !late) return;
+
+            const state = determineHomeState();
+            const lateStates = new Set(['before','current','break','async','afterschool']);
+            const validSchoolDay = lateStates.has(state.state) && (state.mode === 'regular' || state.mode === 'synchronous');
+            const target = validSchoolDay ? late : early;
+            if (corner.parentElement !== target) target.appendChild(corner);
+        }
+
+        function birthdayVisibleCount(entryCount) {
+            if (window.innerWidth >= 1024) return Math.min(3, entryCount);
+            if (window.innerWidth >= 700) return Math.min(2, entryCount);
+            return 1;
+        }
+
+        function birthdayCornerCanAutoplay() {
+            const corner = document.getElementById('birthdayCorner');
+            const scheduleView = document.getElementById('classScheduleView');
+            return birthdayCarouselEntries.length >= 2 &&
+                !!corner && !corner.classList.contains('hidden') &&
+                !!scheduleView && !scheduleView.classList.contains('hidden') &&
+                !document.hidden && !birthdayHoverPaused && !birthdayFocusPaused;
+        }
+
+        function stopBirthdayAutoplay() {
+            if (birthdayAutoplayTimer) clearInterval(birthdayAutoplayTimer);
+            birthdayAutoplayTimer = null;
+        }
+
+        function startBirthdayAutoplay() {
+            stopBirthdayAutoplay();
+            if (!birthdayCornerCanAutoplay()) return;
+            birthdayAutoplayTimer = setInterval(() => window.birthdayCarouselNext(false), BIRTHDAY_AUTOPLAY_MS);
+        }
+
+        function ensureBirthdayAutoplay() {
+            if (!birthdayCornerCanAutoplay()) {
+                stopBirthdayAutoplay();
+                return;
+            }
+            if (!birthdayAutoplayTimer) startBirthdayAutoplay();
+        }
+
+        function resetBirthdayAutoplay() {
+            stopBirthdayAutoplay();
+            startBirthdayAutoplay();
+        }
+
+        function updateBirthdayCarouselLayout(animate) {
+            const viewport = document.getElementById('birthdayCarouselViewport');
+            const track = document.getElementById('birthdayCarouselTrack');
+            if (!viewport || !track || !birthdayCarouselEntries.length) return;
+            const width = viewport.clientWidth;
+            if (!width) return;
+            const step = width / Math.max(1, birthdayCarouselVisibleCount);
+            track.querySelectorAll('.birthday-slide').forEach(slide => {
+                slide.style.width = step + 'px';
+            });
+            track.style.transition = animate && !window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'transform .36s ease' : 'none';
+            track.style.transform = `translate3d(${-birthdayCarouselPhysicalIndex * step}px,0,0)`;
+            if (!animate) {
+                requestAnimationFrame(() => {
+                    if (track) track.style.transition = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'transform .36s ease';
+                });
+            }
+        }
+
+        function renderBirthdayDots() {
+            const dots = document.getElementById('birthdayCarouselDots');
+            if (!dots) return;
+            dots.innerHTML = '';
+            if (birthdayCarouselEntries.length <= 1) {
+                dots.classList.add('hidden');
+                return;
+            }
+            dots.classList.remove('hidden');
+            birthdayCarouselEntries.forEach((entry, index) => {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.className = 'birthday-carousel-dot' + (index === birthdayCarouselIndex ? ' is-active' : '');
+                dot.setAttribute('aria-label', `Show birthday ${index + 1}`);
+                dot.setAttribute('aria-current', index === birthdayCarouselIndex ? 'true' : 'false');
+                dot.addEventListener('click', () => window.goToBirthdaySlide(index));
+                dots.appendChild(dot);
+            });
+        }
+
+        function createBirthdaySlide(entry) {
+            const slide = document.createElement('article');
+            slide.className = 'birthday-slide' + (isBirthdayToday(entry) ? ' is-today' : '');
+
+            const card = document.createElement('div');
+            card.className = 'birthday-slide-card';
+            card.appendChild(createBirthdayFrame(entry));
+
+            const name = document.createElement('div');
+            name.className = 'birthday-slide-name';
+            name.textContent = birthdayEntryDisplayName(entry);
+            card.appendChild(name);
+
+            const date = document.createElement('div');
+            date.className = 'birthday-slide-date';
+            date.textContent = formatBirthdayMonthDay(entry.birthMonth, entry.birthDay);
+            card.appendChild(date);
+
+            if (isBirthdayToday(entry)) {
+                const today = document.createElement('div');
+                today.className = 'birthday-today-badge';
+                today.textContent = 'Birthday Today';
+                card.appendChild(today);
+            }
+            slide.appendChild(card);
+            return slide;
+        }
+
+        function renderBirthdayCarousel() {
+            const track = document.getElementById('birthdayCarouselTrack');
+            const prev = document.getElementById('birthdayPrevBtn');
+            const next = document.getElementById('birthdayNextBtn');
+            if (!track || !prev || !next) return;
+
+            track.innerHTML = '';
+            if (!birthdayCarouselEntries.length) {
+                prev.classList.add('hidden');
+                next.classList.add('hidden');
+                renderBirthdayDots();
+                return;
+            }
+
+            const renderEntries = birthdayCarouselEntries.length > 1
+                ? birthdayCarouselEntries.concat(birthdayCarouselEntries)
+                : birthdayCarouselEntries.slice();
+            renderEntries.forEach(entry => track.appendChild(createBirthdaySlide(entry)));
+
+            birthdayCarouselVisibleCount = birthdayVisibleCount(birthdayCarouselEntries.length);
+            birthdayCarouselPhysicalIndex = birthdayCarouselIndex;
+            birthdayCarouselTransitioning = false;
+            const multi = birthdayCarouselEntries.length > 1;
+            prev.classList.toggle('hidden', !multi);
+            next.classList.toggle('hidden', !multi);
+            renderBirthdayDots();
+            requestAnimationFrame(() => updateBirthdayCarouselLayout(false));
+        }
+
+        function renderBirthdayCorner() {
+            const corner = document.getElementById('birthdayCorner');
+            const monthLabel = document.getElementById('birthdayMonthLabel');
+            if (!corner) return;
+            positionBirthdayCorner();
+
+            if (!birthdayDataLoaded) {
+                corner.classList.add('hidden');
+                stopBirthdayAutoplay();
+                return;
+            }
+
+            const now = new Date();
+            const entries = getCurrentMonthBirthdayEntries();
+            if (!entries.length) {
+                birthdayCarouselEntries = [];
+                birthdayCarouselSignature = '';
+                corner.classList.add('hidden');
+                stopBirthdayAutoplay();
+                renderBirthdayCarousel();
+                return;
+            }
+
+            const dateKey = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+            const signature = `${now.getMonth() + 1}|` + entries.map(entry => `${entry._key}:${entry.updatedAtMs || ''}:${entry.active}:${birthdayEntryDisplayName(entry)}`).join('|');
+            const oldCurrentKey = birthdayCarouselEntries[birthdayCarouselIndex] && birthdayCarouselEntries[birthdayCarouselIndex]._key;
+            const dateChanged = birthdayCarouselDateKey && birthdayCarouselDateKey !== dateKey;
+            const dataChanged = signature !== birthdayCarouselSignature;
+            const visibleChanged = birthdayVisibleCount(entries.length) !== birthdayCarouselVisibleCount;
+
+            if (dateChanged) {
+                birthdayCarouselIndex = 0;
+            } else if (dataChanged && oldCurrentKey) {
+                const preservedIndex = entries.findIndex(entry => entry._key === oldCurrentKey);
+                birthdayCarouselIndex = preservedIndex >= 0 ? preservedIndex : 0;
+            } else if (birthdayCarouselIndex >= entries.length) {
+                birthdayCarouselIndex = 0;
+            }
+
+            birthdayCarouselEntries = entries;
+            birthdayCarouselSignature = signature;
+            birthdayCarouselDateKey = dateKey;
+            birthdayCarouselVisibleCount = birthdayVisibleCount(entries.length);
+
+            if (monthLabel) {
+                monthLabel.textContent = now.toLocaleDateString('en-US', { month: 'long' }) + ' Celebrants';
+            }
+            corner.classList.remove('hidden');
+
+            if (dataChanged || dateChanged || visibleChanged || !document.getElementById('birthdayCarouselTrack').children.length) {
+                renderBirthdayCarousel();
+            } else {
+                updateBirthdayCarouselLayout(false);
+                renderBirthdayDots();
+            }
+            ensureBirthdayAutoplay();
+        }
+
+        window.birthdayCarouselNext = function(manual = true) {
+            const count = birthdayCarouselEntries.length;
+            if (count < 2 || birthdayCarouselTransitioning) return;
+            birthdayCarouselTransitioning = true;
+            birthdayCarouselIndex = (birthdayCarouselIndex + 1) % count;
+            birthdayCarouselPhysicalIndex += 1;
+            updateBirthdayCarouselLayout(true);
+            renderBirthdayDots();
+
+            if (birthdayTransitionTimer) clearTimeout(birthdayTransitionTimer);
+            birthdayTransitionTimer = setTimeout(() => {
+                if (birthdayCarouselPhysicalIndex >= count) {
+                    birthdayCarouselPhysicalIndex = 0;
+                    updateBirthdayCarouselLayout(false);
+                }
+                birthdayCarouselTransitioning = false;
+            }, 410);
+            if (manual) resetBirthdayAutoplay();
+        };
+
+        window.birthdayCarouselPrevious = function(manual = true) {
+            const count = birthdayCarouselEntries.length;
+            if (count < 2 || birthdayCarouselTransitioning) return;
+            birthdayCarouselTransitioning = true;
+            birthdayCarouselIndex = (birthdayCarouselIndex - 1 + count) % count;
+
+            if (birthdayCarouselPhysicalIndex === 0) {
+                birthdayCarouselPhysicalIndex = count;
+                updateBirthdayCarouselLayout(false);
+                requestAnimationFrame(() => {
+                    birthdayCarouselPhysicalIndex = count - 1;
+                    updateBirthdayCarouselLayout(true);
+                });
+            } else {
+                birthdayCarouselPhysicalIndex -= 1;
+                updateBirthdayCarouselLayout(true);
+            }
+            renderBirthdayDots();
+
+            if (birthdayTransitionTimer) clearTimeout(birthdayTransitionTimer);
+            birthdayTransitionTimer = setTimeout(() => { birthdayCarouselTransitioning = false; }, 410);
+            if (manual) resetBirthdayAutoplay();
+        };
+
+        window.goToBirthdaySlide = function(index) {
+            const count = birthdayCarouselEntries.length;
+            const target = Number(index);
+            if (!Number.isInteger(target) || target < 0 || target >= count || birthdayCarouselTransitioning) return;
+            birthdayCarouselIndex = target;
+            birthdayCarouselPhysicalIndex = target;
+            updateBirthdayCarouselLayout(true);
+            renderBirthdayDots();
+            resetBirthdayAutoplay();
+        };
+
+        window.handleBirthdayTouchStart = function(event) {
+            const touch = event && event.touches && event.touches[0];
+            if (!touch) return;
+            birthdayTouchStartX = touch.clientX;
+            birthdayTouchStartY = touch.clientY;
+        };
+
+        window.handleBirthdayTouchEnd = function(event) {
+            const touch = event && event.changedTouches && event.changedTouches[0];
+            if (!touch || birthdayTouchStartX === null || birthdayTouchStartY === null) return;
+            const dx = touch.clientX - birthdayTouchStartX;
+            const dy = touch.clientY - birthdayTouchStartY;
+            birthdayTouchStartX = null;
+            birthdayTouchStartY = null;
+            if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy) * 1.2) return;
+            if (dx < 0) window.birthdayCarouselNext();
+            else window.birthdayCarouselPrevious();
+        };
+
+        function bindBirthdayCornerSync() {
+            if (!currentUser) return;
+            if (birthdaySyncBoundUid === currentUser.uid && birthdaySyncUnsubscribe) return;
+            if (birthdaySyncUnsubscribe) {
+                try { birthdaySyncUnsubscribe(); } catch (err) { console.warn('[Birthday] Failed to unbind old listener:', err); }
+            }
+            birthdaySyncBoundUid = currentUser.uid;
+            birthdayDataLoaded = false;
+            birthdayData = {};
+            renderBirthdayCorner();
+
+            birthdaySyncUnsubscribe = onValue(ref(db, BIRTHDAY_ROOT), snapshot => {
+                birthdayData = snapshot.val() || {};
+                birthdayDataLoaded = true;
+                renderBirthdayCorner();
+                renderBirthdayManagerIfOpen();
+                refreshBirthdayEditorRosterIfOpen();
+            }, err => {
+                console.error('[Birthday] Live sync failed:', err);
+                birthdayData = {};
+                birthdayDataLoaded = false;
+                renderBirthdayCorner();
+                renderBirthdayManagerIfOpen();
+            });
+        }
+
+        function unbindBirthdayCornerSync() {
+            if (birthdaySyncUnsubscribe) {
+                try { birthdaySyncUnsubscribe(); } catch (err) { console.warn('[Birthday] Failed to unbind listener:', err); }
+            }
+            birthdaySyncUnsubscribe = null;
+            birthdaySyncBoundUid = null;
+            birthdayData = {};
+            birthdayDataLoaded = false;
+            birthdayCarouselEntries = [];
+            birthdayCarouselIndex = 0;
+            birthdayCarouselPhysicalIndex = 0;
+            birthdayCarouselSignature = '';
+            birthdayCarouselDateKey = '';
+            stopBirthdayAutoplay();
+            if (birthdayTransitionTimer) clearTimeout(birthdayTransitionTimer);
+            birthdayTransitionTimer = null;
+            const corner = document.getElementById('birthdayCorner');
+            if (corner) corner.classList.add('hidden');
+            window.closeBirthdayCropper();
+            window.closeBirthdayEditor();
+        }
+
+        function birthdayManagerIsOpen() {
+            const view = document.getElementById('birthdayManagerView');
+            return !!view && !view.classList.contains('hidden');
+        }
+
+        function birthdayEditorIsOpen() {
+            const backdrop = document.getElementById('birthdayEditorBackdrop');
+            return !!backdrop && !backdrop.classList.contains('hidden');
+        }
+
+        function refreshBirthdayEditorRosterIfOpen() {
+            if (!birthdayEditorIsOpen()) return;
+            const select = document.getElementById('birthdayStudentSelect');
+            const selected = select ? select.value : '';
+            populateBirthdayStudentOptions(selected);
+            renderBirthdayEditorPhotoPreviews();
+        }
+
+        function birthdayManagerRecords() {
+            return Object.entries(birthdayData || {}).map(([key, raw]) => {
+                const entry = Object.assign({ _key: key }, raw || {});
+                const roster = birthdayRosterStudent(entry.studentId);
+                entry._roster = roster;
+                entry._displayName = roster ? roster.name : (entry.name || 'Unknown Student');
+                return entry;
+            }).sort((a, b) => {
+                const am = Number(a.birthMonth) || 99, bm = Number(b.birthMonth) || 99;
+                if (am !== bm) return am - bm;
+                const ad = Number(a.birthDay) || 99, bd = Number(b.birthDay) || 99;
+                if (ad !== bd) return ad - bd;
+                return a._displayName.localeCompare(b._displayName);
+            });
+        }
+
+        function updateBirthdayManagerSummary(records) {
+            const now = new Date();
+            const registered = records.length;
+            const active = records.filter(entry => entry.active === true).length;
+            const thisMonth = records.filter(entry => entry.active === true && Number(entry.birthMonth) === now.getMonth() + 1).length;
+            const a = document.getElementById('birthdaySummaryRegistered');
+            const b = document.getElementById('birthdaySummaryActive');
+            const c = document.getElementById('birthdaySummaryMonth');
+            if (a) a.textContent = String(registered);
+            if (b) b.textContent = String(active);
+            if (c) c.textContent = String(thisMonth);
+        }
+
+        function createBirthdayManagerThumbnail(entry) {
+            const wrap = document.createElement('div');
+            if (isSafeBirthdayPhotoDataUrl(entry.photoDataUrl)) {
+                const img = document.createElement('img');
+                img.className = 'birthday-manager-thumb';
+                img.src = entry.photoDataUrl;
+                img.alt = `${entry._displayName || entry.name || 'Student'} birthday photo`;
+                img.onerror = () => {
+                    wrap.innerHTML = '';
+                    const fallback = document.createElement('span');
+                    fallback.className = 'birthday-manager-thumb-fallback';
+                    fallback.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.8 20c.7-4.1 3.1-6.2 7.2-6.2s6.5 2.1 7.2 6.2"></path></svg>';
+                    wrap.appendChild(fallback);
+                };
+                wrap.appendChild(img);
+            } else {
+                const fallback = document.createElement('span');
+                fallback.className = 'birthday-manager-thumb-fallback';
+                fallback.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.8 20c.7-4.1 3.1-6.2 7.2-6.2s6.5 2.1 7.2 6.2"></path></svg>';
+                wrap.appendChild(fallback);
+            }
+            return wrap;
+        }
+
+        window.renderBirthdayManager = function() {
+            const body = document.getElementById('birthdayManagerList');
+            if (!body) return;
+            const records = birthdayManagerRecords();
+            updateBirthdayManagerSummary(records);
+            body.innerHTML = '';
+
+            if (!birthdayDataLoaded) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 5; td.className = 'birthday-empty-state'; td.textContent = 'Loading birthday records…';
+                tr.appendChild(td); body.appendChild(tr); return;
+            }
+
+            const searchEl = document.getElementById('birthdayManagerSearch');
+            const filterEl = document.getElementById('birthdayManagerStatusFilter');
+            const search = searchEl ? searchEl.value.trim().toLowerCase() : '';
+            const filter = filterEl ? filterEl.value : 'all';
+            const filtered = records.filter(entry => {
+                const matchesText = !search || entry._displayName.toLowerCase().includes(search) || String(entry.studentId || '').toLowerCase().includes(search);
+                const matchesStatus = filter === 'all' || (filter === 'active' ? entry.active === true : entry.active === false);
+                return matchesText && matchesStatus;
+            });
+
+            if (!filtered.length) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 5; td.className = 'birthday-empty-state';
+                td.textContent = records.length ? 'No birthday records match the current filters.' : 'No birthday records yet.';
+                tr.appendChild(td); body.appendChild(tr); return;
+            }
+
+            const now = new Date();
+            filtered.forEach(entry => {
+                const tr = document.createElement('tr');
+
+                const photoTd = document.createElement('td');
+                photoTd.setAttribute('data-label', 'Photo');
+                photoTd.className = 'birthday-manager-photo-cell';
+                photoTd.appendChild(createBirthdayManagerThumbnail(entry));
+
+                const studentTd = document.createElement('td');
+                studentTd.setAttribute('data-label', 'Student');
+                const name = document.createElement('div');
+                name.className = 'birthday-manager-student-name';
+                name.textContent = entry._displayName;
+                const id = document.createElement('div');
+                id.className = 'birthday-manager-student-id';
+                id.textContent = entry.studentId || 'No Student ID';
+                studentTd.appendChild(name); studentTd.appendChild(id);
+                if (!entry._roster) {
+                    const warning = document.createElement('div');
+                    warning.className = 'birthday-manager-warning';
+                    warning.textContent = 'Student not found in current masterlist';
+                    studentTd.appendChild(warning);
+                }
+
+                const birthdayTd = document.createElement('td');
+                birthdayTd.setAttribute('data-label', 'Birthday');
+                birthdayTd.textContent = isValidBirthdayMonthDay(entry.birthMonth, entry.birthDay) ? formatBirthdayMonthDay(entry.birthMonth, entry.birthDay) : 'Invalid date';
+                if (Number(entry.birthMonth) === now.getMonth() + 1) {
+                    const badge = document.createElement('span');
+                    badge.className = 'birthday-mini-badge';
+                    badge.textContent = isBirthdayToday(entry, now) ? 'Today' : 'This Month';
+                    birthdayTd.appendChild(badge);
+                }
+
+                const statusTd = document.createElement('td');
+                statusTd.setAttribute('data-label', 'Status');
+                const status = document.createElement('span');
+                status.className = 'birthday-status-pill ' + (entry.active === true ? 'birthday-status-active' : 'birthday-status-hidden');
+                status.textContent = entry.active === true ? 'Active' : 'Hidden';
+                statusTd.appendChild(status);
+
+                const actionsTd = document.createElement('td');
+                actionsTd.setAttribute('data-label', 'Actions');
+                actionsTd.className = 'action-pill-cell';
+                const actions = document.createElement('div');
+                actions.className = 'birthday-manager-actions';
+                const editBtn = document.createElement('button');
+                editBtn.type = 'button'; editBtn.className = 'action-pill-btn action-pill-edit'; editBtn.textContent = 'Edit';
+                editBtn.addEventListener('click', () => window.editBirthdayRecord(entry._key));
+                const delBtn = document.createElement('button');
+                delBtn.type = 'button'; delBtn.className = 'action-pill-btn action-pill-delete'; delBtn.textContent = 'Delete';
+                delBtn.addEventListener('click', () => window.deleteBirthdayRecord(entry._key));
+                actions.appendChild(editBtn); actions.appendChild(delBtn); actionsTd.appendChild(actions);
+
+                tr.appendChild(photoTd); tr.appendChild(studentTd); tr.appendChild(birthdayTd); tr.appendChild(statusTd); tr.appendChild(actionsTd);
+                body.appendChild(tr);
+            });
+        };
+
+        function renderBirthdayManagerIfOpen() {
+            if (birthdayManagerIsOpen()) window.renderBirthdayManager();
+        }
+
+        function prepareBirthdayManager() {
+            if (currentUserRole !== 'admin') return;
+            window.renderBirthdayManager();
+        }
+
+        function populateBirthdayStudentOptions(selectedStudentId) {
+            const select = document.getElementById('birthdayStudentSelect');
+            if (!select) return;
+            select.innerHTML = '';
+            const placeholder = document.createElement('option');
+            placeholder.value = '';
+            placeholder.textContent = currentStudentList.length ? 'Select student' : 'Student masterlist unavailable';
+            select.appendChild(placeholder);
+
+            const registeredIds = new Set(Object.values(birthdayData || {}).map(entry => String(entry && entry.studentId || '')));
+            currentStudentList.slice().sort((a,b) => a.name.localeCompare(b.name)).forEach(student => {
+                const opt = document.createElement('option');
+                opt.value = String(student.id);
+                opt.textContent = `${student.id} — ${student.name}`;
+                if (birthdayEditorMode === 'add' && registeredIds.has(String(student.id))) {
+                    opt.disabled = true;
+                    opt.textContent += ' (already registered)';
+                }
+                select.appendChild(opt);
+            });
+
+            if (selectedStudentId && !currentStudentList.some(student => String(student.id) === String(selectedStudentId))) {
+                const orphan = document.createElement('option');
+                orphan.value = String(selectedStudentId);
+                orphan.textContent = `${selectedStudentId} — Student not found in current masterlist`;
+                select.appendChild(orphan);
+            }
+            select.value = selectedStudentId ? String(selectedStudentId) : '';
+            select.disabled = birthdayEditorMode === 'edit';
+        }
+
+        window.populateBirthdayDayOptions = function(selectedDay) {
+            const month = Number(document.getElementById('birthdayMonthSelect').value);
+            const daySelect = document.getElementById('birthdayDaySelect');
+            if (!daySelect) return;
+            daySelect.innerHTML = '<option value="">Select day</option>';
+            const max = birthdayMonthDayLimit(month);
+            for (let day = 1; day <= max; day++) {
+                const opt = document.createElement('option');
+                opt.value = String(day); opt.textContent = String(day); daySelect.appendChild(opt);
+            }
+            if (selectedDay && Number(selectedDay) <= max) daySelect.value = String(selectedDay);
+        };
+
+        function renderBirthdayEditorPhotoPreviews() {
+            const img = document.getElementById('birthdayPhotoPreview');
+            const fallback = document.getElementById('birthdayPhotoFallback');
+            const frameWrap = document.getElementById('birthdayFramePreview');
+            if (!img || !fallback || !frameWrap) return;
+            const hasPhoto = isSafeBirthdayPhotoDataUrl(birthdayEditorPhotoDataUrl);
+            if (hasPhoto) {
+                img.src = birthdayEditorPhotoDataUrl;
+                img.classList.remove('hidden');
+                fallback.classList.add('hidden');
+            } else {
+                img.removeAttribute('src');
+                img.classList.add('hidden');
+                fallback.classList.remove('hidden');
+            }
+
+            const studentId = document.getElementById('birthdayStudentSelect').value;
+            const roster = birthdayRosterStudent(studentId);
+            const existing = birthdayEditingStudentKey ? birthdayData[birthdayEditingStudentKey] : null;
+            const previewEntry = {
+                studentId: studentId || (existing && existing.studentId) || '',
+                name: roster ? roster.name : (existing && existing.name) || 'Student',
+                photoDataUrl: birthdayEditorPhotoDataUrl
+            };
+            frameWrap.innerHTML = '';
+            frameWrap.appendChild(createBirthdayFrame(previewEntry));
+        }
+
+        window.handleBirthdayEditorInput = function() {
+            birthdayEditorDirty = true;
+            renderBirthdayEditorPhotoPreviews();
+        };
+
+        window.handleBirthdayEditorMonthChange = function() {
+            birthdayEditorDirty = true;
+            window.populateBirthdayDayOptions();
+            renderBirthdayEditorPhotoPreviews();
+        };
+
+        window.openBirthdayEditor = function(recordKey) {
+            if (currentUserRole !== 'admin') {
+                showAppAlert('Access Denied', 'Only the Main Admin can manage Birthday Corner records.');
+                return;
+            }
+            const editRecord = recordKey ? birthdayData[recordKey] : null;
+            if (recordKey && !editRecord) {
+                showAppAlert('Birthday Record Not Found', 'This Birthday record is no longer available.');
+                return;
+            }
+
+            birthdayEditorMode = recordKey ? 'edit' : 'add';
+            birthdayEditingStudentKey = recordKey || null;
+            birthdayEditorPhotoDataUrl = editRecord && isSafeBirthdayPhotoDataUrl(editRecord.photoDataUrl) ? editRecord.photoDataUrl : '';
+            birthdayEditorDirty = false;
+
+            document.getElementById('birthdayEditorTitle').textContent = birthdayEditorMode === 'edit' ? 'Edit Birthday' : 'Add Birthday';
+            populateBirthdayStudentOptions(editRecord ? editRecord.studentId : '');
+            document.getElementById('birthdayMonthSelect').value = editRecord && editRecord.birthMonth ? String(editRecord.birthMonth) : '';
+            window.populateBirthdayDayOptions(editRecord && editRecord.birthDay ? editRecord.birthDay : '');
+            document.getElementById('birthdayStatusSelect').value = editRecord && editRecord.active === false ? 'hidden' : 'active';
+            document.getElementById('birthdayPhotoInput').value = '';
+            renderBirthdayEditorPhotoPreviews();
+
+            const backdrop = document.getElementById('birthdayEditorBackdrop');
+            birthdayEditorPreviousBodyOverflow = document.body.style.overflow || '';
+            document.body.style.overflow = 'hidden';
+            backdrop.classList.remove('hidden');
+            backdrop.setAttribute('aria-hidden', 'false');
+            setTimeout(() => document.getElementById('birthdayStudentSelect').focus(), 0);
+        };
+
+        window.editBirthdayRecord = function(recordKey) {
+            window.openBirthdayEditor(recordKey);
+        };
+
+        window.closeBirthdayEditor = function() {
+            const backdrop = document.getElementById('birthdayEditorBackdrop');
+            if (!backdrop || backdrop.classList.contains('hidden')) return;
+            backdrop.classList.add('hidden');
+            backdrop.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = birthdayEditorPreviousBodyOverflow;
+            birthdayEditorPreviousBodyOverflow = '';
+            birthdayEditorDirty = false;
+            birthdayEditingStudentKey = null;
+            birthdayEditorPhotoDataUrl = '';
+            const input = document.getElementById('birthdayPhotoInput');
+            if (input) input.value = '';
+        };
+
+        window.handleBirthdayPhotoSelected = function(event) {
+            if (currentUserRole !== 'admin') return;
+            const input = event && event.target;
+            const file = input && input.files && input.files[0];
+            if (!file) return;
+            if (!['image/jpeg','image/png','image/webp'].includes(file.type)) {
+                showAppAlert('Unsupported Image', 'Please choose a JPEG, PNG, or WEBP image.');
+                input.value = '';
+                return;
+            }
+            if (file.size > BIRTHDAY_MAX_SOURCE_BYTES) {
+                showAppAlert('Image Too Large', 'Please choose an image smaller than 5 MB.');
+                input.value = '';
+                return;
+            }
+            if (typeof Cropper === 'undefined') {
+                showAppAlert('Photo Editor Unavailable', 'The photo cropper could not be loaded. Please try again when online.');
+                input.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = e => {
+                const cropImage = document.getElementById('birthdayCropImage');
+                const cropBackdrop = document.getElementById('birthdayCropBackdrop');
+                if (birthdayCropperInstance) {
+                    birthdayCropperInstance.destroy();
+                    birthdayCropperInstance = null;
+                }
+                cropImage.onload = () => {
+                    birthdayCropperInstance = new Cropper(cropImage, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        autoCropArea: 1,
+                        background: false,
+                        movable: true,
+                        zoomable: true,
+                        scalable: false,
+                        rotatable: false
+                    });
+                };
+                cropImage.src = e.target.result;
+                birthdayCropPreviousBodyOverflow = document.body.style.overflow || '';
+                document.body.style.overflow = 'hidden';
+                cropBackdrop.classList.remove('hidden');
+                cropBackdrop.setAttribute('aria-hidden', 'false');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.closeBirthdayCropper = function() {
+            const backdrop = document.getElementById('birthdayCropBackdrop');
+            if (!backdrop || backdrop.classList.contains('hidden')) return;
+            backdrop.classList.add('hidden');
+            backdrop.setAttribute('aria-hidden', 'true');
+            if (birthdayCropperInstance) {
+                birthdayCropperInstance.destroy();
+                birthdayCropperInstance = null;
+            }
+            const img = document.getElementById('birthdayCropImage');
+            if (img) { img.onload = null; img.removeAttribute('src'); }
+            const input = document.getElementById('birthdayPhotoInput');
+            if (input) input.value = '';
+            document.body.style.overflow = birthdayCropPreviousBodyOverflow;
+            birthdayCropPreviousBodyOverflow = '';
+        };
+
+        function birthdayDataUrlApproxBytes(dataUrl) {
+            if (!dataUrl || dataUrl.indexOf(',') < 0) return 0;
+            const base64 = dataUrl.split(',')[1] || '';
+            return Math.ceil(base64.length * 3 / 4);
+        }
+
+        window.applyBirthdayPhotoCrop = function() {
+            if (!birthdayCropperInstance) return;
+            const canvas = birthdayCropperInstance.getCroppedCanvas({
+                width: BIRTHDAY_OUTPUT_SIZE,
+                height: BIRTHDAY_OUTPUT_SIZE,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+            if (!canvas) return;
+            let quality = BIRTHDAY_OUTPUT_QUALITY;
+            let dataUrl = canvas.toDataURL('image/jpeg', quality);
+            while (birthdayDataUrlApproxBytes(dataUrl) > 250 * 1024 && quality > 0.64) {
+                quality -= 0.06;
+                dataUrl = canvas.toDataURL('image/jpeg', quality);
+            }
+            birthdayEditorPhotoDataUrl = dataUrl;
+            birthdayEditorDirty = true;
+            renderBirthdayEditorPhotoPreviews();
+            window.closeBirthdayCropper();
+        };
+
+        window.saveBirthdayRecord = async function() {
+            if (currentUserRole !== 'admin') {
+                showAppAlert('Access Denied', 'Only the Main Admin can save Birthday Corner records.');
+                return;
+            }
+            if (birthdayEditorSaving) return;
+
+            const studentId = document.getElementById('birthdayStudentSelect').value;
+            const rosterStudent = birthdayRosterStudent(studentId);
+            const month = Number(document.getElementById('birthdayMonthSelect').value);
+            const day = Number(document.getElementById('birthdayDaySelect').value);
+            const status = document.getElementById('birthdayStatusSelect').value;
+
+            if (!studentId || !rosterStudent) {
+                showAppAlert('Select a Student', 'Please select a student from the current Attendance masterlist.');
+                return;
+            }
+            if (!isValidBirthdayMonthDay(month, day)) {
+                showAppAlert('Invalid Birthday', 'Please select a valid birth month and day. February 29 is supported.');
+                return;
+            }
+            if (!isSafeBirthdayPhotoDataUrl(birthdayEditorPhotoDataUrl)) {
+                showAppAlert('Student Photo Required', 'Please upload and crop a student photo before saving.');
+                return;
+            }
+            if (status !== 'active' && status !== 'hidden') {
+                showAppAlert('Invalid Status', 'Please choose Active or Hidden.');
+                return;
+            }
+
+            if (birthdayEditorMode === 'add') {
+                const duplicate = Object.values(birthdayData || {}).find(entry => String(entry && entry.studentId || '') === String(studentId));
+                if (duplicate) {
+                    showAppAlert('Birthday Already Registered', 'This student already has a Birthday Corner record. Please edit the existing record instead.');
+                    return;
+                }
+            }
+
+            const recordKey = birthdayEditorMode === 'edit' && birthdayEditingStudentKey
+                ? birthdayEditingStudentKey
+                : birthdayFirebaseKeyForStudentId(studentId);
+            const existing = birthdayData[recordKey] || {};
+            const now = new Date();
+            const nowText = now.toLocaleString();
+            const nowMs = now.getTime();
+            const actorName = userFullName || 'Main Admin';
+            const payload = {
+                studentId: String(studentId),
+                name: rosterStudent.name,
+                birthMonth: month,
+                birthDay: day,
+                birthKey: `${pad2(month)}-${pad2(day)}`,
+                photoDataUrl: birthdayEditorPhotoDataUrl,
+                active: status === 'active',
+                createdAt: existing.createdAt || nowText,
+                createdAtMs: existing.createdAtMs || nowMs,
+                createdByUid: existing.createdByUid || (currentUser ? currentUser.uid : ''),
+                createdByEmail: existing.createdByEmail || (currentUser ? currentUser.email : ''),
+                updatedAt: nowText,
+                updatedAtMs: nowMs,
+                updatedByUid: currentUser ? currentUser.uid : '',
+                updatedByEmail: currentUser ? currentUser.email : '',
+                updatedByName: actorName
+            };
+
+            const btn = document.getElementById('birthdaySaveBtn');
+            const oldText = btn ? btn.textContent : 'Save Birthday';
+            birthdayEditorSaving = true;
+            if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+            try {
+                await set(ref(db, `${BIRTHDAY_ROOT}/${recordKey}`), payload);
+                birthdayEditorDirty = false;
+                window.closeBirthdayEditor();
+                showAppAlert('Birthday Saved', `${rosterStudent.name}'s birthday information was saved successfully.`);
+            } catch (err) {
+                console.error('[Birthday] Save failed:', err);
+                showAppAlert('Database Error', 'The Birthday record could not be saved. Please try again.');
+            } finally {
+                birthdayEditorSaving = false;
+                if (btn) { btn.disabled = false; btn.textContent = oldText; }
+            }
+        };
+
+        window.deleteBirthdayRecord = function(recordKey) {
+            if (currentUserRole !== 'admin') {
+                showAppAlert('Access Denied', 'Only the Main Admin can delete Birthday Corner records.');
+                return;
+            }
+            if (birthdayDeleteInProgress) return;
+            const entry = birthdayData[recordKey];
+            if (!entry) {
+                showAppAlert('Birthday Record Not Found', 'This Birthday record is no longer available.');
+                return;
+            }
+            const name = birthdayEntryDisplayName(entry);
+            showAppConfirm(
+                'Delete Birthday Record?',
+                `This will permanently remove ${name}'s Birthday Corner record and photo.\n\nThis does not remove the student from Attendance or the student masterlist.\n\nContinue?`,
+                true,
+                async confirmed => {
+                    if (!confirmed || birthdayDeleteInProgress) return;
+                    birthdayDeleteInProgress = true;
+                    try {
+                        await remove(ref(db, `${BIRTHDAY_ROOT}/${recordKey}`));
+                        showAppAlert('Birthday Deleted', `${name}'s Birthday Corner record was removed.`);
+                    } catch (err) {
+                        console.error('[Birthday] Delete failed:', err);
+                        showAppAlert('Database Error', 'The Birthday record could not be deleted. Please try again.');
+                    } finally {
+                        birthdayDeleteInProgress = false;
+                    }
+                }
+            );
+        };
+
+        const birthdayCornerElement = document.getElementById('birthdayCorner');
+        const birthdayViewportElement = document.getElementById('birthdayCarouselViewport');
+        if (birthdayCornerElement) {
+            birthdayCornerElement.addEventListener('mouseenter', () => { birthdayHoverPaused = true; stopBirthdayAutoplay(); });
+            birthdayCornerElement.addEventListener('mouseleave', () => { birthdayHoverPaused = false; ensureBirthdayAutoplay(); });
+            birthdayCornerElement.addEventListener('focusin', () => { birthdayFocusPaused = true; stopBirthdayAutoplay(); });
+            birthdayCornerElement.addEventListener('focusout', () => {
+                setTimeout(() => {
+                    birthdayFocusPaused = !!(document.activeElement && birthdayCornerElement.contains(document.activeElement));
+                    ensureBirthdayAutoplay();
+                }, 0);
+            });
+        }
+        if (birthdayViewportElement) {
+            birthdayViewportElement.addEventListener('touchstart', window.handleBirthdayTouchStart, { passive: true });
+            birthdayViewportElement.addEventListener('touchend', window.handleBirthdayTouchEnd, { passive: true });
+        }
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopBirthdayAutoplay();
+            else ensureBirthdayAutoplay();
+        });
+        window.addEventListener('resize', () => {
+            if (!birthdayCarouselEntries.length) return;
+            const nextCount = birthdayVisibleCount(birthdayCarouselEntries.length);
+            if (nextCount !== birthdayCarouselVisibleCount) {
+                birthdayCarouselVisibleCount = nextCount;
+                renderBirthdayCarousel();
+            } else {
+                updateBirthdayCarouselLayout(false);
+            }
+        });
 
 
         // MISSION COLLECTION SYSTEM (AY 2026-2027)
@@ -8881,6 +10564,7 @@
                 bindCycleDaySync();
                 bindGospelOfTheDaySync();
                 bindAnnouncementSync();
+                bindBirthdayCornerSync();
                 bindClassFundsSync();
 
                 showView('schedule');
@@ -8900,6 +10584,7 @@
                 closeAnnouncementDetailModal();
                 unbindGospelOfTheDaySync();
                 unbindAnnouncementSync();
+                unbindBirthdayCornerSync();
                 currentUser = null;
                 document.getElementById('authContainer').classList.remove('hidden');
                 document.getElementById('appContainer').classList.add('hidden');
@@ -8918,6 +10603,9 @@
                     set(ref(db, 'student_masterlist'), currentStudentList);
                 }
                 renderDashboardMatrix();
+                renderBirthdayCorner();
+                renderBirthdayManagerIfOpen();
+                refreshBirthdayEditorRosterIfOpen();
                 if (!document.getElementById('classFundsView').classList.contains('hidden')) { cfPopulateReportStudentOptions(); renderCfCurrentTab(); }
             });
         }
@@ -9034,7 +10722,7 @@
             if (viewName === 'dashboard' || viewName === 'dailySheet') return 'dashboard';
             if (viewName === 'missionCollection') return 'missionCollection';
             if (viewName === 'classFunds') return 'classFunds';
-            if (viewName === 'officers' || viewName === 'profile' || viewName === 'settings' || viewName === 'cycleDayManager' || viewName === 'gospelManager' || viewName === 'announcementManager') return 'more';
+            if (viewName === 'officers' || viewName === 'profile' || viewName === 'settings' || viewName === 'cycleDayManager' || viewName === 'gospelManager' || viewName === 'announcementManager' || viewName === 'birthdayManager') return 'more';
             return '';
         }
 
@@ -9128,6 +10816,16 @@
 
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape') {
+                const birthdayCropBackdrop = document.getElementById('birthdayCropBackdrop');
+                if (birthdayCropBackdrop && !birthdayCropBackdrop.classList.contains('hidden')) {
+                    window.closeBirthdayCropper();
+                    return;
+                }
+                const birthdayEditorBackdrop = document.getElementById('birthdayEditorBackdrop');
+                if (birthdayEditorBackdrop && !birthdayEditorBackdrop.classList.contains('hidden')) {
+                    window.closeBirthdayEditor();
+                    return;
+                }
                 const announcementBackdrop = document.getElementById('announcementDetailBackdrop');
                 if (announcementBackdrop && !announcementBackdrop.classList.contains('hidden')) {
                     window.closeAnnouncementDetailModal();
@@ -9143,11 +10841,12 @@
             }
         });
 
-        const ALL_TOP_LEVEL_VIEWS = ['classScheduleView', 'dashboardMatrixView', 'dailyAttendanceSheetView', 'officerProfileView', 'adminOfficersView', 'missionCollectionView', 'classFundsView', 'settingsView', 'cycleDayManagerView', 'gospelManagerView', 'announcementManagerView'];
-        const NAV_TITLES = { schedule: 'Class Schedule', dashboard: 'Attendance Tracker', dailySheet: 'Attendance Sheet', missionCollection: 'Mission Collection', classFunds: 'Class Funds', officers: 'My Officers', profile: 'My Profile', settings: 'Settings', cycleDayManager: 'Cycle Day Manager', gospelManager: 'Gospel of the Day Manager', announcementManager: 'Announcement Manager' };
+        const ALL_TOP_LEVEL_VIEWS = ['classScheduleView', 'dashboardMatrixView', 'dailyAttendanceSheetView', 'officerProfileView', 'adminOfficersView', 'missionCollectionView', 'classFundsView', 'settingsView', 'cycleDayManagerView', 'gospelManagerView', 'announcementManagerView', 'birthdayManagerView'];
+        const NAV_TITLES = { schedule: 'Class Schedule', dashboard: 'Attendance Tracker', dailySheet: 'Attendance Sheet', missionCollection: 'Mission Collection', classFunds: 'Class Funds', officers: 'My Officers', profile: 'My Profile', settings: 'Settings', cycleDayManager: 'Cycle Day Manager', gospelManager: 'Gospel of the Day Manager', announcementManager: 'Announcement Manager', birthdayManager: 'Birthday Manager' };
 
         window.showView = function(viewName) {
             ALL_TOP_LEVEL_VIEWS.forEach(id => document.getElementById(id).classList.add('hidden'));
+            if (viewName !== 'schedule') stopBirthdayAutoplay();
 
             if (viewName === 'schedule') {
                 document.getElementById('classScheduleView').classList.remove('hidden');
@@ -9187,6 +10886,13 @@
                 }
                 document.getElementById('announcementManagerView').classList.remove('hidden');
                 prepareAnnouncementManager();
+            } else if (viewName === 'birthdayManager') {
+                if (currentUserRole !== 'admin') {
+                    document.getElementById('settingsView').classList.remove('hidden');
+                    return;
+                }
+                document.getElementById('birthdayManagerView').classList.remove('hidden');
+                prepareBirthdayManager();
             } else if (viewName === 'dailySheet') {
                 document.getElementById('dailyAttendanceSheetView').classList.remove('hidden');
             }
@@ -9199,6 +10905,10 @@
             }
             if (viewName === 'announcementManager' && currentUserRole !== 'admin') {
                 showAppAlert('Access Denied', 'Only the Main Admin can access the Announcement Manager.');
+                return;
+            }
+            if (viewName === 'birthdayManager' && currentUserRole !== 'admin') {
+                showAppAlert('Access Denied', 'Only the Main Admin can access the Birthday Manager.');
                 return;
             }
 
