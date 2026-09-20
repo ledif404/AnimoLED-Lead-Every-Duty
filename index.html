@@ -4038,6 +4038,142 @@
             .auth-container .auth-card { padding: 27px 28px 24px; }
         }
 
+
+        /* ============================================
+           SECURE STUDENT GUEST MODE
+           Read-only UI layer. Firebase data security is enforced by guest_public + Rules.
+           ============================================ */
+        .guest-auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            margin: 18px 0 13px;
+            color: #839087;
+            font-size: 9px;
+            font-weight: 850;
+            letter-spacing: 1.45px;
+            text-transform: uppercase;
+        }
+        .guest-auth-divider::before,
+        .guest-auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #d9e1dc;
+        }
+        .guest-continue-btn {
+            width: 100%;
+            min-height: 48px;
+            padding: 10px 16px;
+            border: 1.5px solid #2e7047;
+            border-radius: 999px;
+            background: #f7faf5;
+            color: #174d30;
+            font: inherit;
+            font-size: 14px;
+            font-weight: 850;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            transition: background .16s ease, transform .16s ease, box-shadow .16s ease;
+        }
+        .guest-continue-btn:hover {
+            background: #eef5eb;
+            box-shadow: 0 7px 18px rgba(30,72,46,.08);
+        }
+        .guest-continue-btn:active { transform: translateY(1px); }
+        .guest-continue-btn:disabled { opacity: .65; cursor: wait; transform: none; box-shadow: none; }
+        .guest-continue-btn svg { width: 19px; height: 19px; flex: 0 0 auto; }
+        .guest-access-hint {
+            margin-top: 8px;
+            color: #77857c;
+            font-size: 10.5px;
+            line-height: 1.4;
+            text-align: center;
+        }
+        .guest-continue-btn:focus-visible {
+            outline: 3px solid rgba(212,162,26,.48);
+            outline-offset: 3px;
+        }
+
+        .guest-mode-notice {
+            margin: 0 0 14px 0;
+            padding: 10px 12px;
+            border: 1px solid #d9e7d8;
+            border-left: 4px solid #5f8f6b;
+            border-radius: 13px;
+            background: #f3f8f1;
+            color: #355b43;
+            font-size: 11px;
+            line-height: 1.45;
+        }
+        .guest-mode-notice strong {
+            display: block;
+            color: #174d30;
+            font-size: 11px;
+            margin-bottom: 2px;
+        }
+        body.guest-mode .guest-restricted-nav,
+        body.guest-mode .guest-export-control,
+        body.guest-mode #attendanceClassRemarksGroup,
+        body.guest-mode #studentRemarkModal,
+        body.guest-mode #mcViewCreated,
+        body.guest-mode #mcViewModified {
+            display: none !important;
+        }
+        body.guest-mode .click-status-cell {
+            cursor: default;
+        }
+        body.guest-mode .all-row-select {
+            display: none !important;
+        }
+        body.guest-mode .cf-audit-row.guest-private-history {
+            display: none !important;
+        }
+        .officers-directory-access.hidden { display: none !important; }
+
+        .guest-public-tool {
+            align-items: center;
+            gap: 12px;
+            cursor: default;
+        }
+        .guest-public-tool-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+        .guest-public-tool-copy small {
+            color: var(--text-muted);
+            font-size: 10px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+        .guest-public-rebuild-btn {
+            flex: 0 0 auto;
+            min-height: 40px;
+            padding: 8px 12px;
+            border: 1px solid #2e7047;
+            border-radius: 10px;
+            background: #eef5eb;
+            color: #174d30;
+            font: inherit;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+        .guest-public-rebuild-btn:disabled { opacity: .65; cursor: wait; }
+
+        @media (max-width: 640px) {
+            .guest-public-tool {
+                align-items: stretch;
+                flex-direction: column;
+            }
+            .guest-public-rebuild-btn { width: 100%; min-height: 44px; }
+        }
+
 </style>
 </head>
 <body>
@@ -4109,6 +4245,16 @@
                     <span id="authToggleMessage">Need an officer account?</span>
                     <span id="authToggleBtn" class="auth-toggle-btn" role="button" tabindex="0" onclick="toggleAuthMode()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleAuthMode();}">Register here</span>
                 </div>
+
+                <div id="guestAuthDivider" class="guest-auth-divider" aria-hidden="true">OR</div>
+                <button id="guestContinueBtn" class="guest-continue-btn" type="button" onclick="handleGuestContinue()" aria-label="Continue as Guest">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+                        <circle cx="12" cy="12" r="2.7"></circle>
+                    </svg>
+                    <span id="guestContinueBtnLabel">Continue as Guest</span>
+                </button>
+                <div id="guestAccessHint" class="guest-access-hint">View-only access for students.</div>
             </section>
 
             <section id="pwaInstallCard" class="auth-install-card hidden" aria-labelledby="pwaInstallTitle">
@@ -4166,12 +4312,12 @@
                 <button class="sidebar-link" data-nav="dashboard" onclick="navigateTo('dashboard')"><span class="sidebar-icon">📋</span> Attendance Tracker</button>
                 <button class="sidebar-link" data-nav="missionCollection" onclick="navigateTo('missionCollection')"><span class="sidebar-icon">💰</span> Mission Collection</button>
                 <button class="sidebar-link" data-nav="classFunds" onclick="navigateTo('classFunds')"><span class="sidebar-icon">💵</span> Class Funds</button>
-                <button class="sidebar-link admin-only-field hidden" data-nav="officers" onclick="navigateTo('officers')"><span class="sidebar-icon">👥</span> My Officers</button>
-                <button class="sidebar-link" data-nav="profile" onclick="navigateTo('profile')"><span class="sidebar-icon">👤</span> My Profile</button>
-                <button class="sidebar-link" data-nav="settings" onclick="navigateTo('settings')"><span class="sidebar-icon">⚙</span> Settings</button>
+                <button class="sidebar-link officers-directory-access hidden" data-nav="officers" onclick="navigateTo('officers')"><span class="sidebar-icon">👥</span> My Officers</button>
+                <button class="sidebar-link guest-restricted-nav" data-nav="profile" onclick="navigateTo('profile')"><span class="sidebar-icon">👤</span> My Profile</button>
+                <button class="sidebar-link guest-restricted-nav" data-nav="settings" onclick="navigateTo('settings')"><span class="sidebar-icon">⚙</span> Settings</button>
             </nav>
             <div class="sidebar-footer">
-                <button class="sidebar-signout-btn" onclick="closeSidebar(); handleLogout();"><span class="sidebar-icon">🚪</span> Sign Out</button>
+                <button id="sidebarSignOutBtn" class="sidebar-signout-btn" onclick="closeSidebar(); handleLogout();"><span class="sidebar-icon">🚪</span> <span id="sidebarSignOutLabel">Sign Out</span></button>
             </div>
         </div>
 
@@ -4193,19 +4339,24 @@
                 <button class="nav-btn" onclick="navigateTo('dashboard')">📋 Tracker</button>
                 <button class="nav-btn" onclick="navigateTo('missionCollection')">💰 Mission Collection</button>
                 <button class="nav-btn" onclick="navigateTo('classFunds')">💵 Class Funds</button>
-                <button class="nav-btn admin-only-field hidden" onclick="navigateTo('officers')">👥 My Officers</button>
-                <button class="nav-btn" onclick="navigateTo('profile')">👤 My Profile</button>
-                <button class="nav-btn" onclick="navigateTo('settings')">⚙ Settings</button>
+                <button class="nav-btn officers-directory-access hidden" onclick="navigateTo('officers')">👥 My Officers</button>
+                <button class="nav-btn guest-restricted-nav" onclick="navigateTo('profile')">👤 My Profile</button>
+                <button class="nav-btn guest-restricted-nav" onclick="navigateTo('settings')">⚙ Settings</button>
                 <div class="user-info">
                     <span class="role-badge" id="displayUserRole">Officer</span>
                 </div>
-                <button class="logout-btn" onclick="handleLogout()">Sign Out</button>
+                <button id="desktopSignOutBtn" class="logout-btn" onclick="handleLogout()">Sign Out</button>
             </div>
 
             <div class="mobile-page-title" id="mobilePageTitle">Class Schedule</div>
         </div>
 
         <div class="portal-container">
+
+            <div id="guestModeNotice" class="guest-mode-notice hidden">
+                <strong>Guest Mode · View Only</strong>
+                You can review class information, but changes are disabled.
+            </div>
 
             <!-- CLASS SCHEDULE HOME VIEW (default landing screen) -->
             <div id="classScheduleView">
@@ -4321,7 +4472,7 @@
                     <div class="btn-set">
                         <button class="btn-ui btn-green admin-only-field hidden" onclick="openAddStudentModal()">➕ Add Student</button>
                         <button class="btn-ui btn-gold admin-only-field hidden" onclick="openModifyStudentModal()">✏️ Modify Student</button>
-                        <button class="btn-ui btn-gold" onclick="exportDataToSpreadsheet()">📊 Export CSV</button>
+                        <button class="btn-ui btn-gold guest-export-control" onclick="exportDataToSpreadsheet()">📊 Export CSV</button>
                         <button class="btn-ui btn-gray" onclick="navigateWeek(-7)">← Prev</button>
                         <button class="btn-ui btn-green" onclick="navigateWeek(7)">Next →</button>
                     </div>
@@ -4389,8 +4540,10 @@
                     </div>
                 </div>
 
-                <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Class Remarks</label>
-                <textarea class="remarks-field" id="fieldRemarks" rows="2" placeholder="General classroom monitoring remarks..."></textarea>
+                <div id="attendanceClassRemarksGroup">
+                    <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Class Remarks</label>
+                    <textarea class="remarks-field" id="fieldRemarks" rows="2" placeholder="General classroom monitoring remarks..."></textarea>
+                </div>
 
                 <div class="table-scroller">
                     <table>
@@ -4608,8 +4761,8 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                         <h3 style="margin:0; font-size:15px; color:var(--primary-green);">Mission Collection Reports</h3>
                         <div class="btn-set">
-                            <button class="btn-ui btn-gold" onclick="exportMcCSV()">📊 Export CSV Data</button>
-                            <button class="btn-ui btn-green" onclick="exportMcPDF()">📄 Export PDF Report</button>
+                            <button class="btn-ui btn-gold guest-export-control" onclick="exportMcCSV()">📊 Export CSV Data</button>
+                            <button class="btn-ui btn-green guest-export-control" onclick="exportMcPDF()">📄 Export PDF Report</button>
                         </div>
                     </div>
                     
@@ -4816,7 +4969,7 @@
                 <div id="cfReportsTab" class="hidden">
                     <div class="view-header-flex" style="margin-bottom:12px;">
                         <h3 style="margin:0; color:var(--primary-green); font-size:15px;">Class Funds Reports</h3>
-                        <div class="btn-set">
+                        <div class="btn-set guest-export-control">
                             <select id="cfExportType" style="padding:8px; border:1px solid var(--border-gray); border-radius:6px; font-size:12px;">
                                 <option value="financial">Financial Statement</option>
                                 <option value="ledger">Complete Ledger</option>
@@ -4857,8 +5010,8 @@
 
                 <div class="settings-section-label">Account</div>
                 <div class="settings-list">
-                    <button class="settings-list-item" onclick="navigateTo('profile')">👤 My Profile <span>›</span></button>
-                    <button class="settings-list-item" onclick="handleLogout()">🚪 Sign Out <span>›</span></button>
+                    <button class="settings-list-item guest-restricted-nav" onclick="navigateTo('profile')">👤 My Profile <span>›</span></button>
+                    <button id="settingsSignOutBtn" class="settings-list-item" onclick="handleLogout()">🚪 <span id="settingsSignOutLabel">Sign Out</span> <span>›</span></button>
                 </div>
 
                 <div id="adminSettingsSection" class="hidden">
@@ -4906,6 +5059,13 @@
                             </span>
                             <span>›</span>
                         </button>
+                        <div id="guestPublicDataTool" class="settings-list-item guest-public-tool admin-only-field hidden">
+                            <span class="guest-public-tool-copy">
+                                <span>Guest Public Data</span>
+                                <small>Rebuild the sanitized student-facing data mirror used by Guest Mode.</small>
+                            </span>
+                            <button id="guestPublicRebuildBtn" class="guest-public-rebuild-btn" type="button" onclick="confirmRebuildGuestPublicData()">Rebuild Guest Public Data</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -5226,23 +5386,23 @@
                 </div>
             </div>
             <div class="mobile-more-menu">
-                <button class="mobile-more-item admin-only-field hidden" type="button" onclick="closeMobileMoreSheet(); navigateTo('officers');">
+                <button id="mobileMoreOfficersItem" class="mobile-more-item officers-directory-access hidden" type="button" onclick="closeMobileMoreSheet(); navigateTo('officers');">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.3"></circle><path d="M3.5 19c.5-3.4 2.3-5.2 5.5-5.2s5 1.8 5.5 5.2M14.5 14.5c.7-.5 1.5-.7 2.5-.7 2.4 0 3.8 1.5 4.2 4.2"></path></svg>
                     <span>My Officers</span><svg class="mobile-more-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
                 </button>
-                <button class="mobile-more-item" type="button" onclick="closeMobileMoreSheet(); navigateTo('profile');">
+                <button class="mobile-more-item guest-restricted-nav" type="button" onclick="closeMobileMoreSheet(); navigateTo('profile');">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.8 20c.7-4.1 3.1-6.2 7.2-6.2s6.5 2.1 7.2 6.2"></path></svg>
                     <span>My Profile</span><svg class="mobile-more-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
                 </button>
-                <button class="mobile-more-item" type="button" onclick="closeMobileMoreSheet(); navigateTo('settings');">
+                <button class="mobile-more-item guest-restricted-nav" type="button" onclick="closeMobileMoreSheet(); navigateTo('settings');">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3V2.8h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"></path></svg>
                     <span>Settings</span><svg class="mobile-more-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
                 </button>
             </div>
             <div class="mobile-more-signout">
-                <button class="mobile-more-item" type="button" onclick="closeMobileMoreSheet(); handleLogout();">
+                <button id="mobileMoreSignOutBtn" class="mobile-more-item" type="button" onclick="closeMobileMoreSheet(); handleLogout();">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 4H5.5A2.5 2.5 0 0 0 3 6.5v11A2.5 2.5 0 0 0 5.5 20H10"></path><path d="M14.5 8 19 12l-4.5 4M19 12H9"></path></svg>
-                    <span>Sign Out</span>
+                    <span id="mobileMoreSignOutLabel">Sign Out</span>
                 </button>
             </div>
         </section>
@@ -5688,15 +5848,15 @@
         <div class="modal-window" style="max-width:820px;">
             <h3 id="cfStudentProfileTitle" style="margin:0 0 8px 0; color:var(--primary-green);">Student Class Fund Profile</h3>
             <div id="cfStudentProfileBody"></div>
-            <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:16px;"><button class="btn-ui btn-gold" onclick="exportCfIndividualStudentCSV()">📊 Export Statement CSV</button><button class="btn-ui btn-green" onclick="exportCfIndividualStudentPDF()">📄 Export Statement PDF</button><button class="btn-ui btn-gray" onclick="closeCfStudentProfileModal()">Close</button></div>
+            <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:16px;"><button class="btn-ui btn-gold guest-export-control" onclick="exportCfIndividualStudentCSV()">📊 Export Statement CSV</button><button class="btn-ui btn-green guest-export-control" onclick="exportCfIndividualStudentPDF()">📄 Export Statement PDF</button><button class="btn-ui btn-gray" onclick="closeCfStudentProfileModal()">Close</button></div>
         </div>
     </div>
 
     <!-- SCRIPT MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, set, remove, onValue, update, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInAnonymously, onAuthStateChanged, signOut, deleteUser as firebaseDeleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, get, set as firebaseSet, remove as firebaseRemove, onValue, update as firebaseUpdate, push as firebasePush } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDf9e2U7UdfLS8zGGMGWk0w5hzdt3LZ_c8",
@@ -5730,6 +5890,616 @@
         let cropperInstance = null;
         let allUsersData = {};
         let activeModalOfficerUid = null;
+
+
+        // ============================================
+        // SECURE STUDENT GUEST MODE — public projection architecture
+        // ============================================
+        const GUEST_PUBLIC_ROOT = 'guest_public';
+        const GUEST_PUBLIC_SCHEMA_VERSION = 1;
+        const GUEST_ALLOWED_VIEWS = new Set(['schedule', 'dashboard', 'dailySheet', 'missionCollection', 'classFunds', 'officers']);
+
+        let guestSignInInProgress = false;
+        let guestPublicRebuildInProgress = false;
+        let guestDetachedAuditOption = null;
+        let usersSyncUnsubscribe = null;
+        let studentMasterlistSyncUnsubscribe = null;
+        let attendanceSyncUnsubscribe = null;
+        let missionSyncUnsubscribe = null;
+        let cycleCalendarSyncUnsubscribe = null;
+        let cycleAuditSyncUnsubscribe = null;
+
+        function isGuestMode() {
+            return currentUserRole === 'guest' || !!(currentUser && currentUser.isAnonymous);
+        }
+
+        function blockGuestWrite(actionLabel) {
+            if (!isGuestMode()) return false;
+            const suffix = actionLabel ? ' to ' + actionLabel + '.' : ' to make changes.';
+            window.showAppAlert('Guest View Only', 'Guest access is read-only. Sign in with an authorized officer account' + suffix);
+            return true;
+        }
+
+        function guestWriteBlockedError() {
+            const err = new Error('Guest write blocked by application read-only guard.');
+            err.code = 'guest/write-blocked';
+            return err;
+        }
+
+        function set(targetRef, value) {
+            if (isGuestMode()) {
+                blockGuestWrite('make changes');
+                return Promise.reject(guestWriteBlockedError());
+            }
+            return firebaseSet(targetRef, value);
+        }
+
+        function update(targetRef, values) {
+            if (isGuestMode()) {
+                blockGuestWrite('make changes');
+                return Promise.reject(guestWriteBlockedError());
+            }
+            return firebaseUpdate(targetRef, values);
+        }
+
+        function remove(targetRef) {
+            if (isGuestMode()) {
+                blockGuestWrite('make changes');
+                return Promise.reject(guestWriteBlockedError());
+            }
+            return firebaseRemove(targetRef);
+        }
+
+        function push(targetRef, value) {
+            if (isGuestMode()) {
+                blockGuestWrite('make changes');
+                throw guestWriteBlockedError();
+            }
+            return arguments.length >= 2 ? firebasePush(targetRef, value) : firebasePush(targetRef);
+        }
+
+        function deleteUser(user) {
+            if (isGuestMode()) {
+                blockGuestWrite('delete an account');
+                return Promise.reject(guestWriteBlockedError());
+            }
+            return firebaseDeleteUser(user);
+        }
+
+        function guestPublicPath(relativePath) {
+            const clean = String(relativePath || '').replace(/^\/+|\/+$/g, '');
+            return clean ? `${GUEST_PUBLIC_ROOT}/${clean}` : GUEST_PUBLIC_ROOT;
+        }
+
+        function normalizeFirebaseComparable(value) {
+            if (value === undefined || value === null) return null;
+            if (Array.isArray(value)) {
+                if (!value.length) return null;
+                return value.map(item => normalizeFirebaseComparable(item));
+            }
+            if (typeof value === 'object') {
+                const out = {};
+                Object.keys(value).sort().forEach(key => {
+                    const normalized = normalizeFirebaseComparable(value[key]);
+                    if (normalized !== null) out[key] = normalized;
+                });
+                return Object.keys(out).length ? out : null;
+            }
+            return value;
+        }
+
+        function stableSerialize(value) {
+            const normalized = normalizeFirebaseComparable(value);
+            if (normalized === null || typeof normalized !== 'object') return JSON.stringify(normalized);
+            if (Array.isArray(normalized)) return '[' + normalized.map(stableSerialize).join(',') + ']';
+            return '{' + Object.keys(normalized).sort().map(key => JSON.stringify(key) + ':' + stableSerialize(normalized[key])).join(',') + '}';
+        }
+
+        function sanitizeGuestStudentMasterlist(source) {
+            const list = Array.isArray(source) ? source : Object.values(source || {});
+            return list
+                .map(item => ({
+                    id: String(item && item.id != null ? item.id : '').trim(),
+                    name: String(item && item.name != null ? item.name : '').trim()
+                }))
+                .filter(item => item.id && item.name);
+        }
+
+        function sanitizeGuestCycleDayCalendar(source) {
+            const safe = {};
+            Object.entries(source || {}).forEach(([dateKey, entry]) => {
+                if (!entry || typeof entry !== 'object') return;
+                if (entry.type === 'noclass') {
+                    safe[dateKey] = {
+                        type: 'noclass',
+                        reason: String(entry.reason || 'No Classes')
+                    };
+                    return;
+                }
+                const day = Number(entry.cycleDay);
+                const mode = entry.mode === 'synchronous' ? 'synchronous' : 'regular';
+                if (entry.type === 'school' && day >= 1 && day <= 5) {
+                    safe[dateKey] = { type: 'school', cycleDay: day, mode };
+                }
+            });
+            return safe;
+        }
+
+        function sanitizeGuestGospel(source) {
+            const safe = {};
+            for (let day = 1; day <= 5; day++) {
+                const key = 'day' + day;
+                const entry = source && source[key];
+                if (!entry || typeof entry !== 'object') continue;
+                const header = String(entry.header || '').trim();
+                const preview = String(entry.preview || '').trim();
+                const fullVerse = String(entry.fullVerse || '').trim();
+                const reflection = String(entry.reflection || '').trim();
+                if (!header || !preview || !fullVerse || !reflection) continue;
+                safe[key] = { header, preview, fullVerse, reflection };
+            }
+            return safe;
+        }
+
+        function sanitizeGuestAnnouncement(source) {
+            if (!source || source.active !== true) return null;
+            const label = String(source.label || '').trim();
+            const title = String(source.title || '').trim();
+            const preview = String(source.preview || '').trim();
+            const fullAnnouncement = String(source.fullAnnouncement || '').trim();
+            if (!label || !title || !preview || !fullAnnouncement) return null;
+            const safe = { label, title, preview, fullAnnouncement, active: true };
+            if (source.updatedAt) safe.updatedAt = String(source.updatedAt);
+            return safe;
+        }
+
+        function sanitizeGuestBirthdayRecords(source) {
+            const safe = {};
+            Object.entries(source || {}).forEach(([recordKey, entry]) => {
+                if (!entry || entry.active !== true) return;
+                const studentId = String(entry.studentId || '').trim();
+                const name = String(entry.name || '').trim();
+                const birthMonth = Number(entry.birthMonth);
+                const birthDay = Number(entry.birthDay);
+                const birthKey = String(entry.birthKey || '').trim();
+                const photoDataUrl = String(entry.photoDataUrl || '');
+                if (!studentId || !name || !birthKey || birthMonth < 1 || birthMonth > 12 || birthDay < 1 || birthDay > 31) return;
+                safe[recordKey] = {
+                    studentId,
+                    name,
+                    birthMonth,
+                    birthDay,
+                    birthKey,
+                    photoDataUrl,
+                    active: true
+                };
+            });
+            return safe;
+        }
+
+        function sanitizeGuestAttendanceRecords(source) {
+            const safe = {};
+            const statusKeys = ['hr','p1','p2','p3','p4','p5','p6','p7','p8','p9'];
+            Object.entries(source || {}).forEach(([dateKey, day]) => {
+                if (!day || typeof day !== 'object') return;
+                const publicDay = {
+                    modality: String(day.modality || ''),
+                    periods: Number(day.periods || 7),
+                    records: {}
+                };
+                Object.entries(day.records || {}).forEach(([studentId, record]) => {
+                    if (!record || typeof record !== 'object') return;
+                    const publicRecord = {};
+                    statusKeys.forEach(key => {
+                        if (record[key] !== undefined && record[key] !== null) {
+                            publicRecord[key] = String(record[key]);
+                        }
+                    });
+                    publicDay.records[studentId] = publicRecord;
+                });
+                safe[dateKey] = publicDay;
+            });
+            return safe;
+        }
+
+        const GUEST_MISSION_DENOM_KEYS = ['1000','500','200','100','50','20_paper','20_coin','10','5','1','0_25','0_10','0_05'];
+
+        function sanitizeGuestMissionCollections(source) {
+            const safe = {};
+            Object.entries(source || {}).forEach(([recordKey, record]) => {
+                if (!record || typeof record !== 'object') return;
+                const denoms = {};
+                GUEST_MISSION_DENOM_KEYS.forEach(key => {
+                    const definition = (typeof MC_DENOMINATIONS !== 'undefined')
+                        ? MC_DENOMINATIONS.find(item => item.key === key)
+                        : null;
+                    const quantity = definition
+                        ? getMcDenominationQuantity(record, definition)
+                        : Number(record.denominations && record.denominations[key] || 0);
+                    denoms[key] = Number.isFinite(Number(quantity)) ? Math.max(0, Math.trunc(Number(quantity))) : 0;
+                });
+                safe[recordKey] = {
+                    weekNumber: Number(record.weekNumber || String(recordKey).replace(/\D+/g, '') || 0),
+                    collectionDate: String(record.collectionDate || ''),
+                    denominations: denoms,
+                    totalCollection: Number(record.totalCollection || 0),
+                    autoGeneratedZero: !!record.autoGeneratedZero
+                };
+            });
+            return safe;
+        }
+
+        function sanitizeGuestVerification(verification) {
+            const safe = {};
+            ['president', 'vicePresident'].forEach(slot => {
+                const value = verification && verification[slot];
+                if (!value || typeof value !== 'object') {
+                    safe[slot] = { verified: false };
+                    return;
+                }
+                const out = { verified: !!value.verified };
+                if (value.verifiedByName) out.verifiedByName = String(value.verifiedByName);
+                if (value.designation) out.designation = String(value.designation);
+                if (value.verifiedAt) out.verifiedAt = String(value.verifiedAt);
+                if (value.verifiedAtMs != null) out.verifiedAtMs = Number(value.verifiedAtMs || 0);
+                if (value.override === true) out.override = true;
+                if (value.overrideFor) out.overrideFor = String(value.overrideFor);
+                safe[slot] = out;
+            });
+            return safe;
+        }
+
+        function sanitizeGuestClassFunds(source) {
+            const safeDaily = {};
+            Object.entries((source && source.daily_collections) || {}).forEach(([dateKey, record]) => {
+                if (!record || !['submitted', 'no_collection'].includes(record.status)) return;
+                if (record.status === 'no_collection') {
+                    safeDaily[dateKey] = {
+                        date: String(record.date || dateKey),
+                        status: 'no_collection',
+                        totalCentavos: Number(record.totalCentavos || 0),
+                        contributorCount: Number(record.contributorCount || 0),
+                        noContributionCount: Number(record.noContributionCount || 0),
+                        excusedCount: Number(record.excusedCount || 0)
+                    };
+                    return;
+                }
+
+                const publicStudents = {};
+                Object.entries(record.students || {}).forEach(([studentKey, student]) => {
+                    if (!student || typeof student !== 'object') return;
+                    publicStudents[studentKey] = {
+                        studentId: String(student.studentId || studentKey),
+                        studentNameSnapshot: String(student.studentNameSnapshot || ''),
+                        status: String(student.status || ''),
+                        amountCentavos: Number(student.amountCentavos || 0)
+                    };
+                });
+
+                safeDaily[dateKey] = {
+                    date: String(record.date || dateKey),
+                    status: 'submitted',
+                    totalCentavos: Number(record.totalCentavos || 0),
+                    contributorCount: Number(record.contributorCount || 0),
+                    noContributionCount: Number(record.noContributionCount || 0),
+                    excusedCount: Number(record.excusedCount || 0),
+                    rosterCountSnapshot: Number(record.rosterCountSnapshot || 0),
+                    students: publicStudents,
+                    linkedTransactionId: String(record.linkedTransactionId || ''),
+                    cashCountedCentavos: record.cashCountedCentavos == null ? null : Number(record.cashCountedCentavos || 0),
+                    differenceCentavos: record.differenceCentavos == null ? null : Number(record.differenceCentavos || 0),
+                    reconciliationDiscrepancy: !!record.reconciliationDiscrepancy,
+                    verification: sanitizeGuestVerification(record.verification),
+                    reverificationRequired: !!record.reverificationRequired,
+                    revision: Number(record.revision || 0)
+                };
+            });
+
+            const safeTransactions = {};
+            Object.entries((source && source.transactions) || {}).forEach(([txKey, tx]) => {
+                if (!tx || typeof tx !== 'object' || tx.status === 'inactive_reopened') return;
+                const out = {
+                    transactionId: String(tx.transactionId || txKey),
+                    type: String(tx.type || ''),
+                    direction: String(tx.direction || ''),
+                    amountCentavos: Number(tx.amountCentavos || 0),
+                    effectiveDate: String(tx.effectiveDate || ''),
+                    effectiveTs: Number(tx.effectiveTs || 0),
+                    description: String(tx.description || ''),
+                    status: String(tx.status || 'active'),
+                    createdAt: String(tx.createdAt || ''),
+                    createdAtMs: Number(tx.createdAtMs || 0),
+                    verification: sanitizeGuestVerification(tx.verification),
+                    reverificationRequired: !!tx.reverificationRequired
+                };
+                if (tx.sourceDailyCollection) out.sourceDailyCollection = String(tx.sourceDailyCollection);
+                if (tx.type === 'expense') {
+                    out.category = String(tx.category || '');
+                    out.customCategory = String(tx.customCategory || '');
+                    out.description = String(tx.description || '');
+                    out.paidTo = String(tx.paidTo || '');
+                    out.referenceNumber = String(tx.referenceNumber || '');
+                    out.notes = String(tx.notes || '');
+                } else if (tx.type === 'adjustment') {
+                    out.reason = String(tx.reason || '');
+                    out.notes = String(tx.notes || '');
+                }
+                safeTransactions[txKey] = out;
+            });
+
+            return {
+                daily_collections: safeDaily,
+                transactions: safeTransactions
+            };
+        }
+
+        function sanitizeGuestOfficers(usersData) {
+            const safe = {};
+            const keyMap = {
+                'President': 'president',
+                'Vice President': 'vice_president',
+                'Secretary': 'secretary',
+                'Treasurer': 'treasurer'
+            };
+            Object.values(usersData || {}).forEach(user => {
+                if (!user || typeof user !== 'object') return;
+                const designation = String(user.designation || '');
+                const publicKey = keyMap[designation];
+                if (!publicKey) return;
+                safe[publicKey] = {
+                    designation,
+                    fullName: String(user.fullName || ''),
+                    photoBase64: String(user.photoBase64 || '')
+                };
+            });
+            return safe;
+        }
+
+        async function syncGuestPublicPathIfChanged(relativePath, safeValue) {
+            if (!currentUser || currentUser.isAnonymous || currentUserRole === 'guest') return;
+            const target = ref(db, guestPublicPath(relativePath));
+            try {
+                const snapshot = await get(target);
+                const currentValue = snapshot.exists() ? snapshot.val() : null;
+                const normalizedSafe = normalizeFirebaseComparable(safeValue);
+                if (stableSerialize(currentValue) === stableSerialize(normalizedSafe)) return;
+                if (normalizedSafe === null) await firebaseRemove(target);
+                else await firebaseSet(target, normalizedSafe);
+            } catch (err) {
+                console.error(`[Guest Public Sync] ${relativePath} failed:`, err);
+            }
+        }
+
+        async function guestPublicReady() {
+            try {
+                const snapshot = await get(ref(db, guestPublicPath('meta')));
+                const meta = snapshot.val() || {};
+                return meta.ready === true && Number(meta.schemaVersion) === GUEST_PUBLIC_SCHEMA_VERSION;
+            } catch (err) {
+                console.error('[Guest] Readiness check failed:', err);
+                return false;
+            }
+        }
+
+        function setGuestContinueLoading(loading) {
+            guestSignInInProgress = !!loading;
+            const btn = document.getElementById('guestContinueBtn');
+            const label = document.getElementById('guestContinueBtnLabel');
+            if (btn) btn.disabled = guestSignInInProgress;
+            if (label) label.textContent = guestSignInInProgress ? 'Entering Guest Mode...' : 'Continue as Guest';
+        }
+
+        function applyGuestModeUI() {
+            const guest = isGuestMode();
+            document.body.classList.toggle('guest-mode', guest);
+
+            const notice = document.getElementById('guestModeNotice');
+            if (notice) notice.classList.toggle('hidden', !guest);
+
+            document.querySelectorAll('.officers-directory-access').forEach(el => {
+                el.classList.toggle('hidden', !(guest || currentUserRole === 'admin'));
+            });
+            document.querySelectorAll('.guest-restricted-nav').forEach(el => {
+                el.classList.toggle('hidden', guest);
+            });
+
+            const roleBadge = document.getElementById('displayUserRole');
+            if (guest && roleBadge) roleBadge.textContent = 'Guest · View Only';
+
+            const sidebarRole = document.getElementById('sidebarUserRole');
+            if (guest && sidebarRole) sidebarRole.textContent = 'Guest · View Only';
+
+            const desktopSignOut = document.getElementById('desktopSignOutBtn');
+            if (desktopSignOut) desktopSignOut.textContent = guest ? 'Exit Guest Mode' : 'Sign Out';
+            const sidebarSignOut = document.getElementById('sidebarSignOutLabel');
+            if (sidebarSignOut) sidebarSignOut.textContent = guest ? 'Exit Guest Mode' : 'Sign Out';
+            const settingsSignOut = document.getElementById('settingsSignOutLabel');
+            if (settingsSignOut) settingsSignOut.textContent = guest ? 'Exit Guest Mode' : 'Sign Out';
+            const mobileSignOut = document.getElementById('mobileMoreSignOutLabel');
+            if (mobileSignOut) mobileSignOut.textContent = guest ? 'Exit Guest Mode' : 'Sign Out';
+
+            const remarksGroup = document.getElementById('attendanceClassRemarksGroup');
+            if (remarksGroup) remarksGroup.classList.toggle('hidden', guest);
+            const remarks = document.getElementById('fieldRemarks');
+            if (guest && remarks) remarks.value = '';
+
+            const studentRemarkModal = document.getElementById('studentRemarkModal');
+            if (guest && studentRemarkModal) studentRemarkModal.classList.add('hidden');
+
+            const missionNotice = document.getElementById('mcReadOnlyNotice');
+            if (guest && missionNotice) {
+                missionNotice.textContent = 'Guest View Only: Mission Collection records are available for transparency. Editing is reserved for the Class Treasurer and Main Admin.';
+                missionNotice.classList.remove('hidden');
+            }
+
+            const exportTypeSelect = document.getElementById('cfExportType');
+            const auditOption = exportTypeSelect ? exportTypeSelect.querySelector('option[value="audit"]') : null;
+            if (guest && exportTypeSelect) {
+                if (exportTypeSelect.value === 'audit') exportTypeSelect.value = 'financial';
+                if (auditOption) {
+                    guestDetachedAuditOption = auditOption;
+                    auditOption.remove();
+                }
+            } else if (!guest && exportTypeSelect && !auditOption && guestDetachedAuditOption) {
+                exportTypeSelect.appendChild(guestDetachedAuditOption);
+                guestDetachedAuditOption = null;
+            }
+
+            const deleteOfficerBtn = document.getElementById('modalDeleteOfficerBtn');
+            if (guest && deleteOfficerBtn) deleteOfficerBtn.classList.add('hidden');
+
+            updateMobileAccountUI();
+            renderMobileScheduleWelcome();
+        }
+
+        function resetGuestRoleState() {
+            document.body.classList.remove('guest-mode');
+            currentUserRole = 'officer';
+            userDesignation = 'Officer';
+            userFullName = 'Officer';
+            profilePhotoBase64 = '';
+            allUsersData = {};
+            setGuestContinueLoading(false);
+            const notice = document.getElementById('guestModeNotice');
+            if (notice) notice.classList.add('hidden');
+            document.querySelectorAll('.guest-restricted-nav').forEach(el => el.classList.remove('hidden'));
+            document.querySelectorAll('.officers-directory-access').forEach(el => el.classList.add('hidden'));
+            const desktopSignOut = document.getElementById('desktopSignOutBtn');
+            if (desktopSignOut) desktopSignOut.textContent = 'Sign Out';
+            const sidebarSignOut = document.getElementById('sidebarSignOutLabel');
+            if (sidebarSignOut) sidebarSignOut.textContent = 'Sign Out';
+            const settingsSignOut = document.getElementById('settingsSignOutLabel');
+            if (settingsSignOut) settingsSignOut.textContent = 'Sign Out';
+            const mobileSignOut = document.getElementById('mobileMoreSignOutLabel');
+            if (mobileSignOut) mobileSignOut.textContent = 'Sign Out';
+        }
+
+        function unbindGeneralRealtimeListeners() {
+            [
+                ['users', usersSyncUnsubscribe],
+                ['student masterlist', studentMasterlistSyncUnsubscribe],
+                ['attendance', attendanceSyncUnsubscribe],
+                ['mission', missionSyncUnsubscribe],
+                ['cycle calendar', cycleCalendarSyncUnsubscribe],
+                ['cycle audit', cycleAuditSyncUnsubscribe]
+            ].forEach(([label, unsubscribe]) => {
+                if (!unsubscribe) return;
+                try { unsubscribe(); } catch (err) { console.warn(`[${label}] Failed to unbind listener:`, err); }
+            });
+            usersSyncUnsubscribe = null;
+            studentMasterlistSyncUnsubscribe = null;
+            attendanceSyncUnsubscribe = null;
+            missionSyncUnsubscribe = null;
+            cycleCalendarSyncUnsubscribe = null;
+            cycleAuditSyncUnsubscribe = null;
+        }
+
+        function bindGuestOfficersSync() {
+            if (usersSyncUnsubscribe) {
+                try { usersSyncUnsubscribe(); } catch (err) {}
+                usersSyncUnsubscribe = null;
+            }
+            usersSyncUnsubscribe = onValue(ref(db, guestPublicPath('officers')), snapshot => {
+                allUsersData = snapshot.val() || {};
+                updateAdminOfficersDirectory();
+            }, err => {
+                console.error('[Guest Officers] Live sync failed:', err);
+                allUsersData = {};
+                updateAdminOfficersDirectory();
+            });
+        }
+
+        async function buildGuestPublicPayload() {
+            const paths = {
+                users: 'users',
+                students: 'student_masterlist',
+                attendance: 'attendance_records',
+                mission: 'mission_collections',
+                cycle: 'cycle_day_calendar',
+                gospel: GOSPEL_ROOT,
+                announcement: ANNOUNCEMENT_ROOT,
+                birthday: BIRTHDAY_ROOT,
+                classFunds: CF_ROOT
+            };
+            const entries = await Promise.all(Object.entries(paths).map(async ([key, path]) => {
+                const snap = await get(ref(db, path));
+                return [key, snap.val()];
+            }));
+            const source = Object.fromEntries(entries);
+            const now = new Date();
+            return {
+                meta: {
+                    schemaVersion: GUEST_PUBLIC_SCHEMA_VERSION,
+                    ready: true,
+                    rebuiltAt: now.toLocaleString('en-PH'),
+                    rebuiltAtMs: now.getTime()
+                },
+                student_masterlist: sanitizeGuestStudentMasterlist(source.students),
+                cycle_day_calendar: sanitizeGuestCycleDayCalendar(source.cycle),
+                gospel_of_the_day: { ay_2026_2027: sanitizeGuestGospel(source.gospel) },
+                announcements: { ay_2026_2027: { current: sanitizeGuestAnnouncement(source.announcement) } },
+                birthday_corner: { ay_2026_2027: { students: sanitizeGuestBirthdayRecords(source.birthday) } },
+                attendance_records: sanitizeGuestAttendanceRecords(source.attendance),
+                mission_collections: sanitizeGuestMissionCollections(source.mission),
+                class_funds: { ay_2026_2027: sanitizeGuestClassFunds(source.classFunds) },
+                officers: sanitizeGuestOfficers(source.users)
+            };
+        }
+
+        async function rebuildGuestPublicData() {
+            if (isGuestMode() || currentUserRole !== 'admin') {
+                window.showAppAlert('Access Denied', 'Only the Main Admin can rebuild Guest Public Data.');
+                return;
+            }
+            if (guestPublicRebuildInProgress) return;
+            const btn = document.getElementById('guestPublicRebuildBtn');
+            const oldText = btn ? btn.textContent : 'Rebuild Guest Public Data';
+            guestPublicRebuildInProgress = true;
+            if (btn) { btn.disabled = true; btn.textContent = 'Rebuilding...'; }
+            try {
+                const safePayload = await buildGuestPublicPayload();
+                await firebaseSet(ref(db, GUEST_PUBLIC_ROOT), safePayload);
+                window.showAppAlert(
+                    'Guest Public Data Ready',
+                    'The sanitized Guest data mirror was rebuilt successfully. Anonymous Guests can now view the approved student-facing records.'
+                );
+            } catch (err) {
+                console.error('[Guest Public Rebuild] Failed:', err);
+                window.showAppAlert(
+                    'Guest Public Data Rebuild Failed',
+                    'The sanitized Guest data mirror could not be rebuilt. Please try again after checking your Firebase connection.'
+                );
+            } finally {
+                guestPublicRebuildInProgress = false;
+                if (btn) { btn.disabled = false; btn.textContent = oldText; }
+            }
+        }
+
+        window.confirmRebuildGuestPublicData = function() {
+            if (isGuestMode() || currentUserRole !== 'admin') {
+                window.showAppAlert('Access Denied', 'Only the Main Admin can rebuild Guest Public Data.');
+                return;
+            }
+            window.showAppConfirm(
+                'Rebuild Guest Public Data?',
+                'This will regenerate the student-facing Guest data from the current authoritative records. Private remarks, audit logs, account information, and internal administrative metadata will not be copied.\n\nContinue?',
+                false,
+                confirmed => { if (confirmed) rebuildGuestPublicData(); }
+            );
+        };
+
+        window.handleGuestContinue = async function() {
+            if (guestSignInInProgress) return;
+            setGuestContinueLoading(true);
+            try {
+                await signInAnonymously(auth);
+            } catch (err) {
+                console.error('[Guest Auth] Anonymous sign-in failed:', err);
+                setGuestContinueLoading(false);
+                window.showAppAlert('Guest Access Error', 'Guest access could not be started. Please try again.');
+            }
+        };
+
 
         let confirmModalCallback = null;
         let promptModalCallback = null;
@@ -6057,8 +6827,22 @@
         let cycleDataEverLoaded = false; 
 
         function bindCycleDaySync() {
-            onValue(ref(db, 'cycle_day_calendar'), (snapshot) => {
+            if (cycleCalendarSyncUnsubscribe) {
+                try { cycleCalendarSyncUnsubscribe(); } catch (err) {}
+                cycleCalendarSyncUnsubscribe = null;
+            }
+            if (cycleAuditSyncUnsubscribe) {
+                try { cycleAuditSyncUnsubscribe(); } catch (err) {}
+                cycleAuditSyncUnsubscribe = null;
+            }
+
+            const calendarPath = isGuestMode() ? guestPublicPath('cycle_day_calendar') : 'cycle_day_calendar';
+            cycleCalendarSyncUnsubscribe = onValue(ref(db, calendarPath), (snapshot) => {
                 cycleCalendarData = snapshot.val() || {};
+
+                if (!isGuestMode()) {
+                    syncGuestPublicPathIfChanged('cycle_day_calendar', sanitizeGuestCycleDayCalendar(cycleCalendarData));
+                }
 
                 const onScheduleView = !document.getElementById('classScheduleView').classList.contains('hidden');
                 if (onScheduleView) {
@@ -6076,9 +6860,18 @@
                     renderCycleDayPicker(true);
                     renderCycleCalendarList();
                 }
+            }, err => {
+                console.error('[Cycle Day] Live calendar sync failed:', err);
+                cycleCalendarData = {};
+                renderScheduleHome();
             });
 
-            onValue(ref(db, 'cycle_day_audit'), (snapshot) => {
+            if (isGuestMode()) {
+                cycleAuditLog = [];
+                return;
+            }
+
+            cycleAuditSyncUnsubscribe = onValue(ref(db, 'cycle_day_audit'), (snapshot) => {
                 let val = snapshot.val() || {};
                 cycleAuditLog = Object.values(val).sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 20);
                 if (!document.getElementById('cycleDayManagerView').classList.contains('hidden')) {
@@ -6213,6 +7006,7 @@
         }
 
         window.saveCdmChanges = function() {
+            if (blockGuestWrite('change Cycle Day settings')) return;
             if (currentUserRole !== 'admin') return;
             let dateStr = document.getElementById('cdmDateInput').value;
             if (!dateStr) { showAppAlert("Select a Date", "Please choose a calendar date first."); return; }
@@ -6271,6 +7065,7 @@
         };
 
         window.clearNoClassMark = function(dateStr) {
+            if (blockGuestWrite('change Cycle Day settings')) return;
             if (currentUserRole !== 'admin') return;
             showAppConfirm("Restore Regular School Day", `Remove the No Classes mark for ${dateStr}?`, false, async (confirmed) => {
                 if (!confirmed) return;
@@ -6449,6 +7244,7 @@
         };
 
         window.openCycleDayManager = function() {
+            if (isGuestMode()) { window.showAppAlert('Guest View Only', 'This page is not available in Guest Mode.'); return; }
             const sv = document.getElementById('settingsView');
             const cv = document.getElementById('cycleDayManagerView');
             if (sv) sv.classList.add('hidden');
@@ -6846,9 +7642,13 @@
             gospelDataLoaded = false;
             renderGospelOfTheDay();
 
-            gospelSyncUnsubscribe = onValue(ref(db, GOSPEL_ROOT), (snapshot) => {
+            const gospelPath = isGuestMode() ? guestPublicPath('gospel_of_the_day/ay_2026_2027') : GOSPEL_ROOT;
+            gospelSyncUnsubscribe = onValue(ref(db, gospelPath), (snapshot) => {
                 gospelData = snapshot.val() || {};
                 gospelDataLoaded = true;
+                if (!isGuestMode()) {
+                    syncGuestPublicPathIfChanged('gospel_of_the_day/ay_2026_2027', sanitizeGuestGospel(gospelData));
+                }
                 renderGospelOfTheDay();
                 renderGospelManagerIfOpen();
             }, (err) => {
@@ -6941,6 +7741,7 @@
         }
 
         function prepareGospelManager() {
+            if (isGuestMode()) return;
             if (currentUserRole !== 'admin') return;
             if (!(gospelManagerSelectedDay >= 1 && gospelManagerSelectedDay <= 5)) {
                 gospelManagerSelectedDay = getGospelManagerActualDay() || 1;
@@ -7026,6 +7827,7 @@
         }
 
         window.saveGospelDay = async function() {
+            if (blockGuestWrite('save Gospel content')) return;
             if (currentUserRole !== 'admin') {
                 showAppAlert('Access Denied', 'Only the Main Admin can save Gospel of the Day entries.');
                 return;
@@ -7085,6 +7887,7 @@
         };
 
         window.resetAllGospels = function() {
+            if (blockGuestWrite('reset Gospel content')) return;
             if (currentUserRole !== 'admin') {
                 showAppAlert('Access Denied', 'Only the Main Admin can reset Gospel of the Day entries.');
                 return;
@@ -7256,9 +8059,13 @@
             announcementData = null;
             renderLandingAnnouncement();
 
-            announcementSyncUnsubscribe = onValue(ref(db, ANNOUNCEMENT_ROOT), (snapshot) => {
+            const announcementPath = isGuestMode() ? guestPublicPath('announcements/ay_2026_2027/current') : ANNOUNCEMENT_ROOT;
+            announcementSyncUnsubscribe = onValue(ref(db, announcementPath), (snapshot) => {
                 announcementData = snapshot.val() || null;
                 announcementDataLoaded = true;
+                if (!isGuestMode()) {
+                    syncGuestPublicPathIfChanged('announcements/ay_2026_2027/current', sanitizeGuestAnnouncement(announcementData));
+                }
                 renderLandingAnnouncement();
                 renderAnnouncementManagerIfOpen();
             }, (err) => {
@@ -7314,6 +8121,7 @@
         }
 
         function prepareAnnouncementManager() {
+            if (isGuestMode()) return;
             if (currentUserRole !== 'admin') return;
             populateAnnouncementManagerFields();
         }
@@ -7381,6 +8189,7 @@
         }
 
         window.saveAnnouncement = async function() {
+            if (blockGuestWrite('save the Announcement')) return;
             if (currentUserRole !== 'admin') {
                 showAppAlert('Access Denied', 'Only the Main Admin can save the landing-page Announcement.');
                 return;
@@ -7444,6 +8253,7 @@
         };
 
         window.clearAnnouncement = function() {
+            if (blockGuestWrite('clear the Announcement')) return;
             if (currentUserRole !== 'admin') {
                 showAppAlert('Access Denied', 'Only the Main Admin can clear the landing-page Announcement.');
                 return;
@@ -8008,9 +8818,13 @@
             birthdayData = {};
             renderBirthdayCorner();
 
-            birthdaySyncUnsubscribe = onValue(ref(db, BIRTHDAY_ROOT), snapshot => {
+            const birthdayPath = isGuestMode() ? guestPublicPath('birthday_corner/ay_2026_2027/students') : BIRTHDAY_ROOT;
+            birthdaySyncUnsubscribe = onValue(ref(db, birthdayPath), snapshot => {
                 birthdayData = snapshot.val() || {};
                 birthdayDataLoaded = true;
+                if (!isGuestMode()) {
+                    syncGuestPublicPathIfChanged('birthday_corner/ay_2026_2027/students', sanitizeGuestBirthdayRecords(birthdayData));
+                }
                 renderBirthdayCorner();
                 renderBirthdayManagerIfOpen();
                 refreshBirthdayEditorRosterIfOpen();
@@ -8213,6 +9027,7 @@
         }
 
         function prepareBirthdayManager() {
+            if (isGuestMode()) return;
             if (currentUserRole !== 'admin') return;
             window.renderBirthdayManager();
         }
@@ -8301,6 +9116,7 @@
         };
 
         window.openBirthdayEditor = function(recordKey) {
+            if (blockGuestWrite('manage Birthday Corner records')) return;
             if (currentUserRole !== 'admin') {
                 showAppAlert('Access Denied', 'Only the Main Admin can manage Birthday Corner records.');
                 return;
@@ -8333,6 +9149,7 @@
         };
 
         window.editBirthdayRecord = function(recordKey) {
+            if (blockGuestWrite('edit Birthday Corner records')) return;
             window.openBirthdayEditor(recordKey);
         };
 
@@ -8351,6 +9168,7 @@
         };
 
         window.handleBirthdayPhotoSelected = function(event) {
+            if (blockGuestWrite('upload a Birthday photo')) { if (event && event.target) event.target.value = ''; return; }
             if (currentUserRole !== 'admin') return;
             const input = event && event.target;
             const file = input && input.files && input.files[0];
@@ -8424,6 +9242,7 @@
         }
 
         window.applyBirthdayPhotoCrop = function() {
+            if (blockGuestWrite('crop a Birthday photo')) return;
             if (!birthdayCropperInstance) return;
             const canvas = birthdayCropperInstance.getCroppedCanvas({
                 width: BIRTHDAY_OUTPUT_SIZE,
@@ -8445,6 +9264,7 @@
         };
 
         window.saveBirthdayRecord = async function() {
+            if (blockGuestWrite('save Birthday Corner records')) return;
             if (currentUserRole !== 'admin') {
                 showAppAlert('Access Denied', 'Only the Main Admin can save Birthday Corner records.');
                 return;
@@ -8528,6 +9348,7 @@
         };
 
         window.deleteBirthdayRecord = function(recordKey) {
+            if (blockGuestWrite('delete Birthday Corner records')) return;
             if (currentUserRole !== 'admin') {
                 showAppAlert('Access Denied', 'Only the Main Admin can delete Birthday Corner records.');
                 return;
@@ -8676,8 +9497,16 @@
         let mcEditModeWeek = null;
 
         function bindMissionCollectionSync() {
-            onValue(ref(db, 'mission_collections'), (snapshot) => {
+            if (missionSyncUnsubscribe) {
+                try { missionSyncUnsubscribe(); } catch (err) {}
+                missionSyncUnsubscribe = null;
+            }
+            const missionPath = isGuestMode() ? guestPublicPath('mission_collections') : 'mission_collections';
+            missionSyncUnsubscribe = onValue(ref(db, missionPath), (snapshot) => {
                 mcGlobalData = snapshot.val() || {};
+                if (!isGuestMode()) {
+                    syncGuestPublicPathIfChanged('mission_collections', sanitizeGuestMissionCollections(mcGlobalData));
+                }
                 if (!document.getElementById('missionCollectionView').classList.contains('hidden')) {
                     if (!document.getElementById('mcDashboardTab').classList.contains('hidden')) {
                         renderMcDashboard();
@@ -8685,6 +9514,10 @@
                         renderMcReports();
                     }
                 }
+            }, err => {
+                console.error('[Mission Collection] Live sync failed:', err);
+                mcGlobalData = {};
+                if (!document.getElementById('missionCollectionView').classList.contains('hidden')) renderMcDashboard();
             });
         }
 
@@ -8872,6 +9705,7 @@
         };
 
         window.openMcAddModal = function() {
+            if (blockGuestWrite('add Mission Collection records')) return;
             mcEditModeWeek = null;
             document.getElementById('mcEntryTitle').textContent = "💰 Add Mission Collection";
             
@@ -8902,6 +9736,7 @@
         };
 
         window.openMcEditModal = function(weekNum) {
+            if (blockGuestWrite('edit Mission Collection records')) return;
             mcEditModeWeek = weekNum;
             document.getElementById('mcEntryTitle').textContent = `✏️ Edit Week ${weekNum} Collection`;
             
@@ -8986,6 +9821,7 @@
         }
 
         window.saveMcEntry = function() {
+            if (blockGuestWrite('save Mission Collection records')) return;
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Treasurer');
             if (!canEdit) {
                 showAppAlert("Permission Denied", "Only the Main Admin or Treasurer can record mission collections.");
@@ -9088,6 +9924,7 @@
         };
 
         window.deleteMcEntry = function(weekNum) {
+            if (blockGuestWrite('delete Mission Collection records')) return;
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Treasurer');
             if (!canEdit) return;
 
@@ -9201,6 +10038,7 @@
         };
 
         window.exportMcCSV = function() {
+            if (blockGuestWrite('export Mission Collection data')) return;
             const loggedWeeks = Object.keys(mcGlobalData);
             if (loggedWeeks.length === 0) {
                 showAppAlert("Export Error", "No Mission Collection records found to export.");
@@ -9248,6 +10086,7 @@
         };
 
         window.exportMcPDF = function() {
+            if (blockGuestWrite('export Mission Collection data')) return;
             renderMcReports();
             const element = document.getElementById('mcPdfExportContainer');
             const opt = {
@@ -9322,12 +10161,13 @@
             };
         }
 
-        function cfCanFinanceEdit() { return currentUserRole === 'admin' || userDesignation === 'Treasurer'; }
-        function cfCanAdmin() { return currentUserRole === 'admin'; }
-        function cfCanPresidentVerify() { return currentUserRole !== 'admin' && userDesignation === 'President'; }
-        function cfCanVpVerify() { return currentUserRole !== 'admin' && userDesignation === 'Vice President'; }
+        function cfCanFinanceEdit() { return !isGuestMode() && (currentUserRole === 'admin' || userDesignation === 'Treasurer'); }
+        function cfCanAdmin() { return !isGuestMode() && currentUserRole === 'admin'; }
+        function cfCanPresidentVerify() { return !isGuestMode() && currentUserRole !== 'admin' && userDesignation === 'President'; }
+        function cfCanVpVerify() { return !isGuestMode() && currentUserRole !== 'admin' && userDesignation === 'Vice President'; }
 
         function cfRequireFinance(actionLabel) {
+            if (blockGuestWrite(actionLabel || 'make Class Funds changes')) return false;
             if (!cfCanFinanceEdit()) {
                 showAppAlert('Permission Denied', (actionLabel || 'This action') + ' is reserved for the Class Treasurer and Main Admin.');
                 return false;
@@ -9336,6 +10176,7 @@
         }
 
         function cfRequireAdmin(actionLabel) {
+            if (blockGuestWrite(actionLabel || 'perform an administrative Class Funds action')) return false;
             if (!cfCanAdmin()) {
                 showAppAlert('Permission Denied', (actionLabel || 'This action') + ' requires Main Admin privileges.');
                 return false;
@@ -9428,12 +10269,16 @@
         }
 
         function cfApplyPermissions() {
+            const guest = isGuestMode();
             const canFinance = cfCanFinanceEdit();
             document.querySelectorAll('.cf-finance-edit').forEach(el => el.classList.toggle('hidden', !canFinance));
             document.querySelectorAll('.cf-admin-only').forEach(el => el.classList.toggle('hidden', !cfCanAdmin()));
             const notice = document.getElementById('cfRoleNotice');
             if (!notice) return;
-            if (currentUserRole === 'admin') {
+            if (guest) {
+                notice.textContent = 'Guest View Only: Class Funds records are available for transparency. Editing, verification, and financial actions are disabled.';
+                notice.classList.remove('hidden');
+            } else if (currentUserRole === 'admin') {
                 notice.classList.add('hidden');
             } else if (userDesignation === 'Treasurer') {
                 notice.classList.add('hidden');
@@ -9456,15 +10301,23 @@
                 try { cfSyncUnsubscribe(); } catch (e) { console.warn('[Class Funds] Failed to unbind old listener', e); }
             }
             cfSyncBoundUid = currentUser.uid;
-            cfSyncUnsubscribe = onValue(ref(db, CF_ROOT), (snapshot) => {
+            const classFundsPath = isGuestMode() ? guestPublicPath('class_funds/ay_2026_2027') : CF_ROOT;
+            cfSyncUnsubscribe = onValue(ref(db, classFundsPath), (snapshot) => {
                 cfGlobalData = snapshot.val() || {};
                 cfDailyData = cfGlobalData.daily_collections || {};
                 cfTransactions = cfGlobalData.transactions || {};
-                cfAuditData = cfGlobalData.audit_log || {};
+                cfAuditData = isGuestMode() ? {} : (cfGlobalData.audit_log || {});
+                if (!isGuestMode()) {
+                    syncGuestPublicPathIfChanged('class_funds/ay_2026_2027', sanitizeGuestClassFunds(cfGlobalData));
+                }
                 if (!document.getElementById('classFundsView').classList.contains('hidden')) renderCfCurrentTab();
             }, (err) => {
                 console.error('[Class Funds] Live sync failed:', err);
-                showAppAlert('Class Funds Sync Error', 'Unable to synchronize Class Funds data.\nFirebase returned: ' + err.message);
+                cfGlobalData = { daily_collections:{}, transactions:{}, audit_log:{} };
+                cfDailyData = {};
+                cfTransactions = {};
+                cfAuditData = {};
+                if (!isGuestMode()) showAppAlert('Class Funds Sync Error', 'Unable to synchronize Class Funds data.\nFirebase returned: ' + err.message);
             });
         }
 
@@ -9623,6 +10476,7 @@
         };
 
         window.cfChangeDailyStatus = function(studentId, status) {
+            if (blockGuestWrite('change Class Funds contribution status')) return;
             if (!cfRequireFinance('Editing a daily Class Fund sheet')) return;
             const source = cfDailySourceRecord || cfDailyData[cfWorkingDate];
             if (source && source.status !== 'draft') return showAppAlert('Collection Locked', 'Use Reopen / Correct Collection before changing a submitted record.');
@@ -9645,6 +10499,7 @@
         };
 
         window.cfChangeDailyAmount = function(studentId, value) {
+            if (blockGuestWrite('change Class Funds contribution amounts')) return;
             if (!cfCanFinanceEdit()) return;
             const source = cfDailySourceRecord || cfDailyData[cfWorkingDate];
             if (source && source.status !== 'draft') return;
@@ -9731,6 +10586,7 @@
         }
 
         window.saveCfDraft = async function() {
+            if (blockGuestWrite('save a Class Funds draft')) return;
             if (!cfRequireFinance('Saving a Class Fund draft')) return;
             const eligibility = cfGetDateEligibility(cfWorkingDate);
             if (!eligibility.eligible) return showAppAlert('Not a Collection Day', eligibility.reason);
@@ -9762,6 +10618,7 @@
         };
 
         window.markCfNoCollectionDay = function(dateStr) {
+            if (blockGuestWrite('mark a No Collection Day')) return;
             if (!cfRequireFinance('Marking a No Collection Day')) return;
             const eligibility = cfGetDateEligibility(dateStr);
             if (!eligibility.eligible) return showAppAlert('Not Eligible', eligibility.reason);
@@ -9789,6 +10646,7 @@
         };
 
         window.revertCfNoCollectionDay = function(dateStr) {
+            if (blockGuestWrite('revert a No Collection Day')) return;
             if (!cfRequireFinance('Reverting a No Collection Day')) return;
             const existing = cfDailyData[dateStr];
             if (!existing || existing.status !== 'no_collection') return;
@@ -9808,6 +10666,7 @@
         };
 
         window.openCfReconcileModal = function() {
+            if (blockGuestWrite('reconcile a Class Funds collection')) return;
             if (!cfRequireFinance('Submitting a daily collection')) return;
             const eligibility = cfGetDateEligibility(cfWorkingDate);
             if (!eligibility.eligible) return showAppAlert('Not a Collection Day', eligibility.reason);
@@ -9863,6 +10722,7 @@
         }
 
         window.confirmCfDailySubmission = async function() {
+            if (blockGuestWrite('submit a Class Funds collection')) return;
             if (!cfRequireFinance('Submitting a daily collection')) return;
             const validation = cfValidateWorkingSheet();
             if (!validation.ok) return showAppAlert('Check Daily Sheet', validation.message);
@@ -9939,6 +10799,7 @@
         };
 
         window.reopenCfDailyCollection = function(dateStr) {
+            if (blockGuestWrite('reopen a Class Funds collection')) return;
             if (!cfRequireFinance('Reopening a daily collection')) return;
             const rec = cfDailyData[dateStr];
             if (!rec || rec.status !== 'submitted') return showAppAlert('Cannot Reopen', 'Only an active submitted daily collection can be reopened.');
@@ -9979,6 +10840,7 @@
         };
 
         window.voidCfDailyCollection = function(dateStr) {
+            if (blockGuestWrite('void a Class Funds collection')) return;
             if (!cfRequireFinance('Voiding a daily collection')) return;
             const rec = cfDailyData[dateStr];
             if (!rec || rec.status !== 'submitted') return showAppAlert('Cannot Void', 'Only an active submitted daily collection can be voided.');
@@ -10014,6 +10876,7 @@
         function cfVerificationRoleLabel(slot) { return slot === 'president' ? 'President' : 'Vice President'; }
 
         window.verifyCfDailyCollection = function(dateStr, slot, adminOverride) {
+            if (blockGuestWrite('verify a Class Funds collection')) return;
             const rec = cfDailyData[dateStr];
             if (!rec || rec.status !== 'submitted') return showAppAlert('Verification Unavailable', 'Only active submitted daily collections can be verified.');
             const slotKey = cfVerificationSlotKey(slot);
@@ -10064,7 +10927,8 @@
         function cfVerifierBlock(label, value) {
             if (value && value.verified) {
                 const who = value.override ? `Administrative Override for ${label} by ${cfEsc(value.verifiedByName || 'Main Admin')}` : `${cfEsc(value.verifiedByName || label)} (${label})`;
-                return `<div class="detail-info-row"><span class="detail-info-label">${label}</span><span class="detail-info-value">✅ ${who}<br><span class="cf-muted">${cfEsc(value.verifiedAt || '')}${value.overrideReason ? '<br>Reason: ' + cfEsc(value.overrideReason) : ''}</span></span></div>`;
+                const privateReason = !isGuestMode() && value.overrideReason ? '<br>Reason: ' + cfEsc(value.overrideReason) : '';
+                return `<div class="detail-info-row"><span class="detail-info-label">${label}</span><span class="detail-info-value">✅ ${who}<br><span class="cf-muted">${cfEsc(value.verifiedAt || '')}${privateReason}</span></span></div>`;
             }
             return `<div class="detail-info-row"><span class="detail-info-label">${label}</span><span class="detail-info-value">⏳ Pending</span></div>`;
         }
@@ -10080,7 +10944,7 @@
             const state = cfDailyDisplayState(rec);
             let body = `<div style="margin-bottom:12px;">${cfStatusBadge(state)}</div>`;
             if (rec.status === 'no_collection') {
-                body += `<div class="detail-info-row"><span class="detail-info-label">Reason</span><span class="detail-info-value">${cfEsc(rec.noCollectionReason || '—')}</span></div>`;
+                if (!isGuestMode()) body += `<div class="detail-info-row"><span class="detail-info-label">Reason</span><span class="detail-info-value">${cfEsc(rec.noCollectionReason || '—')}</span></div>`;
             } else {
                 body += `<div class="detail-info-row"><span class="detail-info-label">Contributors</span><span class="detail-info-value">${Number(rec.contributorCount||0)}</span></div>
                     <div class="detail-info-row"><span class="detail-info-label">No Contribution</span><span class="detail-info-value">${Number(rec.noContributionCount||0)}</span></div>
@@ -10088,20 +10952,28 @@
                     <div class="detail-info-row"><span class="detail-info-label">Computed Student Total</span><span class="detail-info-value">${cfMoney(rec.totalCentavos)}</span></div>
                     <div class="detail-info-row"><span class="detail-info-label">Cash Counted</span><span class="detail-info-value">${rec.cashCountedCentavos == null ? '—' : cfMoney(rec.cashCountedCentavos)}</span></div>
                     <div class="detail-info-row"><span class="detail-info-label">Difference</span><span class="detail-info-value">${rec.differenceCentavos == null ? '—' : cfMoney(rec.differenceCentavos)}</span></div>`;
-                if (rec.reconciliationDiscrepancy) body += `<div class="cf-danger-box" style="margin-top:10px;">⚠️ Reconciliation Discrepancy: ${cfMoney(rec.differenceCentavos)}<br>${cfEsc(rec.discrepancyReason || '')}</div>`;
-                body += `<div class="detail-info-row"><span class="detail-info-label">Submitted By</span><span class="detail-info-value">${cfEsc(rec.submittedByName || '—')}<br><span class="cf-muted">${cfEsc(rec.submittedAt || '')}</span></span></div>`;
+                if (rec.reconciliationDiscrepancy) {
+                    body += isGuestMode()
+                        ? `<div class="cf-danger-box" style="margin-top:10px;">⚠️ Reconciliation Discrepancy: ${cfMoney(rec.differenceCentavos)}</div>`
+                        : `<div class="cf-danger-box" style="margin-top:10px;">⚠️ Reconciliation Discrepancy: ${cfMoney(rec.differenceCentavos)}<br>${cfEsc(rec.discrepancyReason || '')}</div>`;
+                }
+                if (!isGuestMode()) body += `<div class="detail-info-row"><span class="detail-info-label">Submitted By</span><span class="detail-info-value">${cfEsc(rec.submittedByName || '—')}<br><span class="cf-muted">${cfEsc(rec.submittedAt || '')}</span></span></div>`;
                 body += cfVerifierBlock('President', rec.verification && rec.verification.president);
                 body += cfVerifierBlock('Vice President', rec.verification && rec.verification.vicePresident);
                 const students = Object.values(rec.students || {}).sort((a,b)=>(a.studentNameSnapshot||'').localeCompare(b.studentNameSnapshot||''));
                 body += `<div class="cf-detail-section"><div class="cf-detail-title">Individual Student Amounts</div><div class="table-scroller"><table><thead><tr><th>Student</th><th>Status</th><th style="text-align:right;">Amount</th></tr></thead><tbody>${students.map(s => `<tr><td>${cfEsc(s.studentNameSnapshot)}<div class="cf-muted">${cfEsc(s.studentId)}</div></td><td>${s.status==='contributed'?'✅ Contributed':s.status==='excused'?'⚪ Excused / Absent':'❌ No Contribution'}</td><td style="text-align:right;">${cfMoney(s.amountCentavos)}</td></tr>`).join('')}</tbody></table></div></div>`;
             }
-            const editHistory = rec.editHistory ? Object.values(rec.editHistory).sort((a,b)=>Number(b.timestampMs||0)-Number(a.timestampMs||0)) : [];
-            if (editHistory.length) {
-                body += `<div class="cf-detail-section"><div class="cf-detail-title">Correction History</div>${editHistory.map(h => `<div class="cf-audit-row"><strong>${cfMoney(h.previousTotalCentavos)} → ${cfMoney(h.newTotalCentavos)}</strong><div class="cf-audit-meta">${cfEsc(h.editedByName||'')} · ${new Date(Number(h.timestampMs||0)).toLocaleString('en-PH')}<br>Reason: ${cfEsc(h.correctionReason||'')}</div>${(h.changes||[]).length?'<div class="cf-muted" style="margin-top:4px;">'+h.changes.map(c=>cfEsc(c.studentName||c.studentId)+': '+cfEsc(c.previousStatus)+' '+cfMoney(c.previousAmountCentavos)+' → '+cfEsc(c.newStatus)+' '+cfMoney(c.newAmountCentavos)).join('<br>')+'</div>':''}</div>`).join('')}</div>`;
+            if (!isGuestMode()) {
+                const editHistory = rec.editHistory ? Object.values(rec.editHistory).sort((a,b)=>Number(b.timestampMs||0)-Number(a.timestampMs||0)) : [];
+                if (editHistory.length) {
+                    body += `<div class="cf-detail-section"><div class="cf-detail-title">Correction History</div>${editHistory.map(h => `<div class="cf-audit-row"><strong>${cfMoney(h.previousTotalCentavos)} → ${cfMoney(h.newTotalCentavos)}</strong><div class="cf-audit-meta">${cfEsc(h.editedByName||'')} · ${new Date(Number(h.timestampMs||0)).toLocaleString('en-PH')}<br>Reason: ${cfEsc(h.correctionReason||'')}</div>${(h.changes||[]).length?'<div class="cf-muted" style="margin-top:4px;">'+h.changes.map(c=>cfEsc(c.studentName||c.studentId)+': '+cfEsc(c.previousStatus)+' '+cfMoney(c.previousAmountCentavos)+' → '+cfEsc(c.newStatus)+' '+cfMoney(c.newAmountCentavos)).join('<br>')+'</div>':''}</div>`).join('')}</div>`;
+                }
+                const audit = cfDailyAuditForDate(dateStr);
+                body += `<div class="cf-detail-section"><div class="cf-detail-title">Audit History</div>${audit.length ? audit.map(a => `<div class="cf-audit-row"><strong>${cfEsc(a.summary || a.actionType)}</strong><div class="cf-audit-meta">${cfEsc(a.displayNameSnapshot || '')} · ${cfEsc(a.designationSnapshot || '')} · ${cfEsc(a.timestamp || '')}${a.reason ? '<br>Reason: ' + cfEsc(a.reason) : ''}</div></div>`).join('') : '<div class="cf-muted">No Class Funds audit entries for this date.</div>'}</div>`;
+                if (rec.status === 'voided') body += `<div class="cf-danger-box" style="margin-top:12px;">VOIDED by ${cfEsc(rec.voidedByName || '—')} · ${cfEsc(rec.voidReason || '')}</div>`;
+            } else if (rec.status === 'voided') {
+                body += `<div class="cf-danger-box" style="margin-top:12px;"><strong>VOIDED</strong></div>`;
             }
-            const audit = cfDailyAuditForDate(dateStr);
-            body += `<div class="cf-detail-section"><div class="cf-detail-title">Audit History</div>${audit.length ? audit.map(a => `<div class="cf-audit-row"><strong>${cfEsc(a.summary || a.actionType)}</strong><div class="cf-audit-meta">${cfEsc(a.displayNameSnapshot || '')} · ${cfEsc(a.designationSnapshot || '')} · ${cfEsc(a.timestamp || '')}${a.reason ? '<br>Reason: ' + cfEsc(a.reason) : ''}</div></div>`).join('') : '<div class="cf-muted">No Class Funds audit entries for this date.</div>'}</div>`;
-            if (rec.status === 'voided') body += `<div class="cf-danger-box" style="margin-top:12px;">VOIDED by ${cfEsc(rec.voidedByName || '—')} · ${cfEsc(rec.voidReason || '')}</div>`;
             document.getElementById('cfDetailBody').innerHTML = body;
             let actions = '';
             if (rec.status === 'submitted') {
@@ -10206,6 +11078,7 @@
         };
 
         window.openCfOpeningBalanceModal = function() {
+            if (blockGuestWrite('set an Opening Balance')) return;
             if (!cfRequireAdmin('Setting the Opening Balance')) return;
             const active = Object.entries(cfTransactions).find(([id,tx]) => tx && tx.type === 'opening_balance' && tx.status === 'active');
             if (active) return showAppAlert('Opening Balance Already Exists', `An active Opening Balance of ${cfMoney(active[1].amountCentavos)} already exists. Use an audited Adjustment for later corrections.`);
@@ -10235,6 +11108,7 @@
         };
 
         window.openCfExpenseModal = function(txId) {
+            if (blockGuestWrite('add or edit a Class Funds expense')) return;
             if (!cfRequireFinance('Recording or editing an expense')) return;
             cfExpenseEditId = txId || null;
             const tx = txId ? cfTransactions[txId] : null;
@@ -10304,6 +11178,7 @@
         }
 
         window.saveCfExpense = function() {
+            if (blockGuestWrite('save a Class Funds expense')) return;
             if (!cfRequireFinance('Saving an expense')) return;
             const date = document.getElementById('cfExpenseDate').value;
             let category = document.getElementById('cfExpenseCategory').value;
@@ -10354,6 +11229,7 @@
         };
 
         window.openCfAdjustmentModal = function(txId) {
+            if (blockGuestWrite('add or edit a Class Funds adjustment')) return;
             if (!cfRequireFinance('Recording or editing an adjustment')) return;
             cfAdjustmentEditId = txId || null;
             const tx = txId ? cfTransactions[txId] : null;
@@ -10375,6 +11251,7 @@
         window.closeCfAdjustmentModal = function() { document.getElementById('cfAdjustmentModal').classList.add('hidden'); cfAdjustmentEditId = null; };
 
         window.saveCfAdjustment = function() {
+            if (blockGuestWrite('save a Class Funds adjustment')) return;
             if (!cfRequireFinance('Saving an adjustment')) return;
             const date = document.getElementById('cfAdjustmentDate').value;
             const direction = document.getElementById('cfAdjustmentDirection').value;
@@ -10418,6 +11295,7 @@
         };
 
         window.verifyCfTransaction = function(txId, slot, adminOverride) {
+            if (blockGuestWrite('verify a Class Funds transaction')) return;
             const tx = cfTransactions[txId];
             if (!tx || tx.status !== 'active' || !['expense','adjustment'].includes(tx.type)) return showAppAlert('Verification Unavailable', 'This transaction is not eligible for officer verification.');
             const slotKey = cfVerificationSlotKey(slot);
@@ -10465,6 +11343,7 @@
         }
 
         window.voidCfTransaction = function(txId) {
+            if (blockGuestWrite('void a Class Funds transaction')) return;
             if (!cfRequireFinance('Voiding a transaction')) return;
             const tx = cfTransactions[txId];
             if (!tx || tx.status !== 'active' || !['expense','adjustment'].includes(tx.type)) return showAppAlert('Cannot Void','Only active expenses or adjustments can be voided here.');
@@ -10491,6 +11370,7 @@
         };
 
         window.editCfTransactionFromDetail = function(txId) {
+            if (blockGuestWrite('edit a Class Funds transaction')) return;
             const tx = cfTransactions[txId];
             if (!tx) {
                 showAppAlert('Transaction Not Found', 'The requested Class Fund transaction is unavailable.');
@@ -10527,16 +11407,18 @@
             if(tx.type==='expense') body += `<div class="detail-info-row"><span class="detail-info-label">Category</span><span class="detail-info-value">${cfEsc(tx.category||'—')}</span></div><div class="detail-info-row"><span class="detail-info-label">Paid To</span><span class="detail-info-value">${cfEsc(tx.paidTo||'—')}</span></div><div class="detail-info-row"><span class="detail-info-label">Receipt / Reference</span><span class="detail-info-value">${cfEsc(tx.referenceNumber||'—')}</span></div>`;
             if(tx.type==='adjustment') body += `<div class="detail-info-row"><span class="detail-info-label">Reason</span><span class="detail-info-value">${cfEsc(tx.reason||'—')}</span></div>`;
             if(tx.notes) body += `<div class="detail-info-row"><span class="detail-info-label">Notes</span><span class="detail-info-value">${cfEsc(tx.notes)}</span></div>`;
-            body += `<div class="detail-info-row"><span class="detail-info-label">Created By</span><span class="detail-info-value">${cfEsc(tx.createdByName||'—')}<br><span class="cf-muted">${cfEsc(tx.createdAt||'')}</span></span></div>`;
+            if (!isGuestMode()) body += `<div class="detail-info-row"><span class="detail-info-label">Created By</span><span class="detail-info-value">${cfEsc(tx.createdByName||'—')}<br><span class="cf-muted">${cfEsc(tx.createdAt||'')}</span></span></div>`;
             if(['expense','adjustment'].includes(tx.type)){
                 body += cfVerifierBlock('President',tx.verification&&tx.verification.president)+cfVerifierBlock('Vice President',tx.verification&&tx.verification.vicePresident);
             }
-            if(tx.overdraftOverride) body += `<div class="cf-danger-box" style="margin-top:10px;"><strong>Administrative Overdraft Override</strong><br>${cfEsc(tx.overdraftOverrideReason||'')}<br><span class="cf-muted">Admin: ${cfEsc(tx.overdraftOverrideByName||'—')}</span></div>`;
-            if(tx.status==='voided') body += `<div class="cf-danger-box" style="margin-top:10px;"><strong>VOIDED</strong><br>${cfEsc(tx.voidReason||'')}<br><span class="cf-muted">${cfEsc(tx.voidedByName||'—')} · ${cfEsc(tx.voidedAt||'')}</span></div>`;
-            const hist=tx.editHistory?Object.values(tx.editHistory).sort((a,b)=>Number(b.timestampMs||0)-Number(a.timestampMs||0)):[];
-            if(hist.length) body += `<div class="cf-detail-section"><div class="cf-detail-title">Edit History</div>${hist.map(h=>`<div class="cf-audit-row"><strong>${cfMoney(h.previousAmountCentavos)} → ${cfMoney(h.newAmountCentavos)}</strong><div class="cf-audit-meta">${cfEsc(h.editedByName||'')} · ${new Date(Number(h.timestampMs||0)).toLocaleString('en-PH')}<br>Reason: ${cfEsc(h.correctionReason||'')}</div></div>`).join('')}</div>`;
-            const audits=Object.values(cfAuditData).filter(a=>a&&a.affectedRecordId===txId).sort((a,b)=>Number(b.timestampMs||0)-Number(a.timestampMs||0));
-            body += `<div class="cf-detail-section"><div class="cf-detail-title">Audit History</div>${audits.length?audits.map(a=>`<div class="cf-audit-row"><strong>${cfEsc(a.summary||a.actionType)}</strong><div class="cf-audit-meta">${cfEsc(a.displayNameSnapshot||'')} · ${cfEsc(a.designationSnapshot||'')} · ${cfEsc(a.timestamp||'')}${a.reason?'<br>Reason: '+cfEsc(a.reason):''}</div></div>`).join(''):'<div class="cf-muted">No audit entries.</div>'}</div>`;
+            if(!isGuestMode() && tx.overdraftOverride) body += `<div class="cf-danger-box" style="margin-top:10px;"><strong>Administrative Overdraft Override</strong><br>${cfEsc(tx.overdraftOverrideReason||'')}<br><span class="cf-muted">Admin: ${cfEsc(tx.overdraftOverrideByName||'—')}</span></div>`;
+            if(tx.status==='voided') body += isGuestMode() ? `<div class="cf-danger-box" style="margin-top:10px;"><strong>VOIDED</strong></div>` : `<div class="cf-danger-box" style="margin-top:10px;"><strong>VOIDED</strong><br>${cfEsc(tx.voidReason||'')}<br><span class="cf-muted">${cfEsc(tx.voidedByName||'—')} · ${cfEsc(tx.voidedAt||'')}</span></div>`;
+            if (!isGuestMode()) {
+                const hist=tx.editHistory?Object.values(tx.editHistory).sort((a,b)=>Number(b.timestampMs||0)-Number(a.timestampMs||0)):[];
+                if(hist.length) body += `<div class="cf-detail-section"><div class="cf-detail-title">Edit History</div>${hist.map(h=>`<div class="cf-audit-row"><strong>${cfMoney(h.previousAmountCentavos)} → ${cfMoney(h.newAmountCentavos)}</strong><div class="cf-audit-meta">${cfEsc(h.editedByName||'')} · ${new Date(Number(h.timestampMs||0)).toLocaleString('en-PH')}<br>Reason: ${cfEsc(h.correctionReason||'')}</div></div>`).join('')}</div>`;
+                const audits=Object.values(cfAuditData).filter(a=>a&&a.affectedRecordId===txId).sort((a,b)=>Number(b.timestampMs||0)-Number(a.timestampMs||0));
+                body += `<div class="cf-detail-section"><div class="cf-detail-title">Audit History</div>${audits.length?audits.map(a=>`<div class="cf-audit-row"><strong>${cfEsc(a.summary||a.actionType)}</strong><div class="cf-audit-meta">${cfEsc(a.displayNameSnapshot||'')} · ${cfEsc(a.designationSnapshot||'')} · ${cfEsc(a.timestamp||'')}${a.reason?'<br>Reason: '+cfEsc(a.reason):''}</div></div>`).join(''):'<div class="cf-muted">No audit entries.</div>'}</div>`;
+            }
             document.getElementById('cfDetailBody').innerHTML=body;
             let actions='';
             if(tx.type==='daily_contribution'&&tx.sourceDailyCollection) actions += `<button class="btn-ui btn-gray" onclick="openCfDailyDetail('${cfEsc(tx.sourceDailyCollection)}')">View Daily Student Sheet</button>`;
@@ -10666,6 +11548,7 @@
         }
 
         window.exportCfIndividualStudentCSV = function(){
+            if (blockGuestWrite('export a Class Funds student statement')) return;
             if(!cfSelectedStudentId) return;
             const student=currentStudentList.find(s=>s.id===cfSelectedStudentId) || {id:cfSelectedStudentId,name:cfSelectedStudentId};
             const st=cfComputeStudentStats(cfSelectedStudentId);
@@ -10675,6 +11558,7 @@
         };
 
         window.exportCfIndividualStudentPDF = function(){
+            if (blockGuestWrite('export a Class Funds student statement')) return;
             if(!cfSelectedStudentId) return;
             const student=currentStudentList.find(s=>s.id===cfSelectedStudentId) || {id:cfSelectedStudentId,name:cfSelectedStudentId};
             const st=cfComputeStudentStats(cfSelectedStudentId);
@@ -10787,27 +11671,30 @@
         function cfReportVerificationSearchValues(record){
             const verification=(record&&record.verification)||{};
             const p=verification.president||{},v=verification.vicePresident||{};
-            return [p.verifiedByName,p.designation,p.verifiedAt,p.overrideFor,p.overrideReason,v.verifiedByName,v.designation,v.verifiedAt,v.overrideFor,v.overrideReason];
+            return isGuestMode() ? [p.verifiedByName,p.designation,p.verifiedAt,p.overrideFor,v.verifiedByName,v.designation,v.verifiedAt,v.overrideFor] : [p.verifiedByName,p.designation,p.verifiedAt,p.overrideFor,p.overrideReason,v.verifiedByName,v.designation,v.verifiedAt,v.overrideFor,v.overrideReason];
         }
 
         function cfTransactionMatchesReportSearch(tx,search){
             if(!search)return true;
-            return cfReportTextMatches(search,[
-                tx.id,tx.transactionId,tx.effectiveDate,tx.type,cfTxTypeLabel(tx),tx.description,tx.reason,
-                tx.category,tx.customCategory,tx.paidTo,tx.referenceNumber,tx.notes,tx.createdByName,
-                tx.lastModifiedByName,...cfReportVerificationSearchValues(tx)
-            ]);
+            const values = isGuestMode()
+                ? [tx.id,tx.transactionId,tx.effectiveDate,tx.type,cfTxTypeLabel(tx),tx.description,tx.reason,
+                    tx.category,tx.customCategory,tx.paidTo,tx.referenceNumber,tx.notes,...cfReportVerificationSearchValues(tx)]
+                : [tx.id,tx.transactionId,tx.effectiveDate,tx.type,cfTxTypeLabel(tx),tx.description,tx.reason,
+                    tx.category,tx.customCategory,tx.paidTo,tx.referenceNumber,tx.notes,tx.createdByName,
+                    tx.lastModifiedByName,...cfReportVerificationSearchValues(tx)];
+            return cfReportTextMatches(search, values);
         }
 
         function cfDailyMatchesReportSearch(date,record,search){
             if(!search)return true;
             const studentValues=[];
             Object.values((record&&record.students)||{}).forEach(student=>studentValues.push(student.studentNameSnapshot,student.studentId));
-            return cfReportTextMatches(search,[
-                date,record&&record.submittedByName,record&&record.submittedByDesignation,
-                record&&record.discrepancyReason,record&&record.noCollectionReason,
-                ...cfReportVerificationSearchValues(record),...studentValues
-            ]);
+            const values = isGuestMode()
+                ? [date, ...cfReportVerificationSearchValues(record), ...studentValues]
+                : [date,record&&record.submittedByName,record&&record.submittedByDesignation,
+                    record&&record.discrepancyReason,record&&record.noCollectionReason,
+                    ...cfReportVerificationSearchValues(record),...studentValues];
+            return cfReportTextMatches(search, values);
         }
 
         function cfStudentMatchesReportSearch(student,search){
@@ -10819,7 +11706,7 @@
         }
 
         function cfAuditMatchesReportSearch(a,search){
-            return cfReportTextMatches(search,[a&&a.actionType,a&&a.affectedRecordId,a&&a.displayNameSnapshot,a&&a.designationSnapshot,a&&a.summary,a&&a.reason]);
+            return !isGuestMode() && cfReportTextMatches(search,[a&&a.actionType,a&&a.affectedRecordId,a&&a.displayNameSnapshot,a&&a.designationSnapshot,a&&a.summary,a&&a.reason]);
         }
 
         function cfCompareTransactionsChronological(a,b){
@@ -10939,7 +11826,7 @@
             if(f.search)students=students.filter(s=>cfStudentMatchesReportSearch(s,f.search));
             const studentSummary=students.map(student=>({student,stats:cfComputeStudentStats(student.id)}));
             const verification=cfBuildVerificationItems(f);
-            const audits=cfBuildAuditReportRows(f);
+            const audits=isGuestMode()?[]:cfBuildAuditReportRows(f);
             const financialSummary=cfFinancialSummaryFromRows(ledger);
             const financialRows=cfFinancialStatementRows(ledger);
             const expenseByCategory={};
@@ -11011,21 +11898,22 @@
             if(type==='students')return cfBuildStudentReportSection(data);
             if(type==='expenses')return cfBuildExpenseReportSection(data);
             if(type==='verification')return cfBuildVerificationReportSection(data);
-            if(type==='audit')return cfBuildAuditReportSection(data);
+            if(type==='audit')return isGuestMode() ? '' : cfBuildAuditReportSection(data);
             return '<div class="cf-panel"><div class="cf-muted">Unknown report type.</div></div>';
         }
 
         window.renderCfReports=function(){
             const data=cfGetFilteredReportData();
-            document.getElementById('cfReportContent').innerHTML=
+            let html =
                 cfBuildFinancialReportSection(data)+
                 cfBuildDailyReportSection(data)+
                 cfBuildStudentReportSection(data)+
                 cfBuildExpenseReportSection(data)+
                 cfBuildExpenseCategorySection(data)+
                 cfBuildMonthlyReportSection(data)+
-                cfBuildVerificationReportSection(data)+
-                cfBuildAuditReportSection(data);
+                cfBuildVerificationReportSection(data);
+            if (!isGuestMode()) html += cfBuildAuditReportSection(data);
+            document.getElementById('cfReportContent').innerHTML=html;
         };
 
         function cfReportTypeTitle(type){
@@ -11071,6 +11959,7 @@
         }
 
         window.exportCfCSV=function(){
+            if (blockGuestWrite('export Class Funds data')) return;
             const type=document.getElementById('cfExportType').value;
             const data=cfGetFilteredReportData();
             const csv=cfBuildCsvReport(type,data);
@@ -11078,6 +11967,7 @@
         };
 
         window.exportCfPDF=function(){
+            if (blockGuestWrite('export Class Funds data')) return;
             const type=document.getElementById('cfExportType').value;
             const data=cfGetFilteredReportData();
             const el=document.getElementById('cfPdfExportContainer');
@@ -11429,69 +12319,75 @@
 
 
         // Auth Listeners & Other App Init logic
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                currentUser = user;
-                window.closePwaInstallHelp(false);
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                closeMobileMoreSheet();
+                closeGospelDetailModal();
+                closeAnnouncementDetailModal();
+                unbindGospelOfTheDaySync();
+                unbindAnnouncementSync();
+                unbindBirthdayCornerSync();
+                unbindGeneralRealtimeListeners();
+                if (cfSyncUnsubscribe) { try { cfSyncUnsubscribe(); } catch(e) {} cfSyncUnsubscribe = null; cfSyncBoundUid = null; }
+
+                currentUser = null;
+                resetGuestRoleState();
+
+                const officerModal = document.getElementById('officerDetailModal');
+                if (officerModal) officerModal.classList.add('hidden');
+                const studentRemarkModal = document.getElementById('studentRemarkModal');
+                if (studentRemarkModal) studentRemarkModal.classList.add('hidden');
+
+                document.getElementById('authContainer').classList.remove('hidden');
+                document.getElementById('appContainer').classList.add('hidden');
+
+                isSignUpMode = false;
+                document.getElementById('registerPositionGroup').classList.add('hidden');
+                document.getElementById('authSubmitBtn').textContent = 'Sign In';
+                document.getElementById('authToggleMessage').textContent = 'Need an officer account?';
+                document.getElementById('authToggleBtn').textContent = 'Register here';
+                document.getElementById('authEmail').placeholder = 'user@dlszobel.edu.ph';
+                syncAuthModePresentation();
+                refreshPwaInstallUI();
+
+                if (homeHighlightIntervalId) {
+                    clearInterval(homeHighlightIntervalId);
+                    homeHighlightIntervalId = null;
+                }
+                return;
+            }
+
+            currentUser = user;
+            window.closePwaInstallHelp(false);
+
+            if (user.isAnonymous === true) {
+                currentUserRole = 'guest';
+                userDesignation = 'Guest';
+                userFullName = 'Guest';
+                profilePhotoBase64 = '';
+
+                const ready = await guestPublicReady();
+                if (!ready) {
+                    setGuestContinueLoading(false);
+                    window.showAppAlert(
+                        'Guest Access Is Being Prepared',
+                        'The student view is not ready yet. Please try again later.'
+                    );
+                    try { await signOut(auth); } catch (err) { console.error('[Guest] Sign-out after readiness failure failed:', err); }
+                    return;
+                }
+
                 document.getElementById('authContainer').classList.add('hidden');
                 document.getElementById('appContainer').classList.remove('hidden');
                 refreshPwaInstallUI();
-                document.getElementById('profEmail').value = user.email;
-                
-                currentUserRole = (user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? "admin" : "officer";
 
-                onValue(ref(db, 'users'), (snapshot) => {
-                    allUsersData = snapshot.val() || {};
-                    const userData = allUsersData[user.uid];
+                document.querySelectorAll('.admin-only-field').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.add('hidden'));
 
-                    if (userData) {
-                        userDesignation = userData.designation || (currentUserRole === "admin" ? "Main Admin" : "Officer");
-                        userFullName = userData.fullName || "";
-                        document.getElementById('displayUserRole').textContent = userDesignation;
-
-                        document.getElementById('profFullName').value = userData.fullName || "";
-                        document.getElementById('profMobile').value = userData.mobile || "";
-                        document.getElementById('profBirthday').value = userData.birthday || "";
-                        
-                        if (currentUserRole === 'admin') {
-                            document.getElementById('profDepartment').value = userData.department || "";
-                            document.getElementById('profUnit').value = userData.unit || "";
-                            document.getElementById('profCluster').value = userData.cluster || "";
-                            document.getElementById('profSubject').value = userData.subject || "";
-                        } else {
-                            document.getElementById('profDesignation').value = userDesignation;
-                            document.getElementById('profStudentId').value = userData.studentId || "";
-                        }
-
-                        if (userData.photoBase64) {
-                            profilePhotoBase64 = userData.photoBase64;
-                            document.getElementById('avatarPreview').src = userData.photoBase64;
-                        }
-                    }
-
-                    configureProfileFormByRole(currentUserRole);
-                    applyAttendancePermissions();
-                    cfApplyPermissions();
-                    
-                    if (currentUserRole === 'admin' || userDesignation === 'Treasurer') {
-                        document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.remove('hidden'));
-                        document.getElementById('mcReadOnlyNotice').classList.add('hidden');
-                    } else {
-                        document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.add('hidden'));
-                        document.getElementById('mcReadOnlyNotice').classList.remove('hidden');
-                    }
-
-                    if (currentUserRole === 'admin') {
-                        updateAdminOfficersDirectory();
-                        document.querySelectorAll('.admin-only-field').forEach(el => el.classList.remove('hidden'));
-                    } else {
-                        document.querySelectorAll('.admin-only-field').forEach(el => el.classList.add('hidden'));
-                    }
-
-                    const sidebarRoleEl = document.getElementById('sidebarUserRole');
-                    if (sidebarRoleEl) sidebarRoleEl.textContent = userDesignation || (currentUserRole === 'admin' ? 'Main Admin' : 'Officer');
-                    updateMobileAccountUI();
-                });
+                applyGuestModeUI();
+                applyAttendancePermissions();
+                cfApplyPermissions();
+                bindGuestOfficersSync();
 
                 bindStudentMasterlistSync();
                 bindDatabaseSync();
@@ -11506,6 +12402,7 @@
                 setActiveNav('schedule');
                 setMobilePageTitle('Class Schedule');
                 updateMobileAccountUI();
+                setGuestContinueLoading(false);
 
                 if (homeHighlightIntervalId) clearInterval(homeHighlightIntervalId);
                 homeHighlightIntervalId = setInterval(() => {
@@ -11513,37 +12410,131 @@
                         renderScheduleHome();
                     }
                 }, 30000);
-            } else {
-                closeMobileMoreSheet();
-                closeGospelDetailModal();
-                closeAnnouncementDetailModal();
-                unbindGospelOfTheDaySync();
-                unbindAnnouncementSync();
-                unbindBirthdayCornerSync();
-                currentUser = null;
-                document.getElementById('authContainer').classList.remove('hidden');
-                document.getElementById('appContainer').classList.add('hidden');
-                syncAuthModePresentation();
-                refreshPwaInstallUI();
-                if (homeHighlightIntervalId) { clearInterval(homeHighlightIntervalId); homeHighlightIntervalId = null; }
-                if (cfSyncUnsubscribe) { try { cfSyncUnsubscribe(); } catch(e) {} cfSyncUnsubscribe = null; cfSyncBoundUid = null; }
+                return;
             }
+
+            // Existing email/password Admin / Officer path.
+            document.getElementById('authContainer').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+            refreshPwaInstallUI();
+
+            document.getElementById('profEmail').value = user.email || '';
+            currentUserRole = (String(user.email || '').toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? 'admin' : 'officer';
+
+            if (usersSyncUnsubscribe) {
+                try { usersSyncUnsubscribe(); } catch (err) {}
+                usersSyncUnsubscribe = null;
+            }
+
+            usersSyncUnsubscribe = onValue(ref(db, 'users'), (snapshot) => {
+                allUsersData = snapshot.val() || {};
+                const userData = allUsersData[user.uid];
+
+                if (userData) {
+                    userDesignation = userData.designation || (currentUserRole === 'admin' ? 'Main Admin' : 'Officer');
+                    userFullName = userData.fullName || '';
+                    document.getElementById('displayUserRole').textContent = userDesignation;
+
+                    document.getElementById('profFullName').value = userData.fullName || '';
+                    document.getElementById('profMobile').value = userData.mobile || '';
+                    document.getElementById('profBirthday').value = userData.birthday || '';
+
+                    if (currentUserRole === 'admin') {
+                        document.getElementById('profDepartment').value = userData.department || '';
+                        document.getElementById('profUnit').value = userData.unit || '';
+                        document.getElementById('profCluster').value = userData.cluster || '';
+                        document.getElementById('profSubject').value = userData.subject || '';
+                    } else {
+                        document.getElementById('profDesignation').value = userDesignation;
+                        document.getElementById('profStudentId').value = userData.studentId || '';
+                    }
+
+                    if (userData.photoBase64) {
+                        profilePhotoBase64 = userData.photoBase64;
+                        document.getElementById('avatarPreview').src = userData.photoBase64;
+                    }
+                }
+
+                syncGuestPublicPathIfChanged('officers', sanitizeGuestOfficers(allUsersData));
+
+                configureProfileFormByRole(currentUserRole);
+                applyAttendancePermissions();
+                cfApplyPermissions();
+
+                if (currentUserRole === 'admin' || userDesignation === 'Treasurer') {
+                    document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.remove('hidden'));
+                    document.getElementById('mcReadOnlyNotice').classList.add('hidden');
+                } else {
+                    document.querySelectorAll('.mc-edit-permission').forEach(el => el.classList.add('hidden'));
+                    document.getElementById('mcReadOnlyNotice').classList.remove('hidden');
+                }
+
+                if (currentUserRole === 'admin') {
+                    updateAdminOfficersDirectory();
+                    document.querySelectorAll('.admin-only-field').forEach(el => el.classList.remove('hidden'));
+                } else {
+                    document.querySelectorAll('.admin-only-field').forEach(el => el.classList.add('hidden'));
+                }
+
+                const sidebarRoleEl = document.getElementById('sidebarUserRole');
+                if (sidebarRoleEl) sidebarRoleEl.textContent = userDesignation || (currentUserRole === 'admin' ? 'Main Admin' : 'Officer');
+                applyGuestModeUI();
+                updateMobileAccountUI();
+            });
+
+            bindStudentMasterlistSync();
+            bindDatabaseSync();
+            bindMissionCollectionSync();
+            bindCycleDaySync();
+            bindGospelOfTheDaySync();
+            bindAnnouncementSync();
+            bindBirthdayCornerSync();
+            bindClassFundsSync();
+
+            showView('schedule');
+            setActiveNav('schedule');
+            setMobilePageTitle('Class Schedule');
+            applyGuestModeUI();
+            updateMobileAccountUI();
+
+            if (homeHighlightIntervalId) clearInterval(homeHighlightIntervalId);
+            homeHighlightIntervalId = setInterval(() => {
+                if (!document.getElementById('classScheduleView').classList.contains('hidden')) {
+                    renderScheduleHome();
+                }
+            }, 30000);
         });
 
         function bindStudentMasterlistSync() {
-            onValue(ref(db, 'student_masterlist'), (snapshot) => {
+            if (studentMasterlistSyncUnsubscribe) {
+                try { studentMasterlistSyncUnsubscribe(); } catch (err) {}
+                studentMasterlistSyncUnsubscribe = null;
+            }
+            const masterlistPath = isGuestMode() ? guestPublicPath('student_masterlist') : 'student_masterlist';
+            studentMasterlistSyncUnsubscribe = onValue(ref(db, masterlistPath), (snapshot) => {
                 const data = snapshot.val();
                 if (data && Array.isArray(data) && data.length > 0) {
                     currentStudentList = sortStudentsAlphabetically(data);
                 } else {
-                    currentStudentList = sortStudentsAlphabetically(DEFAULT_STUDENT_MASTERLIST);
-                    set(ref(db, 'student_masterlist'), currentStudentList);
+                    currentStudentList = sortStudentsAlphabetically(DEFAULT_STUDENT_MASTERLIST.map(student => ({ ...student })));
+                    if (!isGuestMode()) {
+                        set(ref(db, 'student_masterlist'), currentStudentList);
+                    }
                 }
+
+                if (!isGuestMode()) {
+                    syncGuestPublicPathIfChanged('student_masterlist', sanitizeGuestStudentMasterlist(currentStudentList));
+                }
+
                 renderDashboardMatrix();
                 renderBirthdayCorner();
                 renderBirthdayManagerIfOpen();
                 refreshBirthdayEditorRosterIfOpen();
                 if (!document.getElementById('classFundsView').classList.contains('hidden')) { cfPopulateReportStudentOptions(); renderCfCurrentTab(); }
+            }, err => {
+                console.error('[Student Masterlist] Live sync failed:', err);
+                currentStudentList = sortStudentsAlphabetically(DEFAULT_STUDENT_MASTERLIST.map(student => ({ ...student })));
+                renderDashboardMatrix();
             });
         }
 
@@ -11567,20 +12558,30 @@
         }
 
         function applyAttendancePermissions() {
-            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
+            const guest = isGuestMode();
+            const canEdit = !guest && (currentUserRole === 'admin' || userDesignation === 'Secretary');
             const editButtons = document.querySelectorAll('.edit-permission-btn');
             const noticeBox = document.getElementById('readOnlyNotice');
 
             document.getElementById('fieldModality').disabled = !canEdit;
             document.getElementById('fieldPeriodCount').disabled = !canEdit;
             document.getElementById('fieldRemarks').disabled = !canEdit;
-            
+
+            const remarksGroup = document.getElementById('attendanceClassRemarksGroup');
+            if (remarksGroup) remarksGroup.classList.toggle('hidden', guest);
+            if (guest) document.getElementById('fieldRemarks').value = '';
+
             if (canEdit) {
                 editButtons.forEach(btn => btn.classList.remove('hidden'));
                 if (noticeBox) noticeBox.classList.add('hidden');
             } else {
                 editButtons.forEach(btn => btn.classList.add('hidden'));
-                if (noticeBox) noticeBox.classList.remove('hidden');
+                if (noticeBox) {
+                    noticeBox.textContent = guest
+                        ? 'Guest View Only: Attendance records are available for review. Editing and private remarks are not available in Guest Mode.'
+                        : '🔒 View Only Mode: Attendance filing and edits are strictly reserved for the Class Secretary and Main Admin.';
+                    noticeBox.classList.remove('hidden');
+                }
             }
         }
 
@@ -11643,9 +12644,12 @@
         };
 
         window.handleLogout = function() {
-            signOut(auth).then(() => {
-                triggerForceRefresh();
-            });
+            const guest = isGuestMode();
+            signOut(auth)
+                .then(() => {
+                    if (!guest) triggerForceRefresh();
+                })
+                .catch(err => window.showAppAlert('Sign Out Error', err.message));
         };
 
 
@@ -11684,19 +12688,20 @@
         function renderMobileScheduleWelcome() {
             const el = document.getElementById('mobileScheduleGreeting');
             if (!el) return;
-            const roleLabel = currentUserRole === 'admin' ? 'Main Admin' : (userDesignation || 'Officer');
+            const roleLabel = isGuestMode() ? 'Guest' : (currentUserRole === 'admin' ? 'Main Admin' : (userDesignation || 'Officer'));
             el.textContent = `${mobileGreetingByTime()}, ${roleLabel}!`;
         }
 
         function updateMobileAccountUI() {
-            const roleLabel = currentUserRole === 'admin' ? 'Main Admin' : (userDesignation || 'Officer');
-            const email = currentUser && currentUser.email ? currentUser.email : '';
+            const guest = isGuestMode();
+            const roleLabel = guest ? 'Guest · View Only' : (currentUserRole === 'admin' ? 'Main Admin' : (userDesignation || 'Officer'));
+            const email = guest ? 'Student Viewer' : (currentUser && currentUser.email ? currentUser.email : '');
             const roleEl = document.getElementById('mobileMoreRole');
             const emailEl = document.getElementById('mobileMoreEmail');
             if (roleEl) roleEl.textContent = roleLabel;
             if (emailEl) emailEl.textContent = email;
 
-            const hasPhoto = !!profilePhotoBase64;
+            const hasPhoto = !guest && !!profilePhotoBase64;
             [['mobileAccountAvatar','mobileAccountFallbackIcon'], ['mobileMoreAvatar','mobileMoreFallbackIcon']].forEach(pair => {
                 const img = document.getElementById(pair[0]);
                 const fallback = document.getElementById(pair[1]);
@@ -11712,8 +12717,15 @@
                 if (fallback) fallback.classList.toggle('hidden', hasPhoto);
             });
 
-            const officersItem = document.querySelector('#mobileMoreSheet .admin-only-field');
-            if (officersItem) officersItem.classList.toggle('hidden', currentUserRole !== 'admin');
+            document.querySelectorAll('#mobileMoreSheet .officers-directory-access').forEach(item => {
+                item.classList.toggle('hidden', !(guest || currentUserRole === 'admin'));
+            });
+            document.querySelectorAll('#mobileMoreSheet .guest-restricted-nav').forEach(item => {
+                item.classList.toggle('hidden', guest);
+            });
+
+            const signOutLabel = document.getElementById('mobileMoreSignOutLabel');
+            if (signOutLabel) signOutLabel.textContent = guest ? 'Exit Guest Mode' : 'Sign Out';
             renderMobileScheduleWelcome();
         }
 
@@ -11783,6 +12795,10 @@
         const NAV_TITLES = { schedule: 'Class Schedule', dashboard: 'Attendance Tracker', dailySheet: 'Attendance Sheet', missionCollection: 'Mission Collection', classFunds: 'Class Funds', officers: 'My Officers', profile: 'My Profile', settings: 'Settings', cycleDayManager: 'Cycle Day Manager', gospelManager: 'Gospel of the Day Manager', announcementManager: 'Announcement Manager', birthdayManager: 'Birthday Manager' };
 
         window.showView = function(viewName) {
+            if (isGuestMode() && !GUEST_ALLOWED_VIEWS.has(viewName)) {
+                window.showAppAlert('Guest View Only', 'This page is not available in Guest Mode.');
+                return;
+            }
             ALL_TOP_LEVEL_VIEWS.forEach(id => document.getElementById(id).classList.add('hidden'));
             if (viewName !== 'schedule') stopBirthdayAutoplay();
 
@@ -11837,6 +12853,12 @@
         };
 
         window.navigateTo = function(viewName) {
+            if (isGuestMode() && !GUEST_ALLOWED_VIEWS.has(viewName)) {
+                window.showAppAlert('Guest View Only', 'This page is not available in Guest Mode.');
+                closeSidebar();
+                closeMobileMoreSheet();
+                return;
+            }
             if (viewName === 'gospelManager' && currentUserRole !== 'admin') {
                 showAppAlert('Access Denied', 'Only the Main Admin can access the Gospel of the Day Manager.');
                 return;
@@ -11910,6 +12932,7 @@ Leaving this page will discard those changes.`,
 
         // Account Deletion Modal & Magic PIN Logic
         window.openDeleteAccountModal = function() {
+            if (blockGuestWrite('manage account settings')) return;
             document.getElementById('deleteMagicPinInput').value = "";
             document.getElementById('deleteAccountModal').classList.remove('hidden');
             document.getElementById('deleteMagicPinInput').focus();
@@ -11921,6 +12944,7 @@ Leaving this page will discard those changes.`,
         };
 
         window.executeAccountDeletion = function() {
+            if (blockGuestWrite('delete an account')) return;
             const enteredPin = document.getElementById('deleteMagicPinInput').value;
             
             if (enteredPin !== MAGIC_PIN) {
@@ -11953,6 +12977,7 @@ Leaving this page will discard those changes.`,
 
         // Admin Deletion of Officers via Profile Modal
         window.executeAdminDeleteOfficer = function() {
+            if (blockGuestWrite('delete an Officer account')) return;
             if (!activeModalOfficerUid) return;
 
             showAppConfirm("Admin Confirmation", "Are you sure you want to delete and wipe this officer's account profile from the system?", true, (confirmed) => {
@@ -12017,26 +13042,32 @@ Leaving this page will discard those changes.`,
                 modalName.textContent = foundUser.fullName || "Name Not Set";
                 modalImg.src = foundUser.photoBase64 || "https://cdn-icons-png.flaticon.com/512/847/847969.png";
 
-                modalContent.innerHTML = `
-                    <div class="detail-info-row">
-                        <span class="detail-info-label">Student ID</span>
-                        <span class="detail-info-value">${foundUser.studentId || "N/A"}</span>
-                    </div>
-                    <div class="detail-info-row">
-                        <span class="detail-info-label">School Email</span>
-                        <span class="detail-info-value">${foundUser.email || "N/A"}</span>
-                    </div>
-                    <div class="detail-info-row">
-                        <span class="detail-info-label">Mobile Number</span>
-                        <span class="detail-info-value">${foundUser.mobile || "N/A"}</span>
-                    </div>
-                    <div class="detail-info-row">
-                        <span class="detail-info-label">Birthday</span>
-                        <span class="detail-info-value">${foundUser.birthday || "N/A"}</span>
-                    </div>
-                `;
+                if (isGuestMode()) {
+                    modalContent.innerHTML = '';
+                    deleteBtn.classList.add('hidden');
+                } else {
+                    modalContent.innerHTML = `
+                        <div class="detail-info-row">
+                            <span class="detail-info-label">Student ID</span>
+                            <span class="detail-info-value">${foundUser.studentId || "N/A"}</span>
+                        </div>
+                        <div class="detail-info-row">
+                            <span class="detail-info-label">School Email</span>
+                            <span class="detail-info-value">${foundUser.email || "N/A"}</span>
+                        </div>
+                        <div class="detail-info-row">
+                            <span class="detail-info-label">Mobile Number</span>
+                            <span class="detail-info-value">${foundUser.mobile || "N/A"}</span>
+                        </div>
+                        <div class="detail-info-row">
+                            <span class="detail-info-label">Birthday</span>
+                            <span class="detail-info-value">${foundUser.birthday || "N/A"}</span>
+                        </div>
+                    `;
 
-                if (currentUserRole === 'admin') deleteBtn.classList.remove('hidden');
+                    if (currentUserRole === 'admin') deleteBtn.classList.remove('hidden');
+                    else deleteBtn.classList.add('hidden');
+                }
             } else {
                 modalName.textContent = "Unregistered Officer";
                 modalImg.src = "https://cdn-icons-png.flaticon.com/512/847/847969.png";
@@ -12054,6 +13085,7 @@ Leaving this page will discard those changes.`,
 
         // ADMIN: ADD STUDENT MODAL
         window.openAddStudentModal = function() {
+            if (blockGuestWrite('add students')) return;
             document.getElementById('addStudentIdInput').value = "";
             document.getElementById('addStudentNameInput').value = "";
             document.getElementById('addStudentModal').classList.remove('hidden');
@@ -12064,6 +13096,7 @@ Leaving this page will discard those changes.`,
         };
 
         window.confirmAddStudent = function() {
+            if (blockGuestWrite('add students')) return;
             const sid = document.getElementById('addStudentIdInput').value.trim();
             const sname = document.getElementById('addStudentNameInput').value.trim().toUpperCase();
 
@@ -12094,6 +13127,7 @@ Leaving this page will discard those changes.`,
 
         // ADMIN: MODIFY STUDENT MODAL (EDIT NAME & REMOVE DROPDOWN)
         window.openModifyStudentModal = function() {
+            if (blockGuestWrite('modify students')) return;
             const selectEl = document.getElementById('modifyStudentDropdown');
             selectEl.innerHTML = '';
 
@@ -12117,6 +13151,7 @@ Leaving this page will discard those changes.`,
         };
 
         window.executeEditStudentName = function() {
+            if (blockGuestWrite('edit student names')) return;
             const selectEl = document.getElementById('modifyStudentDropdown');
             const studentId = selectEl.value;
 
@@ -12149,6 +13184,7 @@ Leaving this page will discard those changes.`,
         };
 
         window.confirmRemoveStudentFromDropdown = function() {
+            if (blockGuestWrite('remove students')) return;
             const selectEl = document.getElementById('modifyStudentDropdown');
             const studentId = selectEl.value;
 
@@ -12178,6 +13214,7 @@ Leaving this page will discard those changes.`,
 
         // Cropper Logic
         window.handleFileSelectedForCrop = function(event) {
+            if (blockGuestWrite('upload a profile photo')) { if (event && event.target) event.target.value = ''; return; }
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
@@ -12205,6 +13242,7 @@ Leaving this page will discard those changes.`,
         };
 
         window.executeImageCrop = function() {
+            if (blockGuestWrite('crop a profile photo')) return;
             if (!cropperInstance) return;
             const canvas = cropperInstance.getCroppedCanvas({
                 width: 300,
@@ -12217,6 +13255,7 @@ Leaving this page will discard those changes.`,
         };
 
         window.saveOfficerProfile = function() {
+            if (blockGuestWrite('save profile changes')) return;
             if (!currentUser) return;
 
             showAppConfirm("Save Profile", "Are you sure you want to save these profile changes?", false, (confirmed) => {
@@ -12248,19 +13287,32 @@ Leaving this page will discard those changes.`,
         };
 
         function bindDatabaseSync() {
-            const dbRef = ref(db, 'attendance_records');
-            onValue(dbRef, (snapshot) => {
+            if (attendanceSyncUnsubscribe) {
+                try { attendanceSyncUnsubscribe(); } catch (err) {}
+                attendanceSyncUnsubscribe = null;
+            }
+            const attendancePath = isGuestMode() ? guestPublicPath('attendance_records') : 'attendance_records';
+            const dbRef = ref(db, attendancePath);
+            attendanceSyncUnsubscribe = onValue(dbRef, (snapshot) => {
                 const data = snapshot.val();
                 globalDatabase = data ? data : {};
+                if (!isGuestMode()) {
+                    syncGuestPublicPathIfChanged('attendance_records', sanitizeGuestAttendanceRecords(globalDatabase));
+                }
                 renderDashboardMatrix();
-                
+
                 if (!document.getElementById('dailyAttendanceSheetView').classList.contains('hidden') && activeEditingDateStr) {
                     refreshSheetEditorDataOnly();
                 }
+            }, err => {
+                console.error('[Attendance] Live sync failed:', err);
+                globalDatabase = {};
+                renderDashboardMatrix();
             });
         }
 
         function saveDatabaseToDisk() {
+            if (blockGuestWrite('save Attendance changes')) return Promise.resolve(false);
             return set(ref(db, 'attendance_records'), globalDatabase);
         }
 
@@ -12419,19 +13471,21 @@ Leaving this page will discard those changes.`,
             let aggregatedGlobalTardiness = 0;
             let aggregatedGlobalExcused = 0;
 
-            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
+            const guest = isGuestMode();
+            const canEdit = !guest && (currentUserRole === 'admin' || userDesignation === 'Secretary');
 
             currentStudentList.forEach((student, index) => {
                 let stateRow = workingSheetRecords[student.id] || createDefaultClearRow();
                 let tr = document.createElement('tr');
 
                 let targetHasRemarkClass = (stateRow.remark && stateRow.remark.trim().length > 0) ? 'has-student-remark' : '';
+                const remarkButton = guest ? '' : `<button class="bubble-comment-btn ${targetHasRemarkClass}" data-id="${student.id}" data-name="${student.name}">💬</button>`;
 
                 let rowHtml = `
                     <td style="color:var(--text-muted); font-size:11px;">${student.id}</td>
                     <td>
                         <span style="font-weight: 500; color:#334155;">${student.name}</span>
-                        <button class="bubble-comment-btn ${targetHasRemarkClass}" data-id="${student.id}" data-name="${student.name}">💬</button>
+                        ${remarkButton}
                     </td>
                     <td style="text-align:center;"><button class="all-row-select" data-id="${student.id}" ${!canEdit ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>✓</button></td>
                 `;
@@ -12493,7 +13547,7 @@ Leaving this page will discard those changes.`,
         }
 
         function catchDynamicRowEventListeners() {
-            const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
+            const canEdit = !isGuestMode() && (currentUserRole === 'admin' || userDesignation === 'Secretary');
 
             document.querySelectorAll('.click-status-cell').forEach(el => {
                 el.onclick = function() {
@@ -12533,6 +13587,7 @@ Leaving this page will discard those changes.`,
         }
 
         function openStudentRemarkModal(studentId, studentName) {
+            if (isGuestMode()) { window.showAppAlert('Guest View Only', 'Private student remarks are not available in Guest Mode.'); return; }
             modalActiveStudentId = studentId;
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             
@@ -12552,6 +13607,7 @@ Leaving this page will discard those changes.`,
         }
 
         function saveStudentRemarkModal() {
+            if (blockGuestWrite('save private Attendance remarks')) return;
             if(!modalActiveStudentId) return;
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             if (!canEdit) return;
@@ -12564,6 +13620,7 @@ Leaving this page will discard those changes.`,
         }
 
         function resetActiveSheetForm() {
+            if (blockGuestWrite('reset Attendance data')) return;
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             if (!canEdit) return;
 
@@ -12577,6 +13634,7 @@ Leaving this page will discard those changes.`,
         }
 
         function saveActiveSheetToDatabase() {
+            if (blockGuestWrite('save Attendance changes')) return;
             const canEdit = (currentUserRole === 'admin' || userDesignation === 'Secretary');
             if (!canEdit) return;
 
@@ -12604,6 +13662,7 @@ Leaving this page will discard those changes.`,
         }
 
         function exportDataToSpreadsheet() {
+            if (blockGuestWrite('export Attendance data')) return;
             const loggedDates = Object.keys(globalDatabase).sort();
             if (loggedDates.length === 0) {
                 showAppAlert("Export Error", "No saved attendance records were found in the database to export.");
