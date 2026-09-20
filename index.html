@@ -2073,6 +2073,499 @@
             }
         }
 
+
+        /* ============================================
+           GOSPEL OF THE DAY — Landing, Manager, Detail
+           ============================================ */
+        .gospel-landing-card {
+            position: relative;
+            overflow: hidden;
+            margin: 0 0 18px 0;
+            padding: 22px;
+            background: linear-gradient(145deg, #fffef9 0%, #ffffff 60%, #f5f8f2 100%);
+            border: 1px solid #e6eadf;
+            border-radius: 22px;
+            box-shadow: 0 10px 28px rgba(30,72,46,.08);
+            color: #20382a;
+        }
+
+        .gospel-landing-card::after {
+            content: '';
+            position: absolute;
+            right: -28px;
+            top: -34px;
+            width: 126px;
+            height: 126px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(212,162,26,.11) 0%, rgba(212,162,26,0) 70%);
+            pointer-events: none;
+        }
+
+        .gospel-card-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 13px;
+            color: #8b690a;
+            font-size: 10px;
+            line-height: 1;
+            font-weight: 800;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+        }
+
+        .gospel-card-icon {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #f7eecb;
+            color: #174d30;
+            flex: 0 0 auto;
+        }
+
+        .gospel-card-icon svg { width: 21px; height: 21px; }
+
+        .gospel-card-label {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 0 10px;
+            border-radius: 999px;
+            background: #f7eecb;
+            border: 1px solid rgba(212,162,26,.18);
+        }
+
+        .gospel-landing-header,
+        .gospel-preview-header {
+            margin: 0;
+            color: #174d30;
+            font-size: clamp(21px, 3vw, 28px);
+            line-height: 1.18;
+            font-weight: 800;
+            letter-spacing: -.35px;
+        }
+
+        .gospel-landing-preview,
+        .gospel-preview-text {
+            margin-top: 10px;
+            color: #5f6f64;
+            font-size: 14px;
+            line-height: 1.65;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .gospel-read-more-btn {
+            margin-top: 16px;
+            min-height: 44px;
+            padding: 10px 16px;
+            border: 1px solid rgba(212,162,26,.28);
+            border-radius: 999px;
+            background: #fff8dd;
+            color: #6e5508;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            touch-action: manipulation;
+        }
+
+        .gospel-read-more-btn:hover { background: #f7eecb; }
+
+        .gospel-manager-shell {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+
+        .gospel-manager-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .gospel-admin-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            padding: 0 9px;
+            border-radius: 999px;
+            background: #f7eecb;
+            border: 1px solid rgba(212,162,26,.2);
+            color: #765a08;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .45px;
+        }
+
+        .gospel-manager-info {
+            margin-bottom: 16px;
+            padding: 13px 14px;
+            border-radius: 14px;
+            background: #f2f6f0;
+            border: 1px solid #e3eae1;
+            color: #53675a;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .gospel-manager-panel {
+            background: #fff;
+            border: 1px solid #e3eae1;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 5px 18px rgba(30,72,46,.05);
+            margin-bottom: 18px;
+        }
+
+        .gospel-manager-day-tabs {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0,1fr));
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .gospel-day-tab {
+            position: relative;
+            min-width: 0;
+            min-height: 60px;
+            padding: 8px 5px;
+            border: 1px solid #e3eae1;
+            border-radius: 14px;
+            background: #fbfcfa;
+            color: #476352;
+            font: inherit;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            touch-action: manipulation;
+        }
+
+        .gospel-day-tab.is-selected {
+            background: #e4ede1;
+            border-color: rgba(46,112,71,.34);
+            color: #174d30;
+            box-shadow: 0 4px 12px rgba(46,112,71,.08);
+        }
+
+        .gospel-day-name {
+            font-size: 12px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .gospel-day-state {
+            font-size: 9px;
+            font-weight: 700;
+            color: #8a968e;
+            white-space: nowrap;
+        }
+
+        .gospel-day-state.is-saved { color: #2e7047; }
+
+        .gospel-today-tag {
+            position: absolute;
+            top: -6px;
+            right: 5px;
+            padding: 2px 5px;
+            border-radius: 999px;
+            background: #d4a21a;
+            color: #fff;
+            font-size: 7px;
+            line-height: 1.3;
+            font-weight: 900;
+            letter-spacing: .35px;
+        }
+
+        .gospel-form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 14px;
+        }
+
+        .gospel-field label {
+            display: block;
+            margin-bottom: 6px;
+            color: #718077;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+
+        .gospel-field input,
+        .gospel-field textarea {
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #e3eae1;
+            border-radius: 12px;
+            background: #fbfcfa;
+            color: #20382a;
+            padding: 11px 12px;
+            font: inherit;
+            font-size: 14px;
+            line-height: 1.5;
+            outline: none;
+            resize: vertical;
+        }
+
+        .gospel-field input:focus,
+        .gospel-field textarea:focus {
+            border-color: #5f8f6b;
+            box-shadow: 0 0 0 3px rgba(46,112,71,.10);
+            background: #fff;
+        }
+
+        #gospelPreviewInput { min-height: 105px; }
+        #gospelFullVerseInput { min-height: 210px; }
+        #gospelReflectionInput { min-height: 150px; }
+
+        .gospel-field-help,
+        .gospel-manager-meta {
+            margin-top: 6px;
+            color: #7c8980;
+            font-size: 10px;
+            line-height: 1.45;
+        }
+
+        .gospel-manager-actions {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .gospel-manager-actions .btn-ui { min-height: 44px; }
+
+        .gospel-preview-title {
+            margin: 0 0 12px;
+            color: #174d30;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .55px;
+        }
+
+        .gospel-student-preview-card {
+            border: 1px solid #e6eadf;
+            border-radius: 20px;
+            padding: 18px;
+            background: linear-gradient(145deg, #fffef9 0%, #ffffff 72%, #f5f8f2 100%);
+            box-shadow: 0 7px 20px rgba(30,72,46,.055);
+        }
+
+        .gospel-preview-empty {
+            color: #87938b;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .gospel-settings-icon {
+            width: 22px;
+            height: 22px;
+            flex: 0 0 auto;
+            color: var(--primary-green);
+        }
+
+        .gospel-settings-main {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+        }
+
+        .gospel-settings-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .gospel-settings-copy small {
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Isolated centered Gospel detail modal. */
+        .gospel-detail-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 9500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(16px + var(--safe-bottom)) calc(16px + var(--safe-left));
+            box-sizing: border-box;
+            background: rgba(15,35,24,.45);
+            backdrop-filter: blur(2px);
+            -webkit-backdrop-filter: blur(2px);
+        }
+
+        .gospel-detail-modal {
+            width: min(720px, calc(100vw - 32px));
+            max-height: min(86vh, 760px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #fffefa;
+            color: #20382a;
+            border: 1px solid rgba(255,255,255,.72);
+            border-radius: 26px;
+            box-shadow: 0 26px 70px rgba(11,35,21,.30);
+        }
+
+        .gospel-detail-header {
+            position: relative;
+            flex: 0 0 auto;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 22px 68px 16px 22px;
+            border-bottom: 1px solid #e9eee7;
+            background: rgba(255,254,250,.98);
+            z-index: 2;
+        }
+
+        .gospel-detail-kicker {
+            color: #9a7208;
+            font-size: 10px;
+            font-weight: 850;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+        }
+
+        .gospel-detail-header-text h3 {
+            margin: 4px 0 0;
+            color: #174d30;
+            font-size: 25px;
+            line-height: 1.2;
+            font-weight: 800;
+            letter-spacing: -.3px;
+        }
+
+        .gospel-detail-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 44px;
+            height: 44px;
+            padding: 0;
+            border: 1px solid #e3eae1;
+            border-radius: 50%;
+            background: #fff;
+            color: #476352;
+            font-size: 24px;
+            line-height: 1;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4;
+        }
+
+        .gospel-detail-scroll {
+            min-height: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            padding: 20px 22px 24px;
+        }
+
+        .gospel-detail-section + .gospel-detail-section { margin-top: 24px; }
+
+        .gospel-detail-section-title {
+            margin-bottom: 9px;
+            color: #2e7047;
+            font-size: 10px;
+            font-weight: 850;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+        }
+
+        .gospel-detail-copy {
+            margin: 0;
+            color: #31483a;
+            font-size: 15px;
+            line-height: 1.78;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .gospel-detail-reflection {
+            padding: 16px;
+            border-radius: 16px;
+            background: #f2f6f0;
+            border: 1px solid #e3eae1;
+        }
+
+        @media (min-width: 861px) {
+            .gospel-manager-panel { padding: 22px; }
+            .gospel-form-grid { grid-template-columns: 1fr 1fr; }
+            .gospel-field.gospel-field-wide { grid-column: 1 / -1; }
+            .gospel-landing-card { padding: 24px 26px; }
+        }
+
+        @media (max-width: 860px) {
+            .gospel-landing-card {
+                margin-bottom: 16px;
+                padding: 18px 16px;
+                border-radius: 20px;
+                box-shadow: 0 8px 24px rgba(30,72,46,.075);
+            }
+            .gospel-landing-header,
+            .gospel-preview-header { font-size: 22px; }
+            .gospel-landing-preview,
+            .gospel-preview-text { font-size: 13px; line-height: 1.6; }
+
+            .gospel-manager-panel {
+                padding: 14px;
+                border-radius: 16px;
+            }
+            .gospel-manager-day-tabs { gap: 5px; }
+            .gospel-day-tab {
+                min-height: 58px;
+                padding: 7px 2px;
+                border-radius: 12px;
+            }
+            .gospel-day-name { font-size: 11px; }
+            .gospel-day-state { font-size: 8px; }
+            .gospel-manager-actions { flex-direction: column; }
+            .gospel-manager-actions .btn-ui { width: 100%; }
+
+            .gospel-detail-backdrop {
+                padding: calc(14px + var(--safe-top)) calc(14px + var(--safe-right)) calc(14px + var(--safe-bottom)) calc(14px + var(--safe-left));
+            }
+            .gospel-detail-modal {
+                width: calc(100vw - 28px - var(--safe-left) - var(--safe-right));
+                max-height: calc(100dvh - 28px - var(--safe-top) - var(--safe-bottom));
+                border-radius: 24px;
+            }
+            .gospel-detail-header {
+                padding: 18px 62px 14px 18px;
+            }
+            .gospel-detail-header-text h3 { font-size: 22px; }
+            .gospel-detail-close { top: 10px; right: 10px; }
+            .gospel-detail-scroll { padding: 17px 18px 21px; }
+            .gospel-detail-copy { font-size: 14px; line-height: 1.72; }
+        }
+
+        @media (max-width: 360px) {
+            .gospel-manager-day-tabs { gap: 4px; }
+            .gospel-day-name { font-size: 10px; }
+            .gospel-day-state { font-size: 7.5px; }
+            .gospel-today-tag { right: 2px; font-size: 6.5px; }
+        }
+
 </style>
 </head>
 <body>
@@ -2188,6 +2681,27 @@
                     <div id="mobileScheduleGreeting" class="mobile-schedule-greeting"></div>
                     <div class="mobile-schedule-subtitle">Here’s what’s happening with your real class schedule today.</div>
                 </div>
+
+
+                <!-- GOSPEL OF THE DAY — actual configured Cycle Day only -->
+                <section id="gospelLandingCard" class="gospel-landing-card hidden" aria-live="polite">
+                    <div class="gospel-card-kicker">
+                        <span class="gospel-card-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4.5 5.5c2.6-.8 5-.4 7.5 1.2v12c-2.5-1.6-4.9-2-7.5-1.2v-12Z"></path>
+                                <path d="M19.5 5.5c-2.6-.8-5-.4-7.5 1.2v12c2.5-1.6 4.9-2 7.5-1.2v-12Z"></path>
+                                <path d="M12 3.5v5M9.8 6h4.4"></path>
+                            </svg>
+                        </span>
+                        <span class="gospel-card-label">Gospel of the Day</span>
+                    </div>
+                    <h3 id="gospelLandingHeader" class="gospel-landing-header"></h3>
+                    <div id="gospelLandingPreview" class="gospel-landing-preview"></div>
+                    <button id="gospelReadMoreBtn" class="gospel-read-more-btn" type="button" onclick="openGospelDetailModal()">
+                        <span>Read More</span>
+                        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"></path></svg>
+                    </button>
+                </section>
 
                 <!-- Dynamic Home Highlight -->
                 <div id="homeHighlightCard" class="home-highlight-card">
@@ -2756,9 +3270,23 @@
                 </div>
 
                 <div id="adminSettingsSection" class="hidden">
-                    <div class="settings-section-label">Administrative</div>
+                    <div class="settings-section-label">Admin Tools</div>
                     <div class="settings-list">
                         <button class="settings-list-item" onclick="openCycleDayManager()">🔄 Cycle Day Manager <span>›</span></button>
+                        <button class="settings-list-item admin-only-field hidden" type="button" onclick="navigateTo('gospelManager')">
+                            <span class="gospel-settings-main">
+                                <svg class="gospel-settings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M4.5 5.5c2.6-.8 5-.4 7.5 1.2v12c-2.5-1.6-4.9-2-7.5-1.2v-12Z"></path>
+                                    <path d="M19.5 5.5c-2.6-.8-5-.4-7.5 1.2v12c2.5-1.6 4.9-2 7.5-1.2v-12Z"></path>
+                                    <path d="M12 3.5v5M9.8 6h4.4"></path>
+                                </svg>
+                                <span class="gospel-settings-copy">
+                                    <span>Gospel of the Day Manager</span>
+                                    <small>Set Day 1–Day 5 Gospel and reflections</small>
+                                </span>
+                            </span>
+                            <span>›</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -2817,6 +3345,85 @@
                 <div id="cdmAuditSection" class="admin-cdm-edit hidden">
                     <h3 style="font-size:14px; color:var(--primary-green); margin:20px 0 10px 0;">Recent Changes</h3>
                     <div class="settings-list" id="cdmAuditList" style="display:block;"></div>
+                </div>
+            </div>
+
+
+            <!-- GOSPEL OF THE DAY MANAGER (Main Admin only) -->
+            <div id="gospelManagerView" class="hidden">
+                <div class="view-header-flex">
+                    <div>
+                        <div class="settings-section-label" style="margin:0 0 5px 0;">Settings</div>
+                        <div class="gospel-manager-heading">
+                            <h2 class="view-title">Gospel of the Day Manager</h2>
+                            <span class="gospel-admin-badge">Main Admin Only</span>
+                        </div>
+                    </div>
+                    <div class="btn-set">
+                        <button class="btn-ui btn-gray" type="button" onclick="navigateFromGospelManagerToSettings()">← Back to Settings</button>
+                    </div>
+                </div>
+
+                <div class="gospel-manager-shell">
+                    <div class="gospel-manager-info">
+                        Set one Gospel and reflection for each Cycle Day. The student Gospel card appears only when today has a valid Day 1–Day 5 configuration and classes are Regular F2F or Synchronous.
+                    </div>
+
+                    <div class="gospel-manager-panel">
+                        <div id="gospelManagerDayTabs" class="gospel-manager-day-tabs" aria-label="Gospel Cycle Day"></div>
+
+                        <div class="gospel-form-grid">
+                            <div class="gospel-field gospel-field-wide">
+                                <label for="gospelHeaderInput">Gospel Header</label>
+                                <input id="gospelHeaderInput" type="text" placeholder="e.g., John 3:13-17" oninput="handleGospelManagerInput()">
+                            </div>
+
+                            <div class="gospel-field gospel-field-wide">
+                                <label for="gospelPreviewInput">Gospel Preview</label>
+                                <textarea id="gospelPreviewInput" placeholder="Short passage shown on the Schedule landing card" oninput="handleGospelManagerInput()"></textarea>
+                                <div id="gospelPreviewCounter" class="gospel-field-help">0 characters · 250–350 recommended</div>
+                            </div>
+
+                            <div class="gospel-field gospel-field-wide">
+                                <label for="gospelFullVerseInput">Full Verse</label>
+                                <textarea id="gospelFullVerseInput" placeholder="Enter the complete Gospel passage. Line breaks are preserved." oninput="handleGospelManagerInput()"></textarea>
+                            </div>
+
+                            <div class="gospel-field gospel-field-wide">
+                                <label for="gospelReflectionInput">General Reflection</label>
+                                <textarea id="gospelReflectionInput" placeholder="Enter the general reflection. Multiple paragraphs are supported." oninput="handleGospelManagerInput()"></textarea>
+                            </div>
+                        </div>
+
+                        <div id="gospelManagerMeta" class="gospel-manager-meta">Not yet saved.</div>
+
+                        <div class="gospel-manager-actions">
+                            <button id="gospelSaveBtn" class="btn-ui btn-green" type="button" onclick="saveGospelDay()">Save Day Gospel</button>
+                            <button id="gospelResetBtn" class="btn-ui btn-red" type="button" onclick="resetAllGospels()">Reset All Gospels</button>
+                        </div>
+                    </div>
+
+                    <div class="gospel-manager-panel">
+                        <h3 class="gospel-preview-title">Student Preview</h3>
+                        <div id="gospelStudentPreview" class="gospel-student-preview-card">
+                            <div id="gospelStudentPreviewEmpty" class="gospel-preview-empty">Enter Gospel details to preview this Day.</div>
+                            <div id="gospelStudentPreviewContent" class="hidden">
+                                <div class="gospel-card-kicker">
+                                    <span class="gospel-card-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M4.5 5.5c2.6-.8 5-.4 7.5 1.2v12c-2.5-1.6-4.9-2-7.5-1.2v-12Z"></path>
+                                            <path d="M19.5 5.5c-2.6-.8-5-.4-7.5 1.2v12c2.5-1.6 4.9-2 7.5-1.2v-12Z"></path>
+                                            <path d="M12 3.5v5M9.8 6h4.4"></path>
+                                        </svg>
+                                    </span>
+                                    <span class="gospel-card-label">Gospel of the Day</span>
+                                </div>
+                                <h3 id="gospelStudentPreviewHeader" class="gospel-preview-header"></h3>
+                                <div id="gospelStudentPreviewText" class="gospel-preview-text"></div>
+                                <button class="gospel-read-more-btn" type="button" disabled aria-disabled="true">Read More</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2881,6 +3488,37 @@
                 </button>
             </div>
         </section>
+
+
+        <!-- GOSPEL OF THE DAY DETAIL — single reusable centered modal -->
+        <div id="gospelDetailBackdrop" class="gospel-detail-backdrop hidden" onclick="handleGospelBackdropClick(event)" aria-hidden="true">
+            <section id="gospelDetailModal" class="gospel-detail-modal" role="dialog" aria-modal="true" aria-labelledby="gospelDetailHeader" tabindex="-1">
+                <div class="gospel-detail-header">
+                    <span class="gospel-card-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4.5 5.5c2.6-.8 5-.4 7.5 1.2v12c-2.5-1.6-4.9-2-7.5-1.2v-12Z"></path>
+                            <path d="M19.5 5.5c-2.6-.8-5-.4-7.5 1.2v12c2.5-1.6 4.9-2 7.5-1.2v-12Z"></path>
+                            <path d="M12 3.5v5M9.8 6h4.4"></path>
+                        </svg>
+                    </span>
+                    <div class="gospel-detail-header-text">
+                        <div class="gospel-detail-kicker">Gospel of the Day</div>
+                        <h3 id="gospelDetailHeader"></h3>
+                    </div>
+                    <button id="gospelDetailCloseBtn" class="gospel-detail-close" type="button" onclick="closeGospelDetailModal()" aria-label="Close Gospel details">×</button>
+                </div>
+                <div class="gospel-detail-scroll">
+                    <div class="gospel-detail-section">
+                        <div class="gospel-detail-section-title">Full Verse</div>
+                        <p id="gospelDetailVerse" class="gospel-detail-copy"></p>
+                    </div>
+                    <div class="gospel-detail-section gospel-detail-reflection">
+                        <div class="gospel-detail-section-title">General Reflection</div>
+                        <p id="gospelDetailReflection" class="gospel-detail-copy"></p>
+                    </div>
+                </div>
+            </section>
+        </div>
 
     </div>
 
@@ -3576,6 +4214,8 @@
                     }
                 }
                 cycleDataEverLoaded = true;
+                renderGospelOfTheDay();
+                renderGospelManagerIfOpen();
 
                 if (!document.getElementById('cycleDayManagerView').classList.contains('hidden')) {
                     renderCycleDayPicker(true);
@@ -4066,6 +4706,7 @@
 
         function renderScheduleHome() {
             renderMobileScheduleWelcome();
+            renderGospelOfTheDay();
             renderHomeHighlight();
             renderMobileDayTabs();
             renderMobileScheduleForDay(selectedMobileScheduleDay);
@@ -4266,6 +4907,429 @@
             const grid = document.querySelector('.schedule-desktop-grid');
             if (grid && grid.parentNode) grid.parentNode.insertBefore(banner, grid);
         }
+
+
+        // ============================================
+        // GOSPEL OF THE DAY — Cycle Day content system
+        // ============================================
+        const GOSPEL_ROOT = 'gospel_of_the_day/ay_2026_2027';
+        let gospelData = {};
+        let gospelDataLoaded = false;
+        let gospelSyncUnsubscribe = null;
+        let gospelSyncBoundUid = null;
+        let gospelManagerSelectedDay = null;
+        let gospelManagerDirty = false;
+        let gospelSaveInProgress = false;
+        let gospelResetInProgress = false;
+        let gospelCurrentLandingEntry = null;
+        let gospelModalPreviousBodyOverflow = '';
+        let gospelModalReturnFocus = null;
+
+        function isCompleteGospelEntry(entry) {
+            return !!entry &&
+                typeof entry.header === 'string' && !!entry.header.trim() &&
+                typeof entry.preview === 'string' && !!entry.preview.trim() &&
+                typeof entry.fullVerse === 'string' && !!entry.fullVerse.trim() &&
+                typeof entry.reflection === 'string' && !!entry.reflection.trim();
+        }
+
+        function getActualGospelCycleInfo() {
+            const info = getCycleInfoForDate(new Date());
+            if (!info || info.type !== 'school') return null;
+            const day = Number(info.cycleDay);
+            const mode = info.mode || 'regular';
+            if (day < 1 || day > 5) return null;
+            if (mode !== 'regular' && mode !== 'synchronous') return null;
+            return { day, mode };
+        }
+
+        function getCurrentGospelEntryForDisplay() {
+            if (!gospelDataLoaded) return null;
+            const cycleInfo = getActualGospelCycleInfo();
+            if (!cycleInfo) return null;
+            const entry = gospelData['day' + cycleInfo.day];
+            if (!isCompleteGospelEntry(entry)) return null;
+            return { day: cycleInfo.day, mode: cycleInfo.mode, entry };
+        }
+
+        function renderGospelOfTheDay() {
+            const card = document.getElementById('gospelLandingCard');
+            if (!card) return;
+
+            const resolved = getCurrentGospelEntryForDisplay();
+            if (!resolved) {
+                gospelCurrentLandingEntry = null;
+                card.classList.add('hidden');
+                document.getElementById('gospelLandingHeader').textContent = '';
+                document.getElementById('gospelLandingPreview').textContent = '';
+                const detailBackdrop = document.getElementById('gospelDetailBackdrop');
+                if (detailBackdrop && !detailBackdrop.classList.contains('hidden')) window.closeGospelDetailModal();
+                return;
+            }
+
+            gospelCurrentLandingEntry = resolved.entry;
+            document.getElementById('gospelLandingHeader').textContent = resolved.entry.header.trim();
+            document.getElementById('gospelLandingPreview').textContent = resolved.entry.preview.trim();
+            card.classList.remove('hidden');
+
+            const detailBackdrop = document.getElementById('gospelDetailBackdrop');
+            if (detailBackdrop && !detailBackdrop.classList.contains('hidden')) {
+                populateGospelDetailModal(resolved.entry);
+            }
+        }
+
+        function bindGospelOfTheDaySync() {
+            if (!currentUser) return;
+            if (gospelSyncBoundUid === currentUser.uid && gospelSyncUnsubscribe) return;
+            if (gospelSyncUnsubscribe) {
+                try { gospelSyncUnsubscribe(); } catch (err) { console.warn('[Gospel] Failed to unbind old listener:', err); }
+            }
+
+            gospelSyncBoundUid = currentUser.uid;
+            gospelDataLoaded = false;
+            renderGospelOfTheDay();
+
+            gospelSyncUnsubscribe = onValue(ref(db, GOSPEL_ROOT), (snapshot) => {
+                gospelData = snapshot.val() || {};
+                gospelDataLoaded = true;
+                renderGospelOfTheDay();
+                renderGospelManagerIfOpen();
+            }, (err) => {
+                console.error('[Gospel] Live sync failed:', err);
+                gospelData = {};
+                gospelDataLoaded = false;
+                renderGospelOfTheDay();
+                renderGospelManagerIfOpen();
+            });
+        }
+
+        function unbindGospelOfTheDaySync() {
+            if (gospelSyncUnsubscribe) {
+                try { gospelSyncUnsubscribe(); } catch (err) { console.warn('[Gospel] Failed to unbind listener:', err); }
+            }
+            gospelSyncUnsubscribe = null;
+            gospelSyncBoundUid = null;
+            gospelData = {};
+            gospelDataLoaded = false;
+            gospelCurrentLandingEntry = null;
+            renderGospelOfTheDay();
+        }
+
+        function gospelManagerIsOpen() {
+            const view = document.getElementById('gospelManagerView');
+            return !!view && !view.classList.contains('hidden');
+        }
+
+        function getGospelManagerActualDay() {
+            const cycleInfo = getActualGospelCycleInfo();
+            return cycleInfo ? cycleInfo.day : null;
+        }
+
+        function renderGospelManagerDayTabs() {
+            const tabs = document.getElementById('gospelManagerDayTabs');
+            if (!tabs) return;
+            const actualDay = getGospelManagerActualDay();
+            tabs.innerHTML = '';
+
+            for (let day = 1; day <= 5; day++) {
+                const entry = gospelData['day' + day];
+                const saved = isCompleteGospelEntry(entry);
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'gospel-day-tab' + (gospelManagerSelectedDay === day ? ' is-selected' : '');
+                btn.setAttribute('aria-pressed', gospelManagerSelectedDay === day ? 'true' : 'false');
+                btn.addEventListener('click', () => window.selectGospelManagerDay(day));
+
+                const name = document.createElement('span');
+                name.className = 'gospel-day-name';
+                name.textContent = 'Day ' + day;
+
+                const state = document.createElement('span');
+                state.className = 'gospel-day-state' + (saved ? ' is-saved' : '');
+                state.textContent = saved ? '✓ Saved' : 'Not Set';
+
+                btn.appendChild(name);
+                btn.appendChild(state);
+
+                if (actualDay === day) {
+                    const today = document.createElement('span');
+                    today.className = 'gospel-today-tag';
+                    today.textContent = 'TODAY';
+                    btn.appendChild(today);
+                }
+
+                tabs.appendChild(btn);
+            }
+        }
+
+        function populateGospelManagerFields(day) {
+            const entry = gospelData['day' + day] || {};
+            document.getElementById('gospelHeaderInput').value = typeof entry.header === 'string' ? entry.header : '';
+            document.getElementById('gospelPreviewInput').value = typeof entry.preview === 'string' ? entry.preview : '';
+            document.getElementById('gospelFullVerseInput').value = typeof entry.fullVerse === 'string' ? entry.fullVerse : '';
+            document.getElementById('gospelReflectionInput').value = typeof entry.reflection === 'string' ? entry.reflection : '';
+
+            const meta = document.getElementById('gospelManagerMeta');
+            if (meta) {
+                if (entry.updatedAt) {
+                    const who = entry.updatedByName || entry.updatedByEmail || 'Main Admin';
+                    meta.textContent = `Last updated by ${who} · ${entry.updatedAt}`;
+                } else {
+                    meta.textContent = 'Not yet saved.';
+                }
+            }
+
+            gospelManagerDirty = false;
+            updateGospelManagerPreview();
+        }
+
+        function prepareGospelManager() {
+            if (currentUserRole !== 'admin') return;
+            if (!(gospelManagerSelectedDay >= 1 && gospelManagerSelectedDay <= 5)) {
+                gospelManagerSelectedDay = getGospelManagerActualDay() || 1;
+            }
+            renderGospelManagerDayTabs();
+            populateGospelManagerFields(gospelManagerSelectedDay);
+        }
+
+        function renderGospelManagerIfOpen() {
+            if (!gospelManagerIsOpen()) return;
+            renderGospelManagerDayTabs();
+            if (!gospelManagerDirty && gospelManagerSelectedDay) {
+                populateGospelManagerFields(gospelManagerSelectedDay);
+            } else {
+                updateGospelManagerPreview();
+            }
+        }
+
+        window.selectGospelManagerDay = function(day) {
+            const nextDay = Number(day);
+            if (currentUserRole !== 'admin') {
+                showAppAlert('Access Denied', 'Only the Main Admin can manage Gospel of the Day entries.');
+                return;
+            }
+            if (nextDay < 1 || nextDay > 5 || nextDay === gospelManagerSelectedDay) return;
+
+            const switchDay = () => {
+                gospelManagerSelectedDay = nextDay;
+                gospelManagerDirty = false;
+                renderGospelManagerDayTabs();
+                populateGospelManagerFields(nextDay);
+            };
+
+            if (gospelManagerDirty) {
+                showAppConfirm(
+                    'Unsaved Changes',
+                    `You have unsaved Gospel changes for Day ${gospelManagerSelectedDay}.\nSwitching days will discard those changes.`,
+                    false,
+                    (confirmed) => {
+                        if (confirmed) switchDay();
+                    }
+                );
+                return;
+            }
+
+            switchDay();
+        };
+
+        window.handleGospelManagerInput = function() {
+            if (!gospelManagerIsOpen()) return;
+            gospelManagerDirty = true;
+            updateGospelManagerPreview();
+        };
+
+        function updateGospelManagerPreview() {
+            const previewInput = document.getElementById('gospelPreviewInput');
+            if (!previewInput) return;
+
+            const header = document.getElementById('gospelHeaderInput').value;
+            const preview = previewInput.value;
+            const counter = document.getElementById('gospelPreviewCounter');
+            if (counter) counter.textContent = `${preview.length} characters · 250–350 recommended`;
+
+            const hasPreviewContent = !!header.trim() || !!preview.trim();
+            const empty = document.getElementById('gospelStudentPreviewEmpty');
+            const content = document.getElementById('gospelStudentPreviewContent');
+            if (empty) empty.classList.toggle('hidden', hasPreviewContent);
+            if (content) content.classList.toggle('hidden', !hasPreviewContent);
+
+            if (hasPreviewContent) {
+                document.getElementById('gospelStudentPreviewHeader').textContent = header.trim() || 'Gospel Header';
+                document.getElementById('gospelStudentPreviewText').textContent = preview.trim() || 'Enter a Gospel Preview to see how the landing card will read.';
+            }
+        }
+
+        function collectGospelManagerValues() {
+            return {
+                header: document.getElementById('gospelHeaderInput').value.trim(),
+                preview: document.getElementById('gospelPreviewInput').value.trim(),
+                fullVerse: document.getElementById('gospelFullVerseInput').value.trim(),
+                reflection: document.getElementById('gospelReflectionInput').value.trim()
+            };
+        }
+
+        window.saveGospelDay = async function() {
+            if (currentUserRole !== 'admin') {
+                showAppAlert('Access Denied', 'Only the Main Admin can save Gospel of the Day entries.');
+                return;
+            }
+            if (gospelSaveInProgress) return;
+            const day = Number(gospelManagerSelectedDay);
+            if (day < 1 || day > 5) {
+                showAppAlert('Select a Day', 'Please select Day 1 through Day 5.');
+                return;
+            }
+
+            const values = collectGospelManagerValues();
+            const missing = [];
+            if (!values.header) missing.push('Gospel Header');
+            if (!values.preview) missing.push('Gospel Preview');
+            if (!values.fullVerse) missing.push('Full Verse');
+            if (!values.reflection) missing.push('General Reflection');
+
+            if (missing.length) {
+                showAppAlert('Required Gospel Fields', 'Please complete: ' + missing.join(', ') + '.');
+                return;
+            }
+
+            const btn = document.getElementById('gospelSaveBtn');
+            gospelSaveInProgress = true;
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = 'Saving...';
+            }
+
+            try {
+                const now = new Date();
+                await set(ref(db, `${GOSPEL_ROOT}/day${day}`), {
+                    header: values.header,
+                    preview: values.preview,
+                    fullVerse: values.fullVerse,
+                    reflection: values.reflection,
+                    updatedAt: now.toLocaleString(),
+                    updatedAtMs: now.getTime(),
+                    updatedByUid: currentUser ? currentUser.uid : '',
+                    updatedByEmail: currentUser && currentUser.email ? currentUser.email : '',
+                    updatedByName: userFullName || 'Main Admin'
+                });
+
+                gospelManagerDirty = false;
+                showAppAlert('Gospel Saved', `Day ${day} Gospel and reflection were saved successfully.`);
+            } catch (err) {
+                console.error('[Gospel] Save failed:', err);
+                showAppAlert('Database Error', 'The Gospel entry could not be saved.\nFirebase returned: ' + err.message);
+            } finally {
+                gospelSaveInProgress = false;
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = 'Save Day Gospel';
+                }
+            }
+        };
+
+        window.resetAllGospels = function() {
+            if (currentUserRole !== 'admin') {
+                showAppAlert('Access Denied', 'Only the Main Admin can reset Gospel of the Day entries.');
+                return;
+            }
+            if (gospelResetInProgress) return;
+
+            showAppConfirm(
+                'Reset All Gospels?',
+                'This will permanently clear the saved Gospel Header, Gospel Preview, Full Verse, and General Reflection for Day 1 through Day 5.\n\nThis action does not affect the Cycle Day calendar, schedule, attendance, Mission Collection, or Class Funds.\n\nContinue?',
+                true,
+                async (confirmed) => {
+                    if (!confirmed || gospelResetInProgress) return;
+
+                    const btn = document.getElementById('gospelResetBtn');
+                    gospelResetInProgress = true;
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.textContent = 'Resetting...';
+                    }
+
+                    try {
+                        await update(ref(db, GOSPEL_ROOT), {
+                            day1: null,
+                            day2: null,
+                            day3: null,
+                            day4: null,
+                            day5: null
+                        });
+
+                        gospelManagerDirty = false;
+                        document.getElementById('gospelHeaderInput').value = '';
+                        document.getElementById('gospelPreviewInput').value = '';
+                        document.getElementById('gospelFullVerseInput').value = '';
+                        document.getElementById('gospelReflectionInput').value = '';
+                        updateGospelManagerPreview();
+                        showAppAlert('Gospels Reset', 'All Day 1–Day 5 Gospel entries have been cleared.');
+                    } catch (err) {
+                        console.error('[Gospel] Reset failed:', err);
+                        showAppAlert('Database Error', 'The Gospel entries could not be reset.\nFirebase returned: ' + err.message);
+                    } finally {
+                        gospelResetInProgress = false;
+                        if (btn) {
+                            btn.disabled = false;
+                            btn.textContent = 'Reset All Gospels';
+                        }
+                    }
+                }
+            );
+        };
+
+        window.navigateFromGospelManagerToSettings = function() {
+            window.navigateTo('settings');
+        };
+
+        function populateGospelDetailModal(entry) {
+            if (!isCompleteGospelEntry(entry)) return;
+            document.getElementById('gospelDetailHeader').textContent = entry.header.trim();
+            document.getElementById('gospelDetailVerse').textContent = entry.fullVerse.trim();
+            document.getElementById('gospelDetailReflection').textContent = entry.reflection.trim();
+        }
+
+        window.openGospelDetailModal = function() {
+            const resolved = getCurrentGospelEntryForDisplay();
+            if (!resolved) {
+                renderGospelOfTheDay();
+                return;
+            }
+
+            const backdrop = document.getElementById('gospelDetailBackdrop');
+            if (!backdrop || !backdrop.classList.contains('hidden')) return;
+
+            populateGospelDetailModal(resolved.entry);
+            gospelModalReturnFocus = document.activeElement;
+            gospelModalPreviousBodyOverflow = document.body.style.overflow || '';
+            document.body.style.overflow = 'hidden';
+            backdrop.classList.remove('hidden');
+            backdrop.setAttribute('aria-hidden', 'false');
+
+            const closeBtn = document.getElementById('gospelDetailCloseBtn');
+            if (closeBtn) closeBtn.focus();
+        };
+
+        window.closeGospelDetailModal = function() {
+            const backdrop = document.getElementById('gospelDetailBackdrop');
+            if (!backdrop || backdrop.classList.contains('hidden')) return;
+
+            backdrop.classList.add('hidden');
+            backdrop.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = gospelModalPreviousBodyOverflow;
+
+            const returnFocus = gospelModalReturnFocus;
+            gospelModalReturnFocus = null;
+            if (returnFocus && document.contains(returnFocus) && typeof returnFocus.focus === 'function') {
+                returnFocus.focus();
+            }
+        };
+
+        window.handleGospelBackdropClick = function(event) {
+            const backdrop = document.getElementById('gospelDetailBackdrop');
+            if (event && backdrop && event.target === backdrop) window.closeGospelDetailModal();
+        };
+
 
         // MISSION COLLECTION SYSTEM (AY 2026-2027)
         // ============================================
@@ -6867,6 +7931,7 @@
                 bindDatabaseSync();
                 bindMissionCollectionSync();
                 bindCycleDaySync();
+                bindGospelOfTheDaySync();
                 bindClassFundsSync();
 
                 showView('schedule');
@@ -6882,6 +7947,8 @@
                 }, 30000);
             } else {
                 closeMobileMoreSheet();
+                closeGospelDetailModal();
+                unbindGospelOfTheDaySync();
                 currentUser = null;
                 document.getElementById('authContainer').classList.remove('hidden');
                 document.getElementById('appContainer').classList.add('hidden');
@@ -7016,7 +8083,7 @@
             if (viewName === 'dashboard' || viewName === 'dailySheet') return 'dashboard';
             if (viewName === 'missionCollection') return 'missionCollection';
             if (viewName === 'classFunds') return 'classFunds';
-            if (viewName === 'officers' || viewName === 'profile' || viewName === 'settings' || viewName === 'cycleDayManager') return 'more';
+            if (viewName === 'officers' || viewName === 'profile' || viewName === 'settings' || viewName === 'cycleDayManager' || viewName === 'gospelManager') return 'more';
             return '';
         }
 
@@ -7110,13 +8177,18 @@
 
         document.addEventListener('keydown', event => {
             if (event.key === 'Escape') {
+                const gospelBackdrop = document.getElementById('gospelDetailBackdrop');
+                if (gospelBackdrop && !gospelBackdrop.classList.contains('hidden')) {
+                    window.closeGospelDetailModal();
+                    return;
+                }
                 const sheet = document.getElementById('mobileMoreSheet');
                 if (sheet && sheet.classList.contains('is-open')) closeMobileMoreSheet();
             }
         });
 
-        const ALL_TOP_LEVEL_VIEWS = ['classScheduleView', 'dashboardMatrixView', 'dailyAttendanceSheetView', 'officerProfileView', 'adminOfficersView', 'missionCollectionView', 'classFundsView', 'settingsView', 'cycleDayManagerView'];
-        const NAV_TITLES = { schedule: 'Class Schedule', dashboard: 'Attendance Tracker', dailySheet: 'Attendance Sheet', missionCollection: 'Mission Collection', classFunds: 'Class Funds', officers: 'My Officers', profile: 'My Profile', settings: 'Settings', cycleDayManager: 'Cycle Day Manager' };
+        const ALL_TOP_LEVEL_VIEWS = ['classScheduleView', 'dashboardMatrixView', 'dailyAttendanceSheetView', 'officerProfileView', 'adminOfficersView', 'missionCollectionView', 'classFundsView', 'settingsView', 'cycleDayManagerView', 'gospelManagerView'];
+        const NAV_TITLES = { schedule: 'Class Schedule', dashboard: 'Attendance Tracker', dailySheet: 'Attendance Sheet', missionCollection: 'Mission Collection', classFunds: 'Class Funds', officers: 'My Officers', profile: 'My Profile', settings: 'Settings', cycleDayManager: 'Cycle Day Manager', gospelManager: 'Gospel of the Day Manager' };
 
         window.showView = function(viewName) {
             ALL_TOP_LEVEL_VIEWS.forEach(id => document.getElementById(id).classList.add('hidden'));
@@ -7145,12 +8217,39 @@
                 renderCycleDayPicker(false);
                 renderCycleCalendarList();
                 renderAuditLog();
+            } else if (viewName === 'gospelManager') {
+                if (currentUserRole !== 'admin') {
+                    document.getElementById('settingsView').classList.remove('hidden');
+                    return;
+                }
+                document.getElementById('gospelManagerView').classList.remove('hidden');
+                prepareGospelManager();
             } else if (viewName === 'dailySheet') {
                 document.getElementById('dailyAttendanceSheetView').classList.remove('hidden');
             }
         };
 
         window.navigateTo = function(viewName) {
+            if (viewName === 'gospelManager' && currentUserRole !== 'admin') {
+                showAppAlert('Access Denied', 'Only the Main Admin can access the Gospel of the Day Manager.');
+                return;
+            }
+
+            if (viewName !== 'gospelManager' && gospelManagerDirty && gospelManagerIsOpen()) {
+                showAppConfirm(
+                    'Unsaved Changes',
+                    `You have unsaved Gospel changes for Day ${gospelManagerSelectedDay}.
+Leaving this page will discard those changes.`,
+                    false,
+                    (confirmed) => {
+                        if (!confirmed) return;
+                        gospelManagerDirty = false;
+                        window.navigateTo(viewName);
+                    }
+                );
+                return;
+            }
+
             showView(viewName);
             setActiveNav(viewName);
             setMobilePageTitle(NAV_TITLES[viewName] || '');
